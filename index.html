@@ -1,0 +1,2225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Revisiting Nationhood - NLP Gallery</title>
+<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;600;700&family=Reenie+Beanie&family=Kalam:wght@300;400;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #1a1a2e;
+    --blue: #2563eb;
+    --blue-light: #93c5fd;
+    --blue-pale: #eff6ff;
+    --paper: #faf7f2;
+    --paper-dark: #f0ebe0;
+    --tape: rgba(147, 197, 253, 0.45);
+    --shadow: rgba(26,26,46,0.13);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--paper);
+    font-family: 'Kalam', cursive;
+    color: var(--ink);
+    min-height: 100vh;
+    background-image:
+      repeating-linear-gradient(0deg, transparent, transparent 27px, rgba(37,99,235,0.06) 28px),
+      repeating-linear-gradient(90deg, transparent, transparent 27px, rgba(37,99,235,0.03) 28px);
+    background-size: 28px 28px;
+  }
+
+  .header {
+    background: var(--blue);
+    padding: 2.2rem 3rem 1.8rem;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 4px 18px var(--shadow);
+  }
+  .header::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: repeating-linear-gradient(-45deg, transparent, transparent 10px, rgba(255,255,255,0.04) 10px, rgba(255,255,255,0.04) 20px);
+  }
+  .header h1 {
+    font-family: 'Reenie Beanie', cursive;
+    font-size: 3.8rem;
+    color: white;
+    letter-spacing: 0.08em;
+    text-shadow: 3px 3px 0 rgba(0,0,0,0.2);
+    position: relative;
+  }
+  .header-sub {
+    font-family: 'Caveat', cursive;
+    color: var(--blue-light);
+    font-size: 1.1rem;
+    margin-top: 0.2rem;
+    position: relative;
+  }
+
+  .page-body {
+    display: grid;
+    grid-template-columns: 210px 1fr 210px;
+    gap: 0;
+    padding: 2rem 0;
+    max-width: 1440px;
+    margin: 0 auto;
+    align-items: start;
+  }
+
+  .side-col {
+    position: sticky;
+    top: 2rem;
+    height: fit-content;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 3rem;
+    padding: 2rem 0.5rem;
+    align-self: start;
+  }
+
+  .book-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.55rem;
+    cursor: pointer;
+    transition: transform 0.22s ease, filter 0.2s;
+    position: relative;
+    padding: 0.3rem;
+  }
+
+  .book-item:nth-child(1)  { transform: rotate(-4deg) translateX(-8px); }
+  .book-item:nth-child(2)  { transform: rotate(3.5deg) translateX(10px); }
+  .book-item:nth-child(3)  { transform: rotate(-2deg) translateX(5px); }
+  .book-item:nth-child(4)  { transform: rotate(5deg) translateX(-7px); }
+  .book-item:nth-child(5)  { transform: rotate(-3.5deg) translateX(8px); }
+  .book-item:nth-child(6)  { transform: rotate(2.5deg) translateX(-10px); }
+
+  .book-item:hover {
+    transform: rotate(0deg) scale(1.13) !important;
+    z-index: 10;
+    filter: drop-shadow(0 4px 10px rgba(37,99,235,0.2));
+  }
+
+  .book-item.active .book-label { color: var(--blue); font-weight: 700; }
+
+  .book-svg { width: 78px; height: 65px; }
+
+  .book-image {
+    width: 121px;
+    height: 156px;
+    background-size: contain;
+    background-position: center;
+    background-repeat: no-repeat;
+  }
+
+  .book-label {
+    font-family: 'Caveat', cursive;
+    font-size: 0.82rem;
+    color: var(--ink);
+    text-align: center;
+    max-width: 120px;
+    line-height: 1.3;
+    opacity: 0.9;
+    white-space: pre-line;
+  }
+
+  .center-col {
+    padding: 0 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+  }
+
+  .card {
+    background: white;
+    border: 2px solid var(--ink);
+    border-radius: 3px;
+    padding: 1.5rem 1.8rem;
+    position: relative;
+    box-shadow: 4px 4px 0 var(--ink);
+  }
+  .card::before {
+    content: '';
+    position: absolute;
+    top: -11px; left: 50%;
+    transform: translateX(-50%) rotate(-1deg);
+    width: 64px; height: 18px;
+    background: var(--tape);
+    border-radius: 2px;
+  }
+
+  .section-tag {
+    font-family: 'Caveat', cursive;
+    font-size: 1rem;
+    color: var(--blue);
+    margin-bottom: 0.8rem;
+    letter-spacing: 0.05em;
+  }
+  .section-tag::before { content: '< '; }
+  .section-tag::after  { content: ' >'; }
+
+  .slide-content {
+    min-height: 90px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .scrapbook-slide {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    align-items: center;
+    justify-items: center;
+    gap: 2rem;
+    width: 100%;
+    max-width: 820px;
+    margin: 0 auto;
+  }
+
+  .scrapbook-text {
+    display: flex;
+    flex-direction: column;
+    gap: 0.7rem;
+    align-items: center;
+    text-align: center;
+  }
+
+  .scrapbook-title {
+    font-family: 'Caveat', cursive;
+    font-size: 1.7rem;
+    color: var(--blue);
+    line-height: 1.1;
+  }
+
+  .scrapbook-body {
+    font-size: 0.95rem;
+    line-height: 1.8;
+    color: #444;
+  }
+
+  .scrapbook-photos {
+    position: relative;
+    height: 220px;
+    width: 240px;
+  }
+
+  .slide-polaroid {
+    position: absolute;
+    width: 120px;
+    background: white;
+    padding: 6px 6px 18px;
+    border: 1px solid #ddd;
+    box-shadow: 2px 4px 10px rgba(0,0,0,0.12);
+  }
+
+  .slide-polaroid::before {
+    content: '';
+    position: absolute;
+    top: -7px;
+    left: 50%;
+    transform: translateX(-50%) rotate(-2deg);
+    width: 28px;
+    height: 10px;
+    background: rgba(147,197,253,0.5);
+  }
+
+  .slide-polaroid:nth-child(1) { top: 0; left: 10px; transform: rotate(-6deg); }
+  .slide-polaroid:nth-child(2) { top: 40px; left: 95px; transform: rotate(5deg); }
+  .slide-polaroid:nth-child(3) { top: 100px; left: 30px; transform: rotate(-2deg); }
+
+  .slide-polaroid svg { width: 100%; display: block; }
+
+  .slide-polaroid-caption {
+    font-family: 'Caveat', cursive;
+    font-size: 0.72rem;
+    text-align: center;
+    margin-top: 4px;
+    color: #666;
+  }
+
+  .slide-text {
+    font-family: 'Caveat', cursive;
+    font-size: 1.25rem;
+    color: var(--ink);
+    text-align: center;
+    line-height: 1.6;
+  }
+  .slide-nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 1rem;
+  }
+  .nav-btn {
+    background: none;
+    border: 2px solid var(--ink);
+    width: 34px; height: 34px;
+    border-radius: 2px;
+    cursor: pointer;
+    font-size: 1rem;
+    display: flex; align-items: center; justify-content: center;
+    transition: background 0.15s, transform 0.1s;
+    box-shadow: 2px 2px 0 var(--ink);
+  }
+  .nav-btn:hover { background: var(--blue-pale); transform: scale(1.05); }
+  .slide-counter { font-family: 'Kalam', cursive; font-size: 0.85rem; color: #888; }
+
+/* ===================== REFLECTION EXPAND ===================== */
+
+.expand-reflection-btn {
+  margin-top: 1rem;
+
+  width: 100%;
+
+  border: 1.5px solid var(--ink);
+
+  background: white;
+
+  padding: 0.55rem 0.8rem;
+
+  font-family: 'Caveat', cursive;
+
+  font-size: 1rem;
+
+  cursor: pointer;
+
+  border-radius: 2px;
+
+  transition:
+    transform 0.18s ease,
+    background 0.18s ease;
+
+  box-shadow: 2px 2px 0 rgba(0,0,0,0.08);
+}
+
+.expand-reflection-btn:hover {
+  background: var(--blue-pale);
+
+  transform: translateY(-2px);
+}
+
+/* ===================== NOTEBOOK MODAL ===================== */
+/* ===================== NOTEBOOK FLOW LAYOUT ===================== */
+
+.notebook-content-layout {
+  display: grid;
+
+  grid-template-columns: 210px 1fr;
+
+  gap: 2.5rem;
+
+  align-items: start;
+
+  min-height: 100%;
+}
+
+.notebook-text-area {
+  display: flex;
+
+  flex-direction: column;
+
+  min-width: 0;
+}
+
+.notebook-title {
+  font-family: 'Caveat', cursive;
+
+  font-size: 3rem;
+
+  color: var(--blue);
+
+  line-height: 1;
+
+  margin-bottom: 1.2rem;
+}
+
+.notebook-text {
+  font-family: 'Kalam', cursive;
+
+  font-size: 1.05rem;
+
+  line-height: 2.15;
+
+  color: #2f2f2f;
+
+  white-space: pre-wrap;
+
+  word-break: break-word;
+}
+
+.notebook-overlay {
+  position: fixed;
+  inset: 0;
+
+  background: rgba(0,0,0,0);
+
+  backdrop-filter: blur(0px);
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  z-index: 5000;
+
+  opacity: 0;
+  pointer-events: none;
+
+  transition:
+    opacity 0.35s ease,
+    background 0.35s ease,
+    backdrop-filter 0.35s ease;
+}
+
+.notebook-overlay.active {
+  opacity: 1;
+  pointer-events: auto;
+
+  background: rgba(10,10,25,0.38);
+
+  backdrop-filter: blur(6px);
+}
+
+.notebook-page {
+  width: min(95vw, 1200px);
+
+  height: min(88vh, 760px);
+
+  overflow-y: auto;
+
+  background:
+    repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 35px,
+      rgba(37,99,235,0.045) 36px
+    ),
+    #fffefc;
+
+  border: 2px solid var(--ink);
+
+  padding: 2.5rem 3rem 3rem;
+
+  position: relative;
+
+  transform:
+    scale(0.72)
+    rotate(-1deg);
+
+  opacity: 0;
+
+  transition:
+    transform 0.5s cubic-bezier(.34,1.56,.64,1),
+    opacity 0.35s ease;
+
+  box-shadow:
+    0 24px 60px rgba(0,0,0,0.22),
+    8px 8px 0 rgba(26,26,46,0.18);
+
+  display: flex;
+  flex-direction: column;
+}
+
+.notebook-overlay.active .notebook-page {
+  transform:
+    scale(1)
+    rotate(0deg);
+
+  opacity: 1;
+}
+
+.notebook-page::before {
+  content: '';
+
+  position: absolute;
+
+  left: 42px;
+  top: 0;
+  bottom: 0;
+
+  width: 2px;
+
+  background: rgba(239,68,68,0.28);
+}
+
+.notebook-tape {
+  position: absolute;
+
+  top: -12px;
+  left: 50%;
+
+  transform: translateX(-50%) rotate(-2deg);
+
+  width: 90px;
+  height: 22px;
+
+  background: rgba(147,197,253,0.5);
+}
+
+.notebook-polaroid {
+  width: 180px;
+
+  background: white;
+
+  padding: 8px 8px 22px;
+
+  border: 1px solid #ddd;
+
+  transform: rotate(-3deg);
+
+  box-shadow: 4px 6px 16px rgba(0,0,0,0.12);
+
+  flex-shrink: 0;
+}
+
+.notebook-polaroid img {
+  width: 100%;
+  height: 170px;
+
+  object-fit: cover;
+
+  display: block;
+}
+
+.notebook-polaroid-caption {
+  font-family: 'Caveat', cursive;
+
+  text-align: center;
+
+  margin-top: 4px;
+
+  color: #666;
+}
+
+.notebook-title {
+  font-family: 'Caveat', cursive;
+
+  font-size: 3rem;
+
+  color: var(--blue);
+
+  line-height: 1;
+}
+
+.notebook-close {
+  position: absolute;
+
+  top: 14px;
+  right: 14px;
+
+  width: 36px;
+  height: 36px;
+
+  border: 2px solid var(--ink);
+
+  background: white;
+
+  cursor: pointer;
+
+  font-size: 1rem;
+
+  border-radius: 2px;
+
+  box-shadow: 2px 2px 0 var(--ink);
+}
+
+.notebook-close:hover {
+  background: var(--blue-pale);
+}
+/* ===================== CONTENT POLAROID ===================== */
+
+.content-polaroid-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.4rem;
+}
+
+.content-polaroid {
+  width: 100%;
+  max-width: 280px;
+  background: white;
+  padding: 10px 10px 26px;
+  border: 1px solid #ddd8cf;
+  box-shadow:
+    0 2px 6px rgba(0,0,0,0.08),
+    3px 5px 0 rgba(0,0,0,0.04);
+  position: relative;
+  transform: rotate(-1.5deg);
+  transition: transform 0.2s ease;
+}
+
+.content-polaroid:hover {
+  transform: rotate(0deg) scale(1.02);
+}
+
+.content-polaroid::before {
+  content: '';
+  position: absolute;
+  top: -9px;
+  left: 50%;
+  transform: translateX(-50%) rotate(-2deg);
+
+  width: 56px;
+  height: 18px;
+
+  background: rgba(147,197,253,0.45);
+
+  border-radius: 2px;
+
+  box-shadow: 0 1px 2px rgba(0,0,0,0.06);
+}
+
+.content-polaroid img {
+  width: 100%;
+  height: 240px;
+  object-fit: cover;
+  display: block;
+
+  filter: contrast(1.02) saturate(0.98);
+}
+
+.content-polaroid-caption {
+  margin-top: 10px;
+
+  font-family: 'Caveat', cursive;
+  font-size: 1.15rem;
+
+  color: #555;
+
+  text-align: center;
+  line-height: 1.3;
+}
+
+.handwritten-note {
+  width: 100%;
+
+  background:rgb(255, 255, 255) 28px;
+
+  padding: 1.2rem 1rem;
+
+  border: 1.5px dashed #c7c7c7;
+
+  position: relative;
+
+  transform: rotate(0.5deg);
+
+  box-shadow: 2px 3px 0 rgba(0,0,0,0.04);
+}
+
+.handwritten-note::before {
+  content: '';
+
+  position: absolute;
+
+  top: -10px;
+  right: 18px;
+
+  width: 52px;
+  height: 16px;
+
+  background: rgba(147,197,253,0.4);
+
+  transform: rotate(6deg);
+}
+
+.handwritten-title {
+  font-family: 'Caveat', cursive;
+  font-size: 1.35rem;
+  color: var(--blue);
+
+  margin-bottom: 0.8rem;
+
+  border-bottom: 1px dashed #bbb;
+  padding-bottom: 0.4rem;
+}
+
+.handwritten-text {
+  font-family: 'Kalam', cursive;
+  font-size: 0.96rem;
+  line-height: 1.9;
+  color: #333;
+}
+  /* ===================== CHARACTERS + CONTENT SIDE-BY-SIDE ===================== */
+  .char-content-card {
+    background: white;
+    border: 2px solid var(--ink);
+    border-radius: 3px;
+    position: relative;
+    box-shadow: 4px 4px 0 var(--ink);
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    min-height: 420px;
+    overflow: hidden;
+  }
+  .char-content-card::before {
+    content: '';
+    position: absolute;
+    top: -11px; left: 50%;
+    transform: translateX(-50%) rotate(-1deg);
+    width: 64px; height: 18px;
+    border-radius: 2px;
+  }
+
+  /* Left half: characters */
+  .char-panel {
+    padding: 1.5rem 1.5rem;
+    border-right: 2px solid var(--ink);
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+  .char-panel-tag {
+    font-family: 'Caveat', cursive;
+    font-size: 1rem;
+    color: var(--blue);
+    letter-spacing: 0.05em;
+  }
+  .char-panel-tag::before { content: '< '; }
+  .char-panel-tag::after  { content: ' >'; }
+
+  .char-label {
+    font-family: 'Caveat', cursive;
+    font-size: 1rem;
+    text-align: center;
+    color: #555;
+    margin-bottom: 0.2rem;
+  }
+  .char-row {
+    display: flex;
+    justify-content: center;
+    gap: 1.5rem;
+    margin-bottom: 0.5rem;
+  }
+  .char-btn {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.4rem;
+    cursor: pointer;
+    padding: 0.5rem 0.8rem;
+    border: 2px dashed transparent;
+    border-radius: 6px;
+    transition: all 0.2s;
+    background: none;
+  }
+  .char-btn:hover { border-color: var(--blue-light); background: var(--blue-pale); }
+  .char-btn.active { border-color: var(--blue); background: var(--blue-pale); box-shadow: 3px 3px 0 var(--blue-light); }
+  .char-btn svg { width: 48px; height: 56px; }
+  .char-btn span { font-family: 'Caveat', cursive; font-size: 1rem; font-weight: 700; letter-spacing: 0.08em; color: var(--ink); }
+  .char-btn.active span { color: var(--blue); }
+
+  .profile-box {
+    background: var(--paper-dark);
+    border: 1.5px solid var(--ink);
+    border-radius: 2px;
+    padding: 1rem 1.2rem;
+  }
+  .profile-box h3 {
+    font-family: 'Caveat', cursive;
+    font-size: 1.1rem;
+    font-weight: 700;
+    border-bottom: 1.5px solid var(--ink);
+    padding-bottom: 0.4rem;
+    margin-bottom: 0.7rem;
+    color: var(--blue);
+  }
+  .profile-detail { font-size: 0.88rem; line-height: 1.7; color: #333; }
+
+  .thought-btn, .reflect-btn {
+    display: block;
+    width: 100%;
+    text-align: left;
+    background: white;
+    border: 1.5px solid var(--ink);
+    border-radius: 2px;
+    padding: 0.38rem 0.7rem;
+    margin-bottom: 0.45rem;
+    cursor: pointer;
+    font-family: 'Kalam', cursive;
+    font-size: 0.82rem;
+    color: var(--ink);
+    transition: background 0.15s, transform 0.1s;
+    box-shadow: 2px 2px 0 rgba(0,0,0,0.08);
+  }
+  .thought-btn::before { content: '• '; color: var(--blue); }
+  .thought-btn:hover { background: var(--blue-pale); transform: translateX(2px); }
+  .thought-btn.active { background: var(--blue-pale); border-color: var(--blue); }
+  .reflect-btn {
+    background: var(--blue); color: white; font-weight: 700;
+    text-align: center; margin-top: 0.3rem;
+    box-shadow: 2px 2px 0 var(--ink);
+  }
+  .reflect-btn:hover { background: #1d4ed8; }
+  .reflect-btn::before { content: ''; }
+
+  /* Right half: content area */
+  .content-panel {
+    padding: 1.5rem 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+  }
+  .content-panel-tag {
+    font-family: 'Caveat', cursive;
+    font-size: 1rem;
+    color: var(--blue);
+    letter-spacing: 0.05em;
+  }
+  .content-panel-tag::before { content: '< '; }
+  .content-panel-tag::after  { content: ' >'; }
+
+  .bottom-box-label {
+    font-family: 'Caveat', cursive;
+    font-size: 0.85rem;
+    color: #888;
+  }
+  .bottom-box-content {
+    flex: 1;
+    min-height: 300px;
+    background: var(--paper-dark);
+    border: 1.5px dashed #bbb;
+    border-radius: 2px;
+    padding: 1rem 1.2rem;
+    font-family: 'Kalam', cursive;
+    font-size: 0.95rem;
+    line-height: 1.7;
+    color: #333;
+    transition: background 0.3s, border-color 0.3s;
+  }
+  .bottom-box-content.flash { background: var(--blue-pale); border-color: var(--blue); }
+
+  .bottom-book-layout {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    align-items: center;
+  }
+  .bottom-book-cover {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.6rem;
+  }
+  .bottom-book-cover img { width: 100%; max-width: 200px; max-height: 220px; object-fit: contain; }
+  .bottom-book-title {
+    font-family: 'Caveat', cursive;
+    font-size: 1.2rem;
+    font-weight: 700;
+    text-align: center;
+    color: var(--ink);
+    line-height: 1.3;
+    margin-top: 0.2rem;
+    margin-bottom: 0.5rem;
+  }
+  .bottom-book-tag {
+    font-family: 'Kalam', cursive;
+    font-size: 0.68rem;
+    color: var(--blue);
+    background: var(--blue-pale);
+    border: 1px solid var(--blue-light);
+    border-radius: 2px;
+    padding: 0.1rem 0.5rem;
+  }
+  .bottom-thoughts-col h4 {
+    font-family: 'Caveat', cursive;
+    font-size: 1rem;
+    color: var(--blue);
+    border-bottom: 1.5px solid var(--ink);
+    padding-bottom: 0.3rem;
+    margin-bottom: 0.7rem;
+  }
+  .thought-entry {
+    padding: 0.8rem 1rem;
+    background: white;
+    border: 1.5px solid #ddd;
+    border-radius: 2px;
+  }
+  .thought-entry-text { font-size: 0.92rem; line-height: 1.65; color: #333; }
+
+  .placeholder-text { color: #bbb; font-style: italic; font-size: 0.88rem; }
+
+  .fade-in { animation: fadeIn 0.3s ease; }
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(6px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  ::-webkit-scrollbar { width: 8px; }
+  ::-webkit-scrollbar-track { background: var(--paper); }
+  ::-webkit-scrollbar-thumb { background: var(--blue-light); border-radius: 4px; }
+
+  /* ===================== GALLERY SECTION ===================== */
+  .gallery-section {
+    max-width: 1040px;
+    margin: 1rem auto 4rem;
+    padding: 0 2rem;
+  }
+
+  .gallery-header {
+    position: relative;
+    margin-bottom: 2rem;
+    padding-top: 1.2rem;
+    text-align: center;
+  }
+  .gallery-title-tape {
+    position: absolute;
+    top: 0; left: 50%;
+    transform: translateX(-50%) rotate(-1deg);
+    width: 80px; height: 18px;
+    background: rgba(147,197,253,0.55);
+    border-radius: 2px;
+  }
+  .gallery-title {
+    font-family: 'Reenie Beanie', cursive;
+    font-size: 2.8rem;
+    color: var(--ink);
+    letter-spacing: 0.06em;
+  }
+  .gallery-sub {
+    font-family: 'Caveat', cursive;
+    font-size: 0.85rem;
+    color: #888;
+    margin-top: 0.1rem;
+  }
+
+  /* OPEN BOOK CONTAINER */
+  .open-book-wrapper {
+    position: relative;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .open-book {
+    position: relative;
+    width: 900px;
+    height: 520px;
+    display: flex;
+    perspective: 2000px;
+  }
+
+  /* Book cover - consistent blue palette */
+  .book-cover-left {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 50%;
+    height: 100%;
+    border-radius: 8px 0 0 8px;
+    background: linear-gradient(to right, #1d4ed8 0%, #2563eb 85%, #3b82f6 100%);
+    box-shadow: -4px 0 12px rgba(0,0,0,0.15), inset -2px 0 4px rgba(0,0,0,0.12);
+  }
+  .book-cover-right {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 50%;
+    height: 100%;
+    border-radius: 0 8px 8px 0;
+    background: linear-gradient(to left, #1d4ed8 0%, #2563eb 85%, #3b82f6 100%);
+    box-shadow: 4px 0 12px rgba(0,0,0,0.15), inset 2px 0 4px rgba(0,0,0,0.12);
+  }
+
+  /* Spine */
+  .book-spine {
+    position: absolute;
+    left: 50%;
+    top: 0;
+    transform: translateX(-50%);
+    width: 24px;
+    height: 100%;
+    background: linear-gradient(to right, #1e3a8a, #2563eb, #1e3a8a);
+    z-index: 20;
+    box-shadow: 0 0 6px rgba(0,0,0,0.2);
+  }
+  .book-spine::before {
+    content: '';
+    position: absolute;
+    top: 8px; left: 2px; right: 2px; bottom: 8px;
+    border: 1px solid rgba(255,255,255,0.15);
+    border-radius: 1px;
+  }
+
+  /* Pages area */
+  .book-page-left,
+  .book-page-right {
+    position: absolute;
+    top: 12px;
+    width: calc(50% - 18px);
+    height: calc(100% - 24px);
+    overflow: hidden;
+  }
+  .book-page-left {
+    left: 12px;
+    border-radius: 4px 0 0 4px;
+    box-shadow: inset -2px 0 4px rgba(0,0,0,0.06);
+    background: linear-gradient(to right, #f5f0e8 0%, #faf7f2 100%);
+  }
+  .book-page-right {
+    right: 12px;
+    border-radius: 0 4px 4px 0;
+    box-shadow: inset 2px 0 4px rgba(0,0,0,0.06);
+    background: linear-gradient(to left, #f5f0e8 0%, #faf7f2 100%);
+  }
+
+  /* Page lines */
+  .book-page-left::before,
+  .book-page-right::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: repeating-linear-gradient(0deg, transparent, transparent 27px, rgba(37,99,235,0.06) 28px);
+  }
+
+  /* Page number */
+  .page-number {
+    position: absolute;
+    bottom: 10px;
+    font-family: 'Caveat', cursive;
+    font-size: 0.75rem;
+    color: #aaa;
+  }
+  .book-page-left .page-number { right: 14px; }
+  .book-page-right .page-number { left: 14px; }
+
+  /* Photo grid on each page */
+  .page-photos {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    grid-template-rows: repeat(2, 1fr);
+    gap: 12px;
+    padding: 18px 16px 28px;
+    height: 100%;
+  }
+
+  /* Polaroid photo card */
+  .polaroid {
+    background: white;
+    border: 1px solid #d8d5cd;
+    padding: 4px 4px 16px;
+    cursor: pointer;
+    transition: transform 0.2s cubic-bezier(.34,1.56,.64,1), box-shadow 0.2s;
+    box-shadow: 1px 2px 5px rgba(0,0,0,0.08);
+    position: relative;
+  }
+  .polaroid:nth-child(odd) { transform: rotate(-1deg); }
+  .polaroid:nth-child(even) { transform: rotate(0.8deg); }
+  .polaroid:hover {
+    transform: rotate(0deg) scale(1.06) !important;
+    box-shadow: 2px 5px 12px rgba(0,0,0,0.14);
+    z-index: 5;
+  }
+  .polaroid::before {
+    content: '';
+    position: absolute;
+    top: -6px; left: 50%;
+    transform: translateX(-50%) rotate(-1deg);
+    width: 20px; height: 8px;
+    background: rgba(147,197,253,0.55);
+    border-radius: 1px;
+  }
+  .polaroid:nth-child(even)::before { transform: translateX(-50%) rotate(1.5deg); }
+
+  .polaroid-img {
+    width: 100%;
+    aspect-ratio: 1.1;
+    overflow: hidden;
+    background: var(--blue-pale);
+  }
+  .polaroid-img svg { width: 100%; height: 100%; display: block; }
+
+  .polaroid-caption {
+    font-family: 'Caveat', cursive;
+    font-size: 1.25rem;
+    color: #555;
+    text-align: center;
+    margin-top: 10px;
+    line-height: 1.2;
+    white-space: pre-line;
+  }
+
+  /* PAGE FLIP NAVIGATION */
+  .book-nav {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    margin-top: 1.2rem;
+  }
+  .page-btn {
+    background: white;
+    border: 2px solid var(--ink);
+    border-radius: 2px;
+    padding: 0.5rem 1.2rem;
+    cursor: pointer;
+    font-family: 'Caveat', cursive;
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--ink);
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    box-shadow: 3px 3px 0 var(--ink);
+    transition: transform 0.1s, box-shadow 0.1s, background 0.15s;
+  }
+  .page-btn:hover { background: var(--blue-pale); }
+  .page-btn:active { transform: translate(2px,2px); box-shadow: 1px 1px 0 var(--ink); }
+  .page-btn:disabled { opacity: 0.35; cursor: not-allowed; pointer-events: none; }
+
+  .page-indicator {
+    font-family: 'Caveat', cursive;
+    font-size: 1rem;
+    color: #666;
+  }
+
+  /* ===================== LIGHTBOX ===================== */
+  .lb-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(10,10,25,0);
+    z-index: 2000;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.4s ease;
+  }
+  .lb-overlay.open { display: flex; }
+  .lb-overlay.ready { background: rgba(10,10,25,0.8); }
+
+  .lb-close {
+    position: fixed;
+    top: 1.5rem; right: 1.5rem;
+    background: white;
+    border: 2px solid var(--ink);
+    border-radius: 2px;
+    width: 38px; height: 38px;
+    font-size: 1.2rem;
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    box-shadow: 3px 3px 0 var(--ink);
+    z-index: 2010;
+    font-family: sans-serif;
+    color: var(--ink);
+    transition: background 0.15s;
+  }
+  .lb-close:hover { background: var(--blue-pale); }
+
+  .lb-scene {
+    perspective: 1200px;
+    width: 360px;
+    height: 360px;
+    position: relative;
+  }
+
+  .lb-card {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    transform-style: preserve-3d;
+    transform: scale(0.4) rotateY(-20deg);
+    opacity: 0;
+    transition: transform 0.55s cubic-bezier(.34,1.3,.64,1), opacity 0.4s ease;
+    cursor: pointer;
+  }
+  .lb-card.entering { transform: scale(1) rotateY(0deg); opacity: 1; }
+  .lb-card.flipped  { transform: scale(1) rotateY(180deg) !important; }
+
+  .lb-face {
+    position: absolute;
+    inset: 0;
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+    border-radius: 4px;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: 100%;
+  }
+
+  .lb-front {
+    background: white;
+    border: 2px solid #d8d5cd;
+    padding: 12px 12px 48px;
+    box-shadow: 0 16px 40px rgba(0,0,0,0.2);
+    display: flex;
+    flex-direction: column;
+  }
+  .lb-front-img { flex: 1; overflow: hidden; background: var(--blue-pale); }
+  .lb-front-img svg { width: 100%; height: 100%; display: block; }
+  .lb-front-caption {
+    font-family: 'Caveat', cursive;
+    font-size: 1rem;
+    color: #444;
+    text-align: center;
+    margin-top: 10px;
+    white-space: pre-line;
+    line-height: 1.4;
+  }
+
+  .lb-back {
+    background: white;
+    border: 2px solid #d8d5cd;
+    transform: rotateY(180deg);
+    box-shadow: 0 16px 40px rgba(0,0,0,0.2);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 2rem 2.2rem;
+    gap: 1rem;
+    position: relative;
+    overflow: hidden;
+    background-image: repeating-linear-gradient(0deg, transparent, transparent 23px, rgba(37,99,235,0.07) 24px);
+  }
+  .lb-back::before {
+    content: '';
+    position: absolute;
+    top: -8px; left: 50%;
+    transform: translateX(-50%) rotate(-1deg);
+    width: 60px; height: 18px;
+    background: rgba(147,197,253,0.5);
+    border-radius: 2px;
+  }
+  .lb-back-tag { font-family: 'Caveat', cursive; font-size: 0.8rem; color: var(--blue); letter-spacing: 0.08em; text-transform: uppercase; }
+  .lb-back-note { font-family: 'Kalam', cursive; font-size: 0.95rem; color: #2a2a2a; line-height: 1.7; flex: 1; }
+  .lb-back-sig { font-family: 'Caveat', cursive; font-size: 1.15rem; color: var(--blue); font-weight: 700; text-align: right; }
+  .lb-back-stamp {
+    position: absolute;
+    bottom: 14px; right: 16px;
+    width: 46px; height: 46px;
+    border: 2px solid var(--blue);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    opacity: 0.3; pointer-events: none;
+  }
+  .lb-back-stamp span { font-family: 'Caveat', cursive; font-size: 0.52rem; color: var(--blue); text-align: center; text-transform: uppercase; letter-spacing: 0.04em; line-height: 1.3; }
+
+  .lb-hint {
+    position: fixed;
+    bottom: 2rem; left: 50%;
+    transform: translateX(-50%);
+    font-family: 'Caveat', cursive;
+    font-size: 1rem;
+    color: rgba(255,255,255,0.6);
+    letter-spacing: 0.04em;
+    pointer-events: none;
+    transition: opacity 0.35s;
+  }
+  .lb-hint.hidden { opacity: 0; }
+
+  /* Image Zoom Modal */
+  .image-zoom-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.5);
+    backdrop-filter: blur(4px);
+    z-index: 3000;
+    align-items: center;
+    justify-content: center;
+    animation: fadeInOverlay 0.3s ease;
+  }
+  .image-zoom-overlay.active { display: flex; }
+  @keyframes fadeInOverlay {
+    from { background: rgba(0,0,0,0); backdrop-filter: blur(0px); }
+    to   { background: rgba(0,0,0,0.5); backdrop-filter: blur(4px); }
+  }
+  .image-zoom-container {
+    max-width: 90%; max-height: 90vh;
+    display: flex; align-items: center; justify-content: center;
+    animation: zoomIn 0.4s cubic-bezier(0.34,1.56,0.64,1);
+  }
+  @keyframes zoomIn {
+    from { transform: scale(0.5); opacity: 0; }
+    to   { transform: scale(1); opacity: 1; }
+  }
+  .image-zoom-container img { max-width: 100%; max-height: 85vh; object-fit: contain; }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>Revisiting Nationhood</h1>
+  <div class="header-sub">a visit to the NLP's At sa salita, naging bansa Permanent Gallery</div>
+</div>
+
+<div class="page-body">
+  <div class="side-col" id="left-books"></div>
+
+  <div class="center-col">
+    <!-- SLIDES -->
+    <div class="card">
+      <div class="section-tag">Archive Overview</div>
+      <div class="slide-content">
+        <div class="slide-text" id="slide-text"></div>
+      </div>
+      <div class="slide-nav">
+        <button class="nav-btn" onclick="changeSlide(-1)">&lt;</button>
+        <span class="slide-counter" id="slide-counter">1 / 3</span>
+        <button class="nav-btn" onclick="changeSlide(1)">&gt;</button>
+      </div>
+    </div>
+
+    <!-- CHARACTERS + CONTENT SIDE BY SIDE -->
+    <div class="char-content-card">
+      <!-- LEFT: Characters -->
+      <div class="char-panel">
+        <div class="char-panel-tag">Student Perspectives</div>
+        <div class="char-label">choose a student perspective</div>
+        <div class="char-row" id="char-row"></div>
+        <div id="profile-grid"></div>
+      </div>
+
+      <!-- RIGHT: Content Area -->
+      <div class="content-panel">
+        <div class="content-panel-tag">Content Area</div>
+        <div class="bottom-box-label" id="box-label">nothing selected yet</div>
+        <div class="bottom-box-content" id="box-content">
+          <span class="placeholder-text">Click a book on the side, or a thought / reflection button above.</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="side-col" id="right-books"></div>
+</div>
+
+<!-- Image Zoom Overlay -->
+<div class="image-zoom-overlay" id="imageZoomOverlay">
+  <div class="image-zoom-container" id="imageZoomContainer">
+    <img id="zoomImage" src="" alt="Zoomed image" />
+  </div>
+</div>
+
+<!-- SVG SYMBOLS -->
+<svg style="display:none">
+  <symbol id="book-open" viewBox="0 0 72 60">
+    <path d="M36 10 C26 8 8 10 5 13 L5 52 C8 49 26 47 36 50 C46 47 64 49 67 52 L67 13 C64 10 46 8 36 10Z" fill="#2563eb" stroke="#1a1a2e" stroke-width="1.8"/>
+    <path d="M36 10 L36 50" stroke="white" stroke-width="2"/>
+    <path d="M12 20 C19 18 27 18.5 34 21" stroke="white" stroke-width="1.2" stroke-linecap="round" opacity="0.7"/>
+    <path d="M12 27 C19 25 27 25.5 34 28" stroke="white" stroke-width="1.2" stroke-linecap="round" opacity="0.5"/>
+    <path d="M12 34 C19 32 27 32.5 34 35" stroke="white" stroke-width="1.2" stroke-linecap="round" opacity="0.35"/>
+    <path d="M38 21 C45 18.5 53 18 60 20" stroke="white" stroke-width="1.2" stroke-linecap="round" opacity="0.7"/>
+    <path d="M38 28 C45 25.5 53 25 60 27" stroke="white" stroke-width="1.2" stroke-linecap="round" opacity="0.5"/>
+    <path d="M38 35 C45 32.5 53 32 60 34" stroke="white" stroke-width="1.2" stroke-linecap="round" opacity="0.35"/>
+  </symbol>
+</svg>
+
+<script>
+const slides = [
+  {
+    title: "Welcome",
+    body: "Here's our project! Explore the National Library's permanent collection through the perspectives of three students.",
+    photos: ["hall","book","map"]
+  },
+  {
+    title: "About the Gallery and Collection",
+    body: "This is the NLP's 'At sa salita, naging bansa' permanent gallery, featuring important Philippine historical documents and texts that shaped our nation.",
+    photos: ["manuscript","scroll","folio"]
+  },
+  {
+    title: "How to Get Here & Layouts",
+    body: "Select a student perspective below, then click any material to see their thoughts and reflections on these important documents.",
+    photos: ["hallway","novel","book"]
+  }
+];
+
+const characters = [
+  {
+    id: "raya",
+    name: "RAYA",
+
+    profile: {
+      role: "LIS 170 Student",
+      background: "Placeholder background details here."
+    },
+
+    thoughts: [
+      {
+        title: "Thought 1",
+        text: "Placeholder thought content here.",
+        image: "1.png"
+      },
+
+      {
+        title: "Thought 2",
+        text: "Placeholder thought content here.",
+        image: "2.png"
+      },
+
+      {
+        title: "Thought 3",
+        text: "Placeholder thought content here.",
+        image: "3.png"
+      }
+    ],
+
+    reflection: {
+      text: "Placeholder reflection content here.",
+      image: "4.png"
+    }
+  },
+
+  {
+    id: "erin",
+    name: "ERIN",
+
+    profile: {
+      role: "LIS 170 Student",
+      background: "Placeholder background details here."
+    },
+
+    thoughts: [
+      {
+        title: "Thought 1",
+        text: "Placeholder thought content here.",
+        image: "5.png"
+      },
+
+      {
+        title: "Thought 2",
+        text: "Placeholder thought content here.",
+        image: "6.png"
+      },
+
+      {
+        title: "Thought 3",
+        text: "Placeholder thought content here.",
+        image: "7.png"
+      }
+    ],
+
+    reflection: {
+      text: "Placeholder reflection content here.",
+      image: "8.png"
+    }
+  },
+
+  {
+    id: "ian",
+    name: "IAN",
+
+    profile: {
+      role: "LIS 170 Student",
+      background: "Placeholder background details here."
+    },
+
+    thoughts: [
+      {
+        title: "Thought 1",
+        text: "Placeholder thought content here.",
+        image: "9.png"
+      },
+
+      {
+        title: "Thought 2",
+        text: "Placeholder thought content here.",
+        image: "10.png"
+      },
+
+      {
+        title: "Thought 3",
+        text: "Placeholder thought content here.",
+        image: "11.png"
+      }
+    ],
+
+    reflection: {
+      text: "Placeholder reflection content here.",
+      image: "12.png"
+    }
+  }
+];
+
+const books = [
+  { id:"b1", image:"Declaration of Philippine Independence.png", thoughts:{ raya:"Thought placeholder", erin:"Thought placeholder", ian:"Thought placeholder" } },
+  { id:"b2", image:"Velarde Map.png",                            thoughts:{ raya:"Thought placeholder", erin:"Thought placeholder", ian:"Thought placeholder" } },
+  { id:"b3", image:"Noli Me Tangere.png",                       thoughts:{ raya:"Thought placeholder", erin:"Thought placeholder", ian:"Thought placeholder" } },
+  { id:"b4", image:"Doctrina Christiana.png",                   thoughts:{ raya:"Thought placeholder", erin:"Thought placeholder", ian:"Thought placeholder" } },
+  { id:"b5", image:"Himno Nacional Pilipinas.png",              thoughts:{ raya:"Thought placeholder", erin:"Thought placeholder", ian:"Thought placeholder" } },
+  { id:"b6", image:"Kartilya ng Katipunan.png",                 thoughts:{ raya:"Thought placeholder", erin:"Thought placeholder", ian:"Thought placeholder" } },
+  { id:"b7", image:"Katipunan Membership Certificate.png",      thoughts:{ raya:"Thought placeholder", erin:"Thought placeholder", ian:"Thought placeholder" } },
+  { id:"b8", image:"Description of the Philippine Flag.png",   thoughts:{ raya:"Thought placeholder", erin:"Thought placeholder", ian:"Thought placeholder" } },
+];
+
+let currentSlide = 0;
+let currentChar  = 0;
+let activeBook   = null;
+
+function renderSlide() {
+  const s = slides[currentSlide];
+  const el = document.getElementById('slide-text');
+  el.innerHTML = `
+  <div class="scrapbook-slide">
+    <div class="scrapbook-text">
+      <div class="scrapbook-title">${s.title}</div>
+      <div class="scrapbook-body">${s.body}</div>
+    </div>
+    <div class="scrapbook-photos">
+      ${s.photos.map((shape, i) => `
+        <div class="slide-polaroid">
+          <svg viewBox="0 0 110 95" xmlns="http://www.w3.org/2000/svg">
+            ${makeArt({ shapes: shape, colors:["#2563eb","#1d4ed8","#93c5fd","#eff6ff"] }, 110, 95)}
+          </svg>
+          <div class="slide-polaroid-caption">gallery note</div>
+        </div>
+      `).join('')}
+    </div>
+  </div>`;
+  el.classList.remove('fade-in'); void el.offsetWidth; el.classList.add('fade-in');
+  document.getElementById('slide-counter').textContent = `${currentSlide+1} / ${slides.length}`;
+}
+function changeSlide(dir) {
+  currentSlide = (currentSlide + dir + slides.length) % slides.length;
+  renderSlide();
+}
+
+function getImageTitle(imagePath) {
+  return imagePath.replace(/\.png$/i, '');
+}
+
+function bookImage(b) {
+  return `<div class="book-image" style="background-image: url('${b.image}')"></div>`;
+}
+
+function renderBooks() {
+  function makeBook(b) {
+    const title = getImageTitle(b.image);
+    return `<div class="book-item" id="book-${b.id}" onclick="selectBook('${b.id}')">
+      ${b.image ? bookImage(b) : `<svg class="book-svg" viewBox="0 0 72 60" xmlns="http://www.w3.org/2000/svg"><use href="#book-open"/></svg>`}
+      <span class="book-label">${title}</span>
+    </div>`;
+  }
+  document.getElementById('left-books').innerHTML  = books.slice(0,4).map(makeBook).join('');
+  document.getElementById('right-books').innerHTML = books.slice(4,8).map(makeBook).join('');
+}
+
+function selectBook(id) {
+  const book = books.find(b => b.id === id);
+  if (!book) return;
+
+  if (activeBook === id) {
+    activeBook = null;
+    document.querySelectorAll('.book-item').forEach(el => el.classList.remove('active'));
+    setBoxClear();
+    return;
+  }
+
+  activeBook = id;
+  document.querySelectorAll('.book-item').forEach(el => el.classList.remove('active'));
+  document.getElementById('book-' + id).classList.add('active');
+
+  setBoxBook(book);
+
+  setTimeout(() => {
+    const contentArea = document.getElementById('box-label');
+    if (!contentArea) return;
+
+    const offset = 90;
+    const top = contentArea.getBoundingClientRect().top + window.pageYOffset - offset;
+
+    window.scrollTo({
+      top,
+      behavior: 'smooth'
+    });
+
+  }, 150);
+}
+
+function personSVG(color='#2563eb') {
+  return `<svg viewBox="0 0 48 56" xmlns="http://www.w3.org/2000/svg">
+    <circle cx="24" cy="10" r="7" fill="${color}" stroke="#1a1a2e" stroke-width="1.5"/>
+    <path d="M24 17 L24 38" stroke="#1a1a2e" stroke-width="2" stroke-linecap="round"/>
+    <path d="M12 24 L36 24" stroke="#1a1a2e" stroke-width="2" stroke-linecap="round"/>
+    <path d="M24 38 L14 52" stroke="#1a1a2e" stroke-width="2" stroke-linecap="round"/>
+    <path d="M24 38 L34 52" stroke="#1a1a2e" stroke-width="2" stroke-linecap="round"/>
+  </svg>`;
+}
+
+function renderCharacters() {
+
+  document.getElementById('char-row').innerHTML =
+    characters.map((c, i) => `
+      <button class="char-btn ${i === currentChar ? 'active' : ''}"
+              onclick="selectChar(${i})">
+
+        ${personSVG(i === currentChar ? '#2563eb' : '#93c5fd')}
+
+        <span>${c.name}</span>
+
+      </button>
+    `).join('');
+
+  const c = characters[currentChar];
+
+  document.getElementById('profile-grid').innerHTML = `
+
+    <div class="profile-box" style="margin-bottom:0.8rem">
+
+      <h3>Student Profile</h3>
+
+      <div class="profile-detail">
+
+        <strong>${c.name}</strong><br>
+        ${c.profile.role}<br><br>
+
+        <span style="font-size:0.82rem;color:#666">
+          ${c.profile.background}
+        </span>
+
+      </div>
+
+    </div>
+
+    <div class="profile-box">
+
+      <h3>Thoughts</h3>
+
+      ${c.thoughts.map((t, i) => `
+        <button class="thought-btn"
+                onclick="selectThought(${currentChar}, ${i})">
+
+          ${t.title}
+
+        </button>
+      `).join('')}
+
+      <button class="reflect-btn"
+              onclick="selectReflection(${currentChar})">
+
+        Reflection
+
+      </button>
+
+    </div>
+
+  `;
+}
+
+function selectChar(i) {
+  currentChar = i;
+  renderCharacters();
+  if (activeBook) {
+    const book = books.find(b => b.id === activeBook);
+    if (book) setBoxBook(book);
+  } else { setBoxClear(); }
+}
+
+function selectThought(charIdx, thoughtIdx) {
+  const c = characters[charIdx];
+
+  activeBook = null;
+
+  document.querySelectorAll('.book-item')
+    .forEach(el => el.classList.remove('active'));
+
+  setBoxThought(
+    `What's on ${c.name}'s mind`,
+    c.thoughts[thoughtIdx],
+    false
+  );
+}
+
+function selectReflection(charIdx) {
+  const c = characters[charIdx];
+
+  activeBook = null;
+
+  document.querySelectorAll('.book-item')
+    .forEach(el => el.classList.remove('active'));
+
+  setBoxThought(
+    `${c.name}'s Reflection`,
+    {
+      title: "Reflection",
+      text: c.reflection.text,
+      image: c.reflection.image
+    },
+    true
+  );
+}
+
+function setBoxClear() {
+  document.getElementById('box-label').textContent = 'nothing selected yet';
+  document.getElementById('box-content').innerHTML = `<span class="placeholder-text">Click a book on the side, or a thought / reflection button above.</span>`;
+  document.getElementById('box-content').classList.remove('flash');
+}
+
+function setBoxText(label, text) {
+  document.getElementById('box-label').textContent = label;
+  const el = document.getElementById('box-content');
+  el.innerHTML = `<p class="fade-in">${text}</p>`;
+  flashBox(el);
+}
+
+function setBoxThought(label, thought, isReflection = false) {
+
+  document.getElementById('box-label').textContent = label;
+
+  const el = document.getElementById('box-content');
+
+  el.innerHTML = `
+
+    <div class="content-polaroid-wrapper fade-in">
+
+      <div class="content-polaroid">
+
+        <img src="${thought.image}"
+             alt="${thought.title}">
+
+        <div class="content-polaroid-caption">
+          ${thought.title}
+        </div>
+
+      </div>
+
+      <div class="handwritten-note">
+
+        <div class="handwritten-title">
+          ${isReflection ? 'Reflection Note' : 'Thought Note'}
+        </div>
+
+        <div class="handwritten-text preview-text">
+          ${thought.text}
+        </div>
+
+        ${isReflection ? `
+
+          <button class="expand-reflection-btn"
+                  onclick='openReflectionNotebook(
+                    ${JSON.stringify(thought.title)},
+                    ${JSON.stringify(thought.text)},
+                    ${JSON.stringify(thought.image)}
+                  )'>
+
+            expand to see full ↗
+
+          </button>
+
+        ` : ''}
+
+      </div>
+
+    </div>
+
+  `;
+
+  flashBox(el);
+}
+
+function setBoxBook(book) {
+
+  const char = characters[currentChar];
+
+  document.getElementById('box-label').textContent =
+    `${char.name}'s thoughts on ${getImageTitle(book.image)}`;
+
+  const el = document.getElementById('box-content');
+
+  el.innerHTML = `
+
+    <div class="bottom-book-layout fade-in">
+
+      <div class="bottom-book-cover">
+
+        <img src="${book.image}"
+             alt="${getImageTitle(book.image)}">
+
+        <div class="bottom-book-title">
+          ${getImageTitle(book.image)}
+        </div>
+
+      </div>
+    </div>
+
+    <div class="bottom-thoughts-col">
+
+        <h4>${char.name}'s Thoughts</h4>
+
+        <div class="thought-entry">
+
+          <div class="thought-entry-text">
+            ${book.thoughts[char.id]}
+          </div>
+
+        </div>
+
+    </div>
+
+    
+
+  `;
+
+  flashBox(el);
+}
+
+function flashBox(el) {
+  el.classList.remove('flash'); void el.offsetWidth;
+  el.classList.add('flash');
+  setTimeout(() => el.classList.remove('flash'), 500);
+}
+function openReflectionNotebook(title, text, image) {
+
+  document.getElementById('notebookImage').src = image;
+
+  document.getElementById('notebookCaption').textContent = title;
+
+  document.getElementById('notebookText').textContent = text;
+
+  const overlay = document.getElementById('notebookOverlay');
+
+  overlay.classList.add('active');
+
+  document.body.style.overflow = 'hidden';
+}
+
+function closeReflectionNotebook() {
+
+  document.getElementById('notebookOverlay')
+    .classList.remove('active');
+
+  document.body.style.overflow = '';
+}
+
+document.getElementById('notebookOverlay')
+  .addEventListener('click', (e) => {
+
+    if (e.target.id === 'notebookOverlay') {
+      closeReflectionNotebook();
+    }
+});
+</script>
+
+<!-- ===================== GALLERY SECTION ===================== -->
+<div class="gallery-section">
+  <div class="card">
+    <div class="gallery-header">
+      <h2 class="gallery-title">Photo Gallery</h2>
+      <p class="gallery-sub">photos from the visit — click a photo to zoom, click again to flip for notes</p>
+    </div>
+
+    <div class="open-book-wrapper">
+      <div class="open-book" id="open-book">
+        <div class="book-cover-left"></div>
+        <div class="book-cover-right"></div>
+        <div class="book-spine"></div>
+
+        <div class="book-page-left" id="page-left">
+          <div class="page-photos four-grid" id="photos-left"></div>
+          <span class="page-number" id="pagenum-left"></span>
+        </div>
+
+        <div class="book-page-right" id="page-right">
+          <div class="page-photos four-grid" id="photos-right"></div>
+          <span class="page-number" id="pagenum-right"></span>
+        </div>
+
+        <div id="flip-layer"></div>
+      </div>
+
+      <div class="book-nav">
+        <button class="page-btn" id="btn-prev" onclick="turnPage(-1)">← prev page</button>
+        <span class="page-indicator" id="page-indicator">page 1 of 2</span>
+        <button class="page-btn" id="btn-next" onclick="turnPage(1)">next page →</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- LIGHTBOX -->
+<div class="lb-overlay" id="lb-overlay" onclick="handleOverlayClick(event)">
+  <button class="lb-close" onclick="closeLightbox()" aria-label="Close">&#x2715;</button>
+  <div class="lb-scene">
+    <div class="lb-card" id="lb-card" onclick="flipLbCard()">
+      <div class="lb-face lb-front" id="lb-front"></div>
+      <div class="lb-face lb-back" id="lb-back"></div>
+    </div>
+  </div>
+  <div class="lb-hint" id="lb-hint">click photo to flip → notes</div>
+</div>
+
+<script>
+// ============================================================
+// PHOTO DATA — all blue palette
+// ============================================================
+// If you place actual photo files in a `photos/` folder next to this HTML
+// use the `image` property below (e.g. "photos/p1.jpg"). Otherwise the
+// code will fall back to the SVG art generator to create placeholders.
+const photos = [
+  { id:"p1",  image:"1.png",  caption:"Photo 1",          colors:["#2563eb","#1d4ed8","#93c5fd","#eff6ff"], shapes:"hall",       notes:"Photo note placeholder text here.", author:"Raya" },
+  { id:"p2",  image:"2.png",  caption:"Photo 2",        colors:["#2563eb","#1e40af","#bfdbfe","#dbeafe"], shapes:"manuscript", notes:"Photo note placeholder text here.", author:"Erin" },
+  { id:"p3",  image:"3.png",  caption:"Photo 3",      colors:["#3b82f6","#1d4ed8","#93c5fd","#eff6ff"], shapes:"map",        notes:"Photo note placeholder text here.", author:"Ian"  },
+  { id:"p4",  image:"4.png",  caption:"Photo 4",             colors:["#2563eb","#1e3a8a","#bfdbfe","#eff6ff"], shapes:"scroll",     notes:"Photo note placeholder text here.", author:"Raya" },
+  { id:"p5",  image:"5.png",  caption:"Photo 5",         colors:["#1d4ed8","#1e3a8a","#93c5fd","#dbeafe"], shapes:"book",       notes:"Photo note placeholder text here.", author:"Erin" },
+  { id:"p6",  image:"6.png",  caption:"Photo 6",    colors:["#3b82f6","#2563eb","#bfdbfe","#eff6ff"], shapes:"folio",      notes:"Photo note placeholder text here.", author:"Ian"  },
+  { id:"p7",  image:"7.png",  caption:"Photo 7",    colors:["#2563eb","#1e3a8a","#bfdbfe","#eff6ff"], shapes:"hallway",    notes:"Photo note placeholder text here.", author:"Raya" },
+  { id:"p8",  image:"8.png",  caption:"Photo 8",          colors:["#1d4ed8","#1e40af","#93c5fd","#dbeafe"], shapes:"novel",      notes:"Photo note placeholder text here.", author:"Erin" },
+  { id:"p9",  image:"9.png",  caption:"Photo 9",        colors:["#2563eb","#1e40af","#bfdbfe","#eff6ff"], shapes:"hall",       notes:"Photo note placeholder text here.", author:"Ian"  },
+  { id:"p10", image:"10.png", caption:"Photo 10",      colors:["#3b82f6","#2563eb","#93c5fd","#dbeafe"], shapes:"manuscript", notes:"Photo note placeholder text here.", author:"Raya" },
+  { id:"p11", image:"11.png", caption:"Photo 11",          colors:["#2563eb","#1d4ed8","#bfdbfe","#eff6ff"], shapes:"hallway",    notes:"Photo note placeholder text here.", author:"Erin" },
+  { id:"p12", image:"12.png", caption:"Photo 12",             colors:["#1e40af","#1e3a8a","#93c5fd","#eff6ff"], shapes:"book",       notes:"Photo note placeholder text here.", author:"Ian"  },
+  { id:"p13", image:"13.png", caption:"Photo 13",         colors:["#3b82f6","#2563eb","#bfdbfe","#dbeafe"], shapes:"folio",      notes:"Photo note placeholder text here.", author:"Raya" },
+  { id:"p14", image:"14.png", caption:"Photo 14",        colors:["#2563eb","#1d4ed8","#93c5fd","#eff6ff"], shapes:"hall",       notes:"Photo note placeholder text here.", author:"Erin" },
+  { id:"p15", image:"15.png", caption:"Photo 15",     colors:["#1d4ed8","#1e3a8a","#bfdbfe","#eff6ff"], shapes:"scroll",     notes:"Photo note placeholder text here.", author:"Ian"  },
+{ 
+  id: "p16", 
+  image: "16.png", 
+  caption: "Photo 16", 
+  colors: ["#3b82f6", "#2563eb", "#93c5fd", "#dbeafe"], 
+  shapes: "map", 
+  notes: "Photo note placeholder text here.", 
+  author: "Raya" 
+}
+];
+
+// ============================================================
+// ART GENERATORS — all use passed colors (now all blue palette)
+// ============================================================
+function makeArt(p, w, h) {
+  const c = p.colors;
+  const arts = {
+    hall:`<rect width="${w}" height="${h}" fill="${c[3]}"/>
+      <rect x="${w*.15}" y="${h*.1}" width="${w*.7}" height="${h*.9}" fill="${c[2]}" rx="1"/>
+      <rect x="${w*.28}" y="${h*.25}" width="${w*.44}" height="${h*.75}" fill="${c[0]}" rx="1"/>
+      <rect x="${w*.4}" y="${h*.45}" width="${w*.2}" height="${h*.55}" fill="${c[1]}"/>
+      <line x1="${w*.15}" y1="0" x2="${w*.28}" y2="${h*.25}" stroke="${c[0]}" stroke-width="1" opacity="0.4"/>
+      <line x1="${w*.85}" y1="0" x2="${w*.72}" y2="${h*.25}" stroke="${c[0]}" stroke-width="1" opacity="0.4"/>`,
+    manuscript:`<rect width="${w}" height="${h}" fill="${c[3]}"/>
+      <rect x="10" y="8" width="${w-20}" height="${h-16}" fill="white" rx="1" stroke="${c[2]}" stroke-width="1"/>
+      ${[0,1,2,3,4,5,6].map(i=>`<line x1="18" y1="${18+i*13}" x2="${w-18}" y2="${18+i*13}" stroke="${c[2]}" stroke-width="0.8" opacity="0.6"/>`).join('')}
+      <rect x="18" y="14" width="55" height="3" fill="${c[1]}" rx="1" opacity="0.7"/>
+      ${[0,1,2,3,4].map(i=>`<rect x="18" y="${24+i*13}" width="${30+i*8}" height="2.5" fill="${c[0]}" rx="1" opacity="0.5"/>`).join('')}`,
+    map:`<rect width="${w}" height="${h}" fill="${c[3]}"/>
+      <ellipse cx="${w*.5}" cy="${h*.52}" rx="${w*.32}" ry="${h*.35}" fill="${c[2]}" opacity="0.7"/>
+      <ellipse cx="${w*.38}" cy="${h*.42}" rx="${w*.14}" ry="${h*.18}" fill="${c[0]}" opacity="0.85"/>
+      <ellipse cx="${w*.62}" cy="${h*.58}" rx="${w*.1}" ry="${h*.14}" fill="${c[0]}" opacity="0.85"/>
+      <ellipse cx="${w*.5}" cy="${h*.35}" rx="${w*.08}" ry="${h*.1}" fill="${c[1]}" opacity="0.9"/>
+      <line x1="10" y1="${h*.52}" x2="${w-10}" y2="${h*.52}" stroke="${c[0]}" stroke-width="0.5" opacity="0.3" stroke-dasharray="3,3"/>
+      <line x1="${w*.5}" y1="8" x2="${w*.5}" y2="${h-8}" stroke="${c[0]}" stroke-width="0.5" opacity="0.3" stroke-dasharray="3,3"/>`,
+    scroll:`<rect width="${w}" height="${h}" fill="${c[3]}"/>
+      <rect x="14" y="6" width="${w-28}" height="${h-12}" fill="white" rx="2" stroke="${c[2]}" stroke-width="1"/>
+      <ellipse cx="14" cy="${h/2}" rx="8" ry="${h/2-4}" fill="${c[2]}" stroke="${c[1]}" stroke-width="1"/>
+      <ellipse cx="${w-14}" cy="${h/2}" rx="8" ry="${h/2-4}" fill="${c[2]}" stroke="${c[1]}" stroke-width="1"/>
+      ${[0,1,2,3,4,5].map(i=>`<rect x="26" y="${14+i*11}" width="${35+i*5}" height="2" fill="${c[0]}" rx="1" opacity="0.6"/>`).join('')}`,
+    book:`<rect width="${w}" height="${h}" fill="${c[3]}"/>
+      <rect x="${w*.2}" y="8" width="${w*.6}" height="${h-16}" fill="${c[0]}" rx="2" stroke="${c[1]}" stroke-width="1.5"/>
+      <rect x="${w*.2}" y="8" width="8" height="${h-16}" fill="${c[1]}" rx="1"/>
+      ${[0,1,2,3].map(i=>`<rect x="${w*.32}" y="${22+i*14}" width="${w*.3}" height="2.5" fill="white" rx="1" opacity="0.6"/>`).join('')}
+      <rect x="${w*.32}" y="15" width="${w*.35}" height="4" fill="white" rx="1" opacity="0.8"/>`,
+    folio:`<rect width="${w}" height="${h}" fill="${c[3]}"/>
+      <rect x="8" y="8" width="${w-16}" height="${h-16}" fill="white" rx="1" stroke="${c[2]}" stroke-width="1"/>
+      <rect x="8" y="8" width="${w-16}" height="18" fill="${c[0]}" rx="1"/>
+      ${[0,1,2,3,4,5,6].map(i=>`<line x1="16" y1="${32+i*10}" x2="${w-16}" y2="${32+i*10}" stroke="${c[2]}" stroke-width="0.7" opacity="0.5"/>`).join('')}
+      <rect x="16" y="34" width="70" height="2.5" fill="${c[1]}" rx="1" opacity="0.7"/>
+      <rect x="16" y="44" width="50" height="2" fill="${c[0]}" rx="1" opacity="0.5"/>`,
+    hallway:`<rect width="${w}" height="${h}" fill="${c[3]}"/>
+      <rect x="0" y="0" width="${w}" height="${h}" fill="${c[0]}" opacity="0.1"/>
+      <rect x="${w*.1}" y="0" width="${w*.8}" height="${h}" fill="${c[2]}" opacity="0.25"/>
+      <rect x="${w*.25}" y="0" width="${w*.5}" height="${h}" fill="white" opacity="0.2"/>
+      <line x1="0" y1="0" x2="${w*.25}" y2="${h*.6}" stroke="${c[0]}" stroke-width="1" opacity="0.3"/>
+      <line x1="${w}" y1="0" x2="${w*.75}" y2="${h*.6}" stroke="${c[0]}" stroke-width="1" opacity="0.3"/>
+      <rect x="${w*.25}" y="${h*.6}" width="${w*.5}" height="${h*.4}" fill="${c[1]}" opacity="0.5"/>
+      ${[-1,0,1].map(i=>`<rect x="${w*.12+i*w*.2}" y="10" width="22" height="${h*.4}" fill="${c[0]}" rx="1" opacity="0.35"/>`).join('')}`,
+    novel:`<rect width="${w}" height="${h}" fill="${c[3]}"/>
+      <rect x="${w*.18}" y="6" width="${w*.64}" height="${h-12}" fill="${c[0]}" rx="2"/>
+      <rect x="${w*.18}" y="6" width="10" height="${h-12}" fill="${c[1]}" rx="1"/>
+      <rect x="${w*.22}" y="6" width="4" height="${h-12}" fill="rgba(0,0,0,0.15)"/>
+      <rect x="${w*.32}" y="14" width="${w*.38}" height="5" fill="white" rx="1" opacity="0.85"/>
+      ${[0,1,2].map(i=>`<rect x="${w*.34}" y="${26+i*9}" width="${w*.28}" height="2.5" fill="white" rx="1" opacity="${0.45+i*.1}"/>`).join('')}
+      <ellipse cx="${w*.6}" cy="${h*.7}" rx="${w*.12}" ry="${h*.14}" fill="${c[2]}" opacity="0.5"/>`
+  };
+  return arts[p.shapes] || arts.book;
+}
+
+// ============================================================
+// BOOK PAGINATION
+// ============================================================
+const PHOTOS_PER_SIDE   = 4;
+const PHOTOS_PER_SPREAD = 8;
+
+let currentSpread = 0;
+const totalSpreads = Math.ceil(photos.length / PHOTOS_PER_SPREAD);
+let isFlipping = false;
+
+function getSpreadPhotos(spread) {
+  const start = spread * PHOTOS_PER_SPREAD;
+  return {
+    left:  photos.slice(start, start + PHOTOS_PER_SIDE),
+    right: photos.slice(start + PHOTOS_PER_SIDE, start + PHOTOS_PER_SPREAD)
+  };
+}
+
+function renderSpread(spread) {
+  const { left, right } = getSpreadPhotos(spread);
+  const pageOffset = spread * 2;
+  document.getElementById('photos-left').innerHTML  = left.map(p => makePolaroid(p)).join('');
+  document.getElementById('photos-right').innerHTML = right.map(p => makePolaroid(p)).join('');
+  document.getElementById('pagenum-left').textContent  = `${pageOffset + 1}`;
+  document.getElementById('pagenum-right').textContent = `${pageOffset + 2}`;
+  updateNav();
+}
+
+function makePolaroid(p) {
+  const imgContent = p.image
+    ? `<img src="${p.image}" alt="${p.caption}" style="width:100%;height:100%;object-fit:cover;display:block;"/>`
+    : `<svg viewBox="0 0 110 95" xmlns="http://www.w3.org/2000/svg">${makeArt(p, 110, 95)}</svg>`;
+  return `<div class="polaroid" onclick="openLightbox('${p.id}')">
+    <div class="polaroid-img">${imgContent}</div>
+    <div class="polaroid-caption">${p.caption}</div>
+  </div>`;
+}
+
+function updateNav() {
+  document.getElementById('btn-prev').disabled = currentSpread === 0;
+  document.getElementById('btn-next').disabled = currentSpread >= totalSpreads - 1;
+  document.getElementById('page-indicator').textContent = `page ${currentSpread + 1} of ${totalSpreads}`;
+}
+
+// ============================================================
+// PAGE FLIP ANIMATION — smoother easing
+// ============================================================
+function turnPage(dir) {
+  if (isFlipping) return;
+  const next = currentSpread + dir;
+  if (next < 0 || next >= totalSpreads) return;
+
+  isFlipping = true;
+  const flipLayer = document.getElementById('flip-layer');
+  const goingForward = dir === 1;
+
+  const { left: curLeft, right: curRight } = getSpreadPhotos(currentSpread);
+
+  const flipEl = document.createElement('div');
+  flipEl.style.cssText = `
+    position: absolute;
+    top: 12px;
+    width: calc(50% - 18px);
+    height: calc(100% - 24px);
+    background: linear-gradient(${goingForward ? 'to left' : 'to right'}, #e8f0fe, #faf7f2);
+    backface-visibility: hidden;
+    border-radius: ${goingForward ? '0 4px 4px 0' : '4px 0 0 4px'};
+    box-shadow: ${goingForward ? '6px 0 20px rgba(37,99,235,0.18)' : '-6px 0 20px rgba(37,99,235,0.18)'};
+    transform-style: preserve-3d;
+    transition: transform 0.75s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.75s ease;
+    z-index: 15;
+    overflow: hidden;
+    will-change: transform;
+  `;
+
+  if (goingForward) {
+    flipEl.style.right = '12px';
+    flipEl.style.transformOrigin = 'left center';
+    flipEl.style.transform = 'rotateY(0deg)';
+  } else {
+    flipEl.style.left = '12px';
+    flipEl.style.transformOrigin = 'right center';
+    flipEl.style.transform = 'rotateY(0deg)';
+  }
+
+  flipEl.innerHTML = `
+    <div style="position:absolute;inset:0;background:repeating-linear-gradient(0deg,transparent,transparent 27px,rgba(37,99,235,0.06) 28px);"></div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;padding:18px 16px 32px;height:100%;opacity:0.3;pointer-events:none;">
+      ${(goingForward ? curRight : curLeft).map(p => makePolaroid(p)).join('')}
+    </div>
+    <div style="position:absolute;top:0;${goingForward?'right':'left'}:0;width:30px;height:100%;background:linear-gradient(to ${goingForward?'left':'right'},rgba(37,99,235,0.1),transparent);pointer-events:none;"></div>
+  `;
+
+  flipLayer.appendChild(flipEl);
+
+  // Trigger flip — slight delay for browser paint
+  requestAnimationFrame(() => {
+    requestAnimationFrame(() => {
+      flipEl.style.transform = goingForward ? 'rotateY(-180deg)' : 'rotateY(180deg)';
+      flipEl.style.boxShadow = 'none';
+    });
+  });
+
+  // Update content at halfway point
+  setTimeout(() => {
+    currentSpread = next;
+    renderSpread(currentSpread);
+  }, 375);
+
+  // Clean up after animation
+  setTimeout(() => {
+    if (flipEl.parentNode) flipLayer.removeChild(flipEl);
+    isFlipping = false;
+  }, 800);
+}
+
+// ============================================================
+// LIGHTBOX
+// ============================================================
+let lbFlipped = false;
+
+function openLightbox(id) {
+  const p = photos.find(x => x.id === id);
+  if (!p) return;
+  lbFlipped = false;
+
+  const card    = document.getElementById('lb-card');
+  const front   = document.getElementById('lb-front');
+  const back    = document.getElementById('lb-back');
+  const hint    = document.getElementById('lb-hint');
+  const overlay = document.getElementById('lb-overlay');
+
+  card.classList.remove('entering', 'flipped');
+  hint.classList.remove('hidden');
+  hint.textContent = 'click photo to flip → notes';
+
+  front.innerHTML = `
+    <div class="lb-front-img">
+      ${p.image ? `<img src="${p.image}" alt="${p.caption}" style="width:100%;height:100%;object-fit:cover;display:block;"/>` : `<svg viewBox="0 0 332 244" xmlns="http://www.w3.org/2000/svg">${makeArt(p, 332, 244)}</svg>`}
+    </div>
+    <div class="lb-front-caption">${p.caption}</div>
+  `;
+
+  back.innerHTML = `
+    <div class="lb-back-tag">field note &mdash; ${p.author}</div>
+    <div class="lb-back-note">${p.notes}</div>
+    <div class="lb-back-sig">&mdash; ${p.author}</div>
+    <div class="lb-back-stamp"><span>NLP\nGallery\n2024</span></div>
+  `;
+
+  overlay.classList.add('open');
+  document.body.style.overflow = 'hidden';
+
+  requestAnimationFrame(() => {
+    requestAnimationFrame(() => {
+      overlay.style.background = 'rgba(10,10,25,0.8)';
+      card.classList.add('entering');
+    });
+  });
+}
+
+function flipLbCard() {
+  const card = document.getElementById('lb-card');
+  const hint = document.getElementById('lb-hint');
+  lbFlipped = !lbFlipped;
+  card.classList.toggle('flipped', lbFlipped);
+  hint.textContent = lbFlipped ? 'click to flip back' : 'click photo to flip → notes';
+}
+
+function closeLightbox() {
+  const overlay = document.getElementById('lb-overlay');
+  const card    = document.getElementById('lb-card');
+  overlay.style.background = 'rgba(10,10,25,0)';
+  card.classList.remove('entering');
+  lbFlipped = false;
+  setTimeout(() => {
+    overlay.classList.remove('open');
+    card.classList.remove('flipped');
+    document.body.style.overflow = '';
+  }, 350);
+}
+
+function handleOverlayClick(e) {
+  if (e.target === document.getElementById('lb-overlay')) closeLightbox();
+}
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') closeLightbox();
+});
+
+// ============================================================
+// INIT
+// ============================================================
+renderSpread(0);
+renderSlide();
+renderBooks();
+renderCharacters();
+
+// Image Zoom Functions
+function showImageZoom(imagePath) {
+  const overlay = document.getElementById('imageZoomOverlay');
+  const img = document.getElementById('zoomImage');
+  img.src = imagePath;
+  overlay.classList.add('active');
+}
+
+function closeImageZoom() {
+  document.getElementById('imageZoomOverlay').classList.remove('active');
+}
+
+function setupImageHoverZoom() {
+  document.querySelectorAll('.book-item').forEach(item => {
+    const img = item.querySelector('.book-image');
+    if (img) {
+      const imagePath = img.style.backgroundImage.match(/url\('(.+?)'\)/)?.[1];
+      if (imagePath) {
+        img.style.cursor = 'pointer';
+        item.addEventListener('mouseenter', () => showImageZoom(imagePath));
+        item.addEventListener('mouseleave', closeImageZoom);
+        item.addEventListener('click', (e) => {
+          e.stopPropagation();
+          closeImageZoom();
+        });
+      }
+    }
+  });
+}
+
+function setupContentImageZoom() {
+  const observer = new MutationObserver(() => {
+    const contentImg = document.querySelector('.bottom-book-cover img');
+    if (contentImg && !contentImg.dataset.zoomSetup) {
+      contentImg.style.cursor = 'pointer';
+      contentImg.addEventListener('click', () => showImageZoom(contentImg.src));
+      contentImg.dataset.zoomSetup = 'true';
+    }
+  });
+  observer.observe(document.getElementById('box-content'), { childList: true, subtree: true });
+}
+
+document.getElementById('imageZoomOverlay').addEventListener('click', (e) => {
+  if (e.target.id === 'imageZoomOverlay') closeImageZoom();
+});
+
+setupContentImageZoom();
+</script>
+
+<!-- NOTEBOOK MODAL -->
+<div class="notebook-overlay" id="notebookOverlay">
+
+  <div class="notebook-page">
+
+    <div class="notebook-tape"></div>
+
+    <button class="notebook-close"
+            onclick="closeReflectionNotebook()">
+
+      ✕
+
+    </button>
+
+    <div class="notebook-content-layout">
+
+      <div class="notebook-polaroid">
+
+        <img id="notebookImage" src="" alt="">
+
+        <div class="notebook-polaroid-caption"
+            id="notebookCaption"></div>
+
+      </div>
+
+      <div class="notebook-text-area">
+
+        <div class="notebook-title">
+          Full Reflection
+        </div>
+
+        <div class="notebook-text"
+            id="notebookText"></div>
+
+      </div>
+
+    </div>
+  </div>
+
+</div>
+</body>
+</html>
