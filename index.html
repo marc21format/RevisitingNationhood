@@ -39,8 +39,37 @@
   }
   .header::before {
     content: '';
-    position: absolute; inset: 0;
-    background: repeating-linear-gradient(-45deg, transparent, transparent 10px, rgba(255,255,255,0.04) 10px, rgba(255,255,255,0.04) 20px);
+    position: absolute;
+    inset: 0;
+    background: repeating-linear-gradient(
+      -45deg,
+      transparent,
+      transparent 10px,
+      rgba(255,255,255,0.04) 10px,
+      rgba(255,255,255,0.04) 20px
+    );
+  }
+  .header::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+
+    background: url("header.png") center/cover no-repeat;
+
+    opacity: 1;
+    pointer-events: none;
+
+    -webkit-mask-image: linear-gradient(
+      to left,
+      rgba(0,0,0,1) 20%,
+      rgba(0,0,0,0) 50%
+    );
+
+    mask-image: linear-gradient(
+      to left,
+      rgba(0,0,0,1) 20%,
+      rgba(0,0,0,0) 50%
+    );
   }
   .header h1 {
     font-family: 'Reenie Beanie', cursive;
@@ -57,7 +86,11 @@
     margin-top: 0.2rem;
     position: relative;
   }
-
+  .header h1,
+  .header-sub {
+  position: relative;
+  z-index: 2;
+  }
   .page-body {
     display: grid;
     grid-template-columns: 210px 1fr 210px;
@@ -307,129 +340,119 @@
 
 .notebook-content-layout {
   display: grid;
-
   grid-template-columns: 210px 1fr;
-
   gap: 2.5rem;
-
   align-items: start;
+  flex: 1;
+  min-height: 0;
+}
 
-  min-height: 100%;
+.notebook-polaroid {
+  width: 180px;
+  background: white;
+  padding: 8px 8px 22px;
+  border: 1px solid #ddd;
+  transform: rotate(-3deg);
+  box-shadow: 4px 6px 16px rgba(0,0,0,0.12);
+  flex-shrink: 0;
+}
+
+.notebook-polaroid:nth-child(2) {
+  transform: rotate(4deg);  /* OPPOSITE ANGLE */
 }
 
 .notebook-text-area {
   display: flex;
-
   flex-direction: column;
-
-  min-width: 0;
+  flex: 1;
+  min-height: 0;
+  max-height: 100%;        /* ← RESPONSIVE TO ZOOM (% of notebook-page) */
+  grid-column: 2;
+  grid-row: 1 / 3;
+  margin-bottom: 100px;
 }
+
+/* ===================== TITLE ===================== */
 
 .notebook-title {
   font-family: 'Caveat', cursive;
-
   font-size: 3rem;
-
   color: var(--blue);
-
   line-height: 1;
-
   margin-bottom: 1.2rem;
+}
+
+/* ===================== TEXT CONTENT ===================== */
+
+.notebook-text-wrapper {
+  flex: 1;
+  min-height: 0;
+
+  overflow-y: auto;   /* 🔥 SCROLL ONLY WHEN NEEDED */
+  padding-right: 0.5rem;
 }
 
 .notebook-text {
   font-family: 'Kalam', cursive;
-
   font-size: 1.05rem;
-
   line-height: 2.15;
-
   color: #2f2f2f;
+  padding-right: 1rem;
 
   white-space: pre-wrap;
-
   word-break: break-word;
 }
+
+/* ===================== PAGE OVERLAY ===================== */
 
 .notebook-overlay {
   position: fixed;
   inset: 0;
 
-  background: rgba(0,0,0,0);
-
-  backdrop-filter: blur(0px);
-
   display: flex;
   align-items: center;
   justify-content: center;
+
+  background: rgba(0,0,0,0);
 
   z-index: 5000;
 
   opacity: 0;
   pointer-events: none;
 
-  transition:
-    opacity 0.35s ease,
-    background 0.35s ease,
-    backdrop-filter 0.35s ease;
+  transition: 0.35s ease;
 }
 
 .notebook-overlay.active {
   opacity: 1;
   pointer-events: auto;
-
   background: rgba(10,10,25,0.38);
-
   backdrop-filter: blur(6px);
 }
 
+/* ===================== NOTEBOOK PAGE ===================== */
 .notebook-page {
-  width: min(95vw, 1200px);
-
-  height: min(88vh, 760px);
-
-  overflow-y: auto;
-
-  background:
-    repeating-linear-gradient(
-      0deg,
-      transparent,
-      transparent 35px,
-      rgba(37,99,235,0.045) 36px
-    ),
-    #fffefc;
-
+  width: 1200px !important;
+  height: 600px !important;
+  overflow: hidden;
+  background: repeating-linear-gradient(0deg, transparent, transparent 35px, rgba(37,99,235,0.045) 36px), #fffefc;
   border: 2px solid var(--ink);
-
-  padding: 2.5rem 3rem 3rem;
-
+  padding: 2rem 5rem 10rem;
   position: relative;
-
-  transform:
-    scale(0.72)
-    rotate(-1deg);
-
-  opacity: 0;
-
-  transition:
-    transform 0.5s cubic-bezier(.34,1.56,.64,1),
-    opacity 0.35s ease;
-
-  box-shadow:
-    0 24px 60px rgba(0,0,0,0.22),
-    8px 8px 0 rgba(26,26,46,0.18);
-
   display: flex;
   flex-direction: column;
+  transform: rotate(-1deg);
+  opacity: 0;
+  transition: transform 0.5s cubic-bezier(.34,1.56,.64,1), opacity 0.35s ease;
+  box-shadow: 0 24px 60px rgba(0,0,0,0.22), 8px 8px 0 rgba(26,26,46,0.18);
 }
 
 .notebook-overlay.active .notebook-page {
-  transform:
-    scale(1)
-    rotate(0deg);
-
+  transform: rotate(0deg);
   opacity: 1;
 }
+
+/* ===================== DECOR ===================== */
 
 .notebook-page::before {
   content: '';
@@ -459,21 +482,7 @@
   background: rgba(147,197,253,0.5);
 }
 
-.notebook-polaroid {
-  width: 180px;
-
-  background: white;
-
-  padding: 8px 8px 22px;
-
-  border: 1px solid #ddd;
-
-  transform: rotate(-3deg);
-
-  box-shadow: 4px 6px 16px rgba(0,0,0,0.12);
-
-  flex-shrink: 0;
-}
+/* ===================== POLAROID ===================== */
 
 .notebook-polaroid img {
   width: 100%;
@@ -486,23 +495,12 @@
 
 .notebook-polaroid-caption {
   font-family: 'Caveat', cursive;
-
   text-align: center;
-
   margin-top: 4px;
-
   color: #666;
 }
 
-.notebook-title {
-  font-family: 'Caveat', cursive;
-
-  font-size: 3rem;
-
-  color: var(--blue);
-
-  line-height: 1;
-}
+/* ===================== CLOSE BUTTON ===================== */
 
 .notebook-close {
   position: absolute;
@@ -514,7 +512,6 @@
   height: 36px;
 
   border: 2px solid var(--ink);
-
   background: white;
 
   cursor: pointer;
@@ -1237,6 +1234,33 @@
     to   { transform: scale(1); opacity: 1; }
   }
   .image-zoom-container img { max-width: 100%; max-height: 85vh; object-fit: contain; }
+
+#notebookText {
+  transition: opacity 0.2s ease;
+}
+
+.notebook-text-wrapper {
+  max-height: calc(100vh - 200px); /* adjust based on header */
+  overflow: auto;                  /* only scroll when needed */
+}
+
+.notebook-next-btn {
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
+
+  background: #2563eb;
+  color: white;
+  border: none;
+  padding: 6px 10px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 12px;
+}
+
+.notebook-next-btn:hover {
+  background: #1d4ed8;
+}
 </style>
 </head>
 <body>
@@ -1252,7 +1276,7 @@
   <div class="center-col">
     <!-- SLIDES -->
     <div class="card">
-      <div class="section-tag">Archive Overview</div>
+      <div class="section-tag">Project Overview!</div>
       <div class="slide-content">
         <div class="slide-text" id="slide-text"></div>
       </div>
@@ -1313,17 +1337,17 @@ const slides = [
   {
     title: "Welcome",
     body: "Here's our project! Explore the National Library's permanent collection through the perspectives of three students.",
-    photos: ["hall","book","map"]
+    photos: ["3.png", "5.png", "7.png"]
   },
   {
     title: "About the Gallery and Collection",
     body: "This is the NLP's 'At sa salita, naging bansa' permanent gallery, featuring important Philippine historical documents and texts that shaped our nation.",
-    photos: ["manuscript","scroll","folio"]
+    photos: ["9.png", "11.png", "13.png"]
   },
   {
     title: "How to Get Here & Layouts",
     body: "Select a student perspective below, then click any material to see their thoughts and reflections on these important documents.",
-    photos: ["hallway","novel","book"]
+    photos: ["1.png", "2.png", "4.png"]
   }
 ];
 
@@ -1341,25 +1365,28 @@ const characters = [
       {
         title: "Thought 1",
         text: "Placeholder thought content here.",
-        image: "1.png"
+        image: "1.png",
       },
 
       {
         title: "Thought 2",
         text: "Placeholder thought content here.",
-        image: "2.png"
+        image: "2.png",
       },
 
       {
         title: "Thought 3",
         text: "Placeholder thought content here.",
-        image: "3.png"
+        image: "3.png",
       }
     ],
 
     reflection: {
-      text: "Placeholder reflection content here.",
-      image: "4.png"
+      text: `Placeholder reflection content here, test if gumagana pag shorten Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium.Totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit.Sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit.Ut enim ad minima veniam, quis nostrum exercitationem ullam corporis suscipit laboriosam, nisi ut aliquid ex ea commodi consequatur.Quis autem vel eum iure reprehenderit qui in ea voluptate velit esse quam nihil molestiae consequatur. At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti quos dolores.
+Et harum quidem rerum facilis est et expedita distinctio. Nam libero tempore, cum soluta nobis est eligendi optio cumque nihil impedit quo minus id quod maxime placeat facere possimus, omnis voluptas assumenda est, omnis dolor repellendus. Temporibus autem quibusdam et aut officiis debitis.
+Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit, sed quia non numquam eius modi tempora incidunt ut labore et dolore magnam aliquam quaerat voluptatem. Ut enim ad minima veniam, quis nostrum exercitationem ullam corporis suscipit laboriosam, nisi ut aliquid ex ea commodi consequatur. Quis autem vel eum iure reprehenderit qui in ea voluptate velit esse quam nihil molestiae consequatur.`,
+      image: "4.png",
+      image2: "6.png"
     }
   },
 
@@ -1394,7 +1421,8 @@ const characters = [
 
     reflection: {
       text: "Placeholder reflection content here.",
-      image: "8.png"
+      image: "8.png",      
+      image2: "12.png"
     }
   },
 
@@ -1429,7 +1457,8 @@ const characters = [
 
     reflection: {
       text: "Placeholder reflection content here.",
-      image: "12.png"
+      image: "12.png",      
+      image2: "3.png"
     }
   }
 ];
@@ -1448,6 +1477,8 @@ const books = [
 let currentSlide = 0;
 let currentChar  = 0;
 let activeBook   = null;
+let notebookPages = [];
+let notebookPageIndex = 0;
 
 function renderSlide() {
   const s = slides[currentSlide];
@@ -1461,10 +1492,17 @@ function renderSlide() {
     <div class="scrapbook-photos">
       ${s.photos.map((shape, i) => `
         <div class="slide-polaroid">
-          <svg viewBox="0 0 110 95" xmlns="http://www.w3.org/2000/svg">
-            ${makeArt({ shapes: shape, colors:["#2563eb","#1d4ed8","#93c5fd","#eff6ff"] }, 110, 95)}
-          </svg>
-          <div class="slide-polaroid-caption">gallery note</div>
+          <img
+            src="${shape}"
+            alt="slide image"
+            style="
+              width:100%;
+              height:100%;
+              object-fit:cover;
+              border-radius:1px;
+            "
+          />
+          <div class="slide-polaroid-caption">${shape}</div>
         </div>
       `).join('')}
     </div>
@@ -1576,7 +1614,7 @@ function renderCharacters() {
 
     <div class="profile-box">
 
-      <h3>Thoughts</h3>
+      <h3>Reflections & Overall Thoughts...</h3>
 
       ${c.thoughts.map((t, i) => `
         <button class="thought-btn"
@@ -1601,11 +1639,16 @@ function renderCharacters() {
 
 function selectChar(i) {
   currentChar = i;
+
   renderCharacters();
+  updateNotebookTitle(); // 🔥 REQUIRED
+
   if (activeBook) {
     const book = books.find(b => b.id === activeBook);
     if (book) setBoxBook(book);
-  } else { setBoxClear(); }
+  } else {
+    setBoxClear();
+  }
 }
 
 function selectThought(charIdx, thoughtIdx) {
@@ -1671,7 +1714,7 @@ function setBoxThought(label, thought, isReflection = false) {
              alt="${thought.title}">
 
         <div class="content-polaroid-caption">
-          ${thought.title}
+          ${thought.image.replace(/\.png$/i, '')}  <!-- ← SHOW FILENAME INSTEAD -->
         </div>
 
       </div>
@@ -1683,7 +1726,7 @@ function setBoxThought(label, thought, isReflection = false) {
         </div>
 
         <div class="handwritten-text preview-text">
-          ${thought.text}
+          ${firstFiveWords(thought.text)}
         </div>
 
         ${isReflection ? `
@@ -1695,7 +1738,7 @@ function setBoxThought(label, thought, isReflection = false) {
                     ${JSON.stringify(thought.image)}
                   )'>
 
-            expand to see full ↗
+            Expand!
 
           </button>
 
@@ -1708,6 +1751,33 @@ function setBoxThought(label, thought, isReflection = false) {
   `;
 
   flashBox(el);
+}
+
+function splitIntoPages(text, wordsPerPage = 20) {
+  const words = text.split(' ');
+  const pages = [];
+
+  for (let i = 0; i < words.length; i += wordsPerPage) {
+    pages.push(words.slice(i, i + wordsPerPage).join(' '));
+  }
+
+  return pages;
+}
+
+function firstFiveWords(text) {
+  const words = text.split(' ');
+  return words.length > 5
+    ? words.slice(0, 5).join(' ') + '...'
+    : text;
+}
+
+function updateNotebookTitle() {
+  const char = characters[currentChar];
+  const el = document.getElementById("notebookTitle");
+
+  if (!el || !char) return;
+
+  el.textContent = `${char.name}'s Reflection`;
 }
 
 function setBoxBook(book) {
@@ -1727,6 +1797,7 @@ function setBoxBook(book) {
 
         <img src="${book.image}"
              alt="${getImageTitle(book.image)}">
+             <h6 style="color: gray;">Click me to enlarge!</h6>
 
         <div class="bottom-book-title">
           ${getImageTitle(book.image)}
@@ -1762,18 +1833,56 @@ function flashBox(el) {
   setTimeout(() => el.classList.remove('flash'), 500);
 }
 function openReflectionNotebook(title, text, image) {
+  const char = characters[currentChar];
 
+  document.getElementById('notebookTitle').textContent = `${char.name}'s Reflection`;
   document.getElementById('notebookImage').src = image;
+  document.getElementById('notebookCaption').textContent = image.replace(/\.png$/i, '');  // ← EXTRACT FILENAME
+  
+  // Set second image
+  if (char.reflection.image2) {
+    document.getElementById('notebookImage2').src = char.reflection.image2;
+    document.getElementById('notebookCaption2').textContent = char.reflection.image2.replace(/\.png$/i, '');  // ← EXTRACT FILENAME
+  }
 
-  document.getElementById('notebookCaption').textContent = title;
+  notebookPages = splitIntoPages(text, 1000);
+  notebookPageIndex = 0;
 
-  document.getElementById('notebookText').textContent = text;
+  renderNotebookPage();
 
   const overlay = document.getElementById('notebookOverlay');
-
   overlay.classList.add('active');
-
   document.body.style.overflow = 'hidden';
+}
+
+function renderNotebookPage() {
+  const el = document.getElementById('notebookText');
+  const btn = document.querySelector('.notebook-next-btn');
+
+  if (!el) return;
+
+  el.style.opacity = 0;
+
+  setTimeout(() => {
+    el.textContent = notebookPages[notebookPageIndex] || "";
+    el.style.opacity = 1;
+
+    // hide button on last page
+    if (btn) {
+      btn.style.display =
+        notebookPageIndex >= notebookPages.length - 1
+          ? 'none'
+          : 'block';
+    }
+
+  }, 200);
+}
+
+function nextNotebookPage() {
+  if (notebookPageIndex < notebookPages.length - 1) {
+    notebookPageIndex++;
+    renderNotebookPage();
+  }
 }
 
 function closeReflectionNotebook() {
@@ -1791,6 +1900,11 @@ document.getElementById('notebookOverlay')
       closeReflectionNotebook();
     }
 });
+
+window.addEventListener("DOMContentLoaded", () => {
+  updateNotebookTitle();
+});
+
 </script>
 
 <!-- ===================== GALLERY SECTION ===================== -->
@@ -2180,7 +2294,6 @@ document.getElementById('imageZoomOverlay').addEventListener('click', (e) => {
 
 setupContentImageZoom();
 </script>
-
 <!-- NOTEBOOK MODAL -->
 <div class="notebook-overlay" id="notebookOverlay">
 
@@ -2188,36 +2301,40 @@ setupContentImageZoom();
 
     <div class="notebook-tape"></div>
 
-    <button class="notebook-close"
-            onclick="closeReflectionNotebook()">
-
+    <button class="notebook-close" onclick="closeReflectionNotebook()">
       ✕
-
     </button>
 
     <div class="notebook-content-layout">
 
-      <div class="notebook-polaroid">
+      <!-- POLAROIDS COLUMN -->
+      <div class="notebook-polaroids-column">
+        
+        <!-- FIRST POLAROID -->
+        <div class="notebook-polaroid">
+          <img id="notebookImage" src="" alt="">
+          <div class="notebook-polaroid-caption" id="notebookCaption"></div>
+        </div>
 
-        <img id="notebookImage" src="" alt="">
-
-        <div class="notebook-polaroid-caption"
-            id="notebookCaption"></div>
+        <!-- SECOND POLAROID -->
+        <div class="notebook-polaroid">
+          <img id="notebookImage2" src="" alt="">
+          <div class="notebook-polaroid-caption" id="notebookCaption2"></div>
+        </div>
 
       </div>
 
+      <!-- TEXT AREA -->
       <div class="notebook-text-area">
+        <div class="notebook-title" id="notebookTitle"></div>
 
-        <div class="notebook-title">
-          Full Reflection
+        <div class="notebook-text-wrapper">
+          <div class="notebook-text" id="notebookText"></div>
         </div>
-
-        <div class="notebook-text"
-            id="notebookText"></div>
-
       </div>
 
     </div>
+
   </div>
 
 </div>
