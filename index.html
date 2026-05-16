@@ -32,10 +32,13 @@
 
   .header {
     background: var(--blue);
-    padding: 2.2rem 3rem 1.8rem;
+    padding: 1rem 3rem 1.8rem;
     position: relative;
-    overflow: hidden;
+    overflow: visible;
     box-shadow: 0 4px 18px var(--shadow);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
   }
   .header::before {
     content: '';
@@ -851,7 +854,7 @@
 
   /* ===================== GALLERY SECTION ===================== */
   .gallery-section {
-    max-width: 1040px;
+    width: 1040px;
     margin: 1rem auto 4rem;
     padding: 0 2rem;
   }
@@ -1556,7 +1559,7 @@ function selectBook(id) {
     const contentArea = document.getElementById('box-label');
     if (!contentArea) return;
 
-    const offset = 90;
+    const offset = 250;
     const top = contentArea.getBoundingClientRect().top + window.pageYOffset - offset;
 
     window.scrollTo({
@@ -1564,7 +1567,7 @@ function selectBook(id) {
       behavior: 'smooth'
     });
 
-  }, 150);
+  }, 200);
 }
 
 function personSVG(color='#2563eb') {
@@ -1614,7 +1617,7 @@ function renderCharacters() {
 
     <div class="profile-box">
 
-      <h3>Reflections & Overall Thoughts...</h3>
+      <h3>What's on ${c.name}'s Mind???</h3>
 
       ${c.thoughts.map((t, i) => `
         <button class="thought-btn"
@@ -1699,8 +1702,9 @@ function setBoxText(label, text) {
 }
 
 function setBoxThought(label, thought, isReflection = false) {
-
-  document.getElementById('box-label').textContent = label;
+  const char = characters[currentChar];
+  const displayLabel = isReflection ? `What's on ${char.name}'s mind???` : (label || `${char.name}'s Thought`);
+  document.getElementById('box-label').textContent = displayLabel;
 
   const el = document.getElementById('box-content');
 
@@ -1797,7 +1801,7 @@ function setBoxBook(book) {
 
         <img src="${book.image}"
              alt="${getImageTitle(book.image)}">
-             <h6 style="color: gray;">Click me to enlarge!</h6>
+             <h6 style="color: gray;">(Click me to enlarge!)</h6>
 
         <div class="bottom-book-title">
           ${getImageTitle(book.image)}
@@ -1911,7 +1915,7 @@ window.addEventListener("DOMContentLoaded", () => {
 <div class="gallery-section">
   <div class="card">
     <div class="gallery-header">
-      <h2 class="gallery-title">Photo Gallery</h2>
+      <h2 class="gallery-title">Photo (Dump) Gallery</h2>
       <p class="gallery-sub">photos from the visit — click a photo to zoom, click again to flip for notes</p>
     </div>
 
