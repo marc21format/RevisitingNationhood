@@ -112,7 +112,7 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    gap: 3rem;
+    gap: 2rem;
     padding: 2rem 0.5rem;
     align-self: start;
   }
@@ -538,6 +538,14 @@
   gap: 1.4rem;
 }
 
+  /* simple open/close animation for book material in content area */
+  .content-polaroid-wrapper {
+    transform-origin: top center;
+    transition: transform 300ms cubic-bezier(.2,.9,.2,1), opacity 220ms ease;
+  }
+  .content-polaroid-wrapper.anim-open { transform: scale(1); opacity: 1; }
+  .content-polaroid-wrapper.anim-close { transform: scale(0.92); opacity: 0; }
+
 .content-polaroid {
   width: 100%;
   max-width: 280px;
@@ -797,7 +805,14 @@
     flex-direction: column;
     gap: 1rem;
     align-items: center;
+    transform-origin: top center;
+    transform: scale(0.92);
+    opacity: 0;
+    transition: transform 300ms cubic-bezier(.2,.9,.2,1), opacity 220ms ease;
+    will-change: transform, opacity;
   }
+  .bottom-book-layout.anim-open { transform: scale(1); opacity: 1; }
+  .bottom-book-layout.anim-close { transform: scale(0.92); opacity: 0; }
   .bottom-book-cover {
     display: flex;
     flex-direction: column;
@@ -1223,6 +1238,28 @@
     animation: fadeInOverlay 0.3s ease;
   }
   .image-zoom-overlay.active { display: flex; }
+  .image-zoom-overlay.closing { display: flex; }
+  .image-zoom-close {
+    position: fixed;
+    top: 1.5rem;
+    right: 1.5rem;
+    width: 38px;
+    height: 38px;
+    border: 2px solid var(--ink);
+    background: white;
+    border-radius: 2px;
+    cursor: pointer;
+    font-size: 1.2rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 3px 3px 0 var(--ink);
+    z-index: 3010;
+    color: var(--ink);
+    font-family: sans-serif;
+    transition: background 0.15s;
+  }
+  .image-zoom-close:hover { background: var(--blue-pale); }
   @keyframes fadeInOverlay {
     from { background: rgba(0,0,0,0); backdrop-filter: blur(0px); }
     to   { background: rgba(0,0,0,0.5); backdrop-filter: blur(4px); }
@@ -1231,6 +1268,11 @@
     max-width: 90%; max-height: 90vh;
     display: flex; align-items: center; justify-content: center;
     animation: zoomIn 0.4s cubic-bezier(0.34,1.56,0.64,1);
+    transition: transform 0.28s cubic-bezier(0.2,0.9,0.2,1), opacity 0.22s ease;
+  }
+  .image-zoom-overlay.closing .image-zoom-container {
+    transform: scale(0.92);
+    opacity: 0;
   }
   @keyframes zoomIn {
     from { transform: scale(0.5); opacity: 0; }
@@ -1316,6 +1358,7 @@
 
 <!-- Image Zoom Overlay -->
 <div class="image-zoom-overlay" id="imageZoomOverlay">
+  <button class="image-zoom-close" onclick="closeImageZoom()" aria-label="Close">&#x2715;</button>
   <div class="image-zoom-container" id="imageZoomContainer">
     <img id="zoomImage" src="" alt="Zoomed image" />
   </div>
@@ -1559,7 +1602,7 @@ function selectBook(id) {
     const contentArea = document.getElementById('box-label');
     if (!contentArea) return;
 
-    const offset = 250;
+    const offset = 160;
     const top = contentArea.getBoundingClientRect().top + window.pageYOffset - offset;
 
     window.scrollTo({
@@ -1567,7 +1610,7 @@ function selectBook(id) {
       behavior: 'smooth'
     });
 
-  }, 200);
+  }, 160);
 }
 
 function personSVG(color='#2563eb') {
@@ -1793,9 +1836,10 @@ function setBoxBook(book) {
 
   const el = document.getElementById('box-content');
 
-  el.innerHTML = `
+  const replaceContent = () => {
+    el.innerHTML = `
 
-    <div class="bottom-book-layout fade-in">
+    <div class="bottom-book-layout">
 
       <div class="bottom-book-cover">
 
@@ -1824,11 +1868,36 @@ function setBoxBook(book) {
 
     </div>
 
-    
+    `;
 
-  `;
+    // animate open for the newly inserted book wrapper
+    const newWrapper = el.querySelector('.bottom-book-layout');
+    if (newWrapper) {
+      newWrapper.style.transformOrigin = 'top center';
+      newWrapper.style.transition = 'transform 300ms cubic-bezier(.2,.9,.2,1), opacity 220ms ease';
+      newWrapper.style.transform = 'scale(0.92)';
+      newWrapper.style.opacity = '0';
+      void newWrapper.offsetWidth;
+      setTimeout(() => {
+        newWrapper.style.transform = 'scale(1)';
+        newWrapper.style.opacity = '1';
+      }, 20);
+    }
 
-  flashBox(el);
+    flashBox(el);
+  };
+
+  const oldWrapper = el.querySelector('.bottom-book-layout');
+  if (oldWrapper) {
+    // animate close, then replace
+    oldWrapper.style.transformOrigin = 'top center';
+    oldWrapper.style.transition = 'transform 300ms cubic-bezier(.2,.9,.2,1), opacity 220ms ease';
+    oldWrapper.style.transform = 'scale(0.92)';
+    oldWrapper.style.opacity = '0';
+    setTimeout(replaceContent, 260);
+  } else {
+    replaceContent();
+  }
 }
 
 function flashBox(el) {
@@ -1897,13 +1966,15 @@ function closeReflectionNotebook() {
   document.body.style.overflow = '';
 }
 
-document.getElementById('notebookOverlay')
-  .addEventListener('click', (e) => {
+const notebookOverlayEl = document.getElementById('notebookOverlay');
+if (notebookOverlayEl) {
+  notebookOverlayEl.addEventListener('click', (e) => {
 
     if (e.target.id === 'notebookOverlay') {
       closeReflectionNotebook();
     }
-});
+  });
+}
 
 window.addEventListener("DOMContentLoaded", () => {
   updateNotebookTitle();
@@ -2255,11 +2326,18 @@ function showImageZoom(imagePath) {
   const overlay = document.getElementById('imageZoomOverlay');
   const img = document.getElementById('zoomImage');
   img.src = imagePath;
+  overlay.classList.remove('closing');
   overlay.classList.add('active');
 }
 
 function closeImageZoom() {
-  document.getElementById('imageZoomOverlay').classList.remove('active');
+  const overlay = document.getElementById('imageZoomOverlay');
+  if (!overlay || !overlay.classList.contains('active')) return;
+
+  overlay.classList.add('closing');
+  setTimeout(() => {
+    overlay.classList.remove('active', 'closing');
+  }, 260);
 }
 
 function setupImageHoverZoom() {
