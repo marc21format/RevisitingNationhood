@@ -32,7 +32,7 @@
 
   .header {
     background: var(--blue);
-    padding: 1rem 3rem 1.8rem;
+    padding: .8rem 3rem .8rem;
     position: relative;
     overflow: visible;
     box-shadow: 0 4px 18px var(--shadow);
@@ -56,27 +56,15 @@
     content: "";
     position: absolute;
     inset: 0;
-
     background: url("header.png") center/cover no-repeat;
-
     opacity: 1;
     pointer-events: none;
-
-    -webkit-mask-image: linear-gradient(
-      to left,
-      rgba(0,0,0,1) 20%,
-      rgba(0,0,0,0) 50%
-    );
-
-    mask-image: linear-gradient(
-      to left,
-      rgba(0,0,0,1) 20%,
-      rgba(0,0,0,0) 50%
-    );
+    -webkit-mask-image: linear-gradient(to left, rgba(0,0,0,1) 20%, rgba(0,0,0,0) 50%);
+    mask-image: linear-gradient(to left, rgba(0,0,0,1) 20%, rgba(0,0,0,0) 50%);
   }
   .header h1 {
     font-family: 'Reenie Beanie', cursive;
-    font-size: 3.8rem;
+    font-size: 3.3rem;
     color: white;
     letter-spacing: 0.08em;
     text-shadow: 3px 3px 0 rgba(0,0,0,0.2);
@@ -85,14 +73,14 @@
   .header-sub {
     font-family: 'Caveat', cursive;
     color: var(--blue-light);
-    font-size: 1.1rem;
+    font-size: 0.8rem;
     margin-top: 0.2rem;
     position: relative;
   }
   .header h1,
   .header-sub {
-  position: relative;
-  z-index: 2;
+    position: relative;
+    z-index: 2;
   }
   .page-body {
     display: grid;
@@ -250,6 +238,17 @@
     padding: 6px 6px 18px;
     border: 1px solid #ddd;
     box-shadow: 2px 4px 10px rgba(0,0,0,0.12);
+    cursor: default;
+  }
+
+  .slide-polaroid.is-clickable {
+    cursor: pointer;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+
+  .slide-polaroid.is-clickable:hover {
+    box-shadow: 3px 7px 16px rgba(0,0,0,0.18);
+    z-index: 5;
   }
 
   .slide-polaroid::before {
@@ -304,353 +303,384 @@
   .nav-btn:hover { background: var(--blue-pale); transform: scale(1.05); }
   .slide-counter { font-family: 'Kalam', cursive; font-size: 0.85rem; color: #888; }
 
+  /* ===================== PROJECT OVERVIEW MODAL ===================== */
+  .overview-modal-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.55);
+    backdrop-filter: blur(8px);
+    z-index: 4000;
+    align-items: center;
+    justify-content: center;
+  }
+  .overview-modal-overlay.active {
+    display: flex;
+  }
+
+  .overview-modal {
+    background: white;
+    width: 88%;
+    max-width: 860px;
+    border: 3px solid var(--ink);
+    box-shadow: 8px 8px 0 rgba(26,26,46,0.22);
+    border-radius: 3px;
+    position: relative;
+    padding: 2rem 2.2rem 1.6rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .overview-modal::before {
+    content: '';
+    position: absolute;
+    top: -11px; left: 50%;
+    transform: translateX(-50%) rotate(-1deg);
+    width: 64px; height: 18px;
+    background: var(--tape);
+    border-radius: 2px;
+  }
+
+  .overview-modal-close {
+    position: absolute;
+    top: 12px; right: 12px;
+    width: 34px; height: 34px;
+    border: 2px solid var(--ink);
+    background: white;
+    border-radius: 2px;
+    cursor: pointer;
+    font-size: 1rem;
+    display: flex; align-items: center; justify-content: center;
+    box-shadow: 2px 2px 0 var(--ink);
+    color: var(--ink);
+    transition: background 0.15s;
+  }
+  .overview-modal-close:hover { background: var(--blue-pale); }
+
+  .overview-slide-content {
+    min-height: 90px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .overview-slide-nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 0.5rem;
+    padding-top: 0.8rem;
+    border-top: 1px solid #eee;
+  }
+
+  .overview-done-btn {
+    background: var(--blue);
+    color: white;
+    border: 2px solid var(--ink);
+    border-radius: 2px;
+    padding: 0.4rem 1.2rem;
+    font-family: 'Caveat', cursive;
+    font-size: 1rem;
+    font-weight: 700;
+    cursor: pointer;
+    box-shadow: 3px 3px 0 var(--ink);
+    transition: background 0.15s, transform 0.1s;
+  }
+  .overview-done-btn:hover { background: #1d4ed8; }
+  .overview-done-btn:active { transform: translate(2px,2px); box-shadow: 1px 1px 0 var(--ink); }
+
+  .page-overview-card .overview-slide-content {
+    min-height: 250px;
+  }
+
+  .page-overview-card .overview-slide-nav {
+    margin-top: 1rem;
+  }
+
 /* ===================== REFLECTION EXPAND ===================== */
 
-.expand-reflection-btn {
-  margin-top: 1rem;
+  .expand-reflection-btn {
+    margin-top: 1rem;
+    width: 100%;
+    border: 1.5px solid var(--ink);
+    background: white;
+    padding: 0.55rem 0.8rem;
+    font-family: 'Caveat', cursive;
+    font-size: 1rem;
+    cursor: pointer;
+    border-radius: 2px;
+    transition: transform 0.18s ease, background 0.18s ease;
+    box-shadow: 2px 2px 0 rgba(0,0,0,0.08);
+  }
 
-  width: 100%;
-
-  border: 1.5px solid var(--ink);
-
-  background: white;
-
-  padding: 0.55rem 0.8rem;
-
-  font-family: 'Caveat', cursive;
-
-  font-size: 1rem;
-
-  cursor: pointer;
-
-  border-radius: 2px;
-
-  transition:
-    transform 0.18s ease,
-    background 0.18s ease;
-
-  box-shadow: 2px 2px 0 rgba(0,0,0,0.08);
-}
-
-.expand-reflection-btn:hover {
-  background: var(--blue-pale);
-
-  transform: translateY(-2px);
-}
+  .expand-reflection-btn:hover {
+    background: var(--blue-pale);
+    transform: translateY(-2px);
+  }
 
 /* ===================== NOTEBOOK MODAL ===================== */
-/* ===================== NOTEBOOK FLOW LAYOUT ===================== */
+  .notebook-content-layout {
+    display: grid;
+    grid-template-columns: 210px 1fr;
+    gap: 2.5rem;
+    align-items: start;
+    flex: 1;
+    min-height: 0;
+  }
 
-.notebook-content-layout {
-  display: grid;
-  grid-template-columns: 210px 1fr;
-  gap: 2.5rem;
-  align-items: start;
-  flex: 1;
-  min-height: 0;
-}
+  .notebook-polaroid {
+    width: 180px;
+    background: white;
+    padding: 8px 8px 22px;
+    border: 1px solid #ddd;
+    transform: rotate(-3deg);
+    box-shadow: 4px 6px 16px rgba(0,0,0,0.12);
+    flex-shrink: 0;
+  }
 
-.notebook-polaroid {
-  width: 180px;
-  background: white;
-  padding: 8px 8px 22px;
-  border: 1px solid #ddd;
-  transform: rotate(-3deg);
-  box-shadow: 4px 6px 16px rgba(0,0,0,0.12);
-  flex-shrink: 0;
-}
+  .notebook-polaroid:nth-child(2) {
+    transform: rotate(4deg);
+  }
 
-.notebook-polaroid:nth-child(2) {
-  transform: rotate(4deg);  /* OPPOSITE ANGLE */
-}
+  .notebook-text-area {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    min-height: 0;
+    max-height: 100%;
+    grid-column: 2;
+    grid-row: 1 / 3;
+    margin-bottom: 100px;
+  }
 
-.notebook-text-area {
-  display: flex;
-  flex-direction: column;
-  flex: 1;
-  min-height: 0;
-  max-height: 100%;        /* ← RESPONSIVE TO ZOOM (% of notebook-page) */
-  grid-column: 2;
-  grid-row: 1 / 3;
-  margin-bottom: 100px;
-}
+  .notebook-title {
+    font-family: 'Caveat', cursive;
+    font-size: 3rem;
+    color: var(--blue);
+    line-height: 1;
+    margin-bottom: 1.2rem;
+  }
 
-/* ===================== TITLE ===================== */
+  .notebook-text-wrapper {
+    flex: 1;
+    min-height: 0;
+    overflow-y: auto;
+    padding-right: 0.5rem;
+    max-height: calc(100vh - 200px);
+    overflow: auto;
+  }
 
-.notebook-title {
-  font-family: 'Caveat', cursive;
-  font-size: 3rem;
-  color: var(--blue);
-  line-height: 1;
-  margin-bottom: 1.2rem;
-}
+  .notebook-text {
+    font-family: 'Kalam', cursive;
+    font-size: 1.05rem;
+    line-height: 2.15;
+    color: #2f2f2f;
+    padding-right: 1rem;
+    white-space: pre-wrap;
+    word-break: break-word;
+  }
 
-/* ===================== TEXT CONTENT ===================== */
+  .notebook-overlay {
+    position: fixed;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0,0,0,0);
+    z-index: 5000;
+    opacity: 0;
+    pointer-events: none;
+    transition: 0.35s ease;
+  }
 
-.notebook-text-wrapper {
-  flex: 1;
-  min-height: 0;
+  .notebook-overlay.active {
+    opacity: 1;
+    pointer-events: auto;
+    background: rgba(10,10,25,0.38);
+    backdrop-filter: blur(6px);
+  }
 
-  overflow-y: auto;   /* 🔥 SCROLL ONLY WHEN NEEDED */
-  padding-right: 0.5rem;
-}
+  .notebook-page {
+    width: 1200px !important;
+    height: 600px !important;
+    overflow: hidden;
+    background: repeating-linear-gradient(0deg, transparent, transparent 35px, rgba(37,99,235,0.045) 36px), #fffefc;
+    border: 2px solid var(--ink);
+    padding: 2rem 5rem 10rem;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    transform: rotate(-1deg);
+    opacity: 0;
+    transition: transform 0.5s cubic-bezier(.34,1.56,.64,1), opacity 0.35s ease;
+    box-shadow: 0 24px 60px rgba(0,0,0,0.22), 8px 8px 0 rgba(26,26,46,0.18);
+  }
 
-.notebook-text {
-  font-family: 'Kalam', cursive;
-  font-size: 1.05rem;
-  line-height: 2.15;
-  color: #2f2f2f;
-  padding-right: 1rem;
+  .notebook-overlay.active .notebook-page {
+    transform: rotate(0deg);
+    opacity: 1;
+  }
 
-  white-space: pre-wrap;
-  word-break: break-word;
-}
+  .notebook-page::before {
+    content: '';
+    position: absolute;
+    left: 42px;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background: rgba(239,68,68,0.28);
+  }
 
-/* ===================== PAGE OVERLAY ===================== */
+  .notebook-tape {
+    position: absolute;
+    top: -12px;
+    left: 50%;
+    transform: translateX(-50%) rotate(-2deg);
+    width: 90px;
+    height: 22px;
+    background: rgba(147,197,253,0.5);
+  }
 
-.notebook-overlay {
-  position: fixed;
-  inset: 0;
+  .notebook-polaroid img {
+    width: 100%;
+    height: 170px;
+    object-fit: cover;
+    display: block;
+  }
 
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  .notebook-polaroid-caption {
+    font-family: 'Caveat', cursive;
+    text-align: center;
+    margin-top: 4px;
+    color: #666;
+  }
 
-  background: rgba(0,0,0,0);
+  .notebook-close {
+    position: absolute;
+    top: 14px;
+    right: 14px;
+    width: 36px;
+    height: 36px;
+    border: 2px solid var(--ink);
+    background: white;
+    cursor: pointer;
+    font-size: 1rem;
+    border-radius: 2px;
+    box-shadow: 2px 2px 0 var(--ink);
+  }
 
-  z-index: 5000;
+  .notebook-close:hover { background: var(--blue-pale); }
 
-  opacity: 0;
-  pointer-events: none;
-
-  transition: 0.35s ease;
-}
-
-.notebook-overlay.active {
-  opacity: 1;
-  pointer-events: auto;
-  background: rgba(10,10,25,0.38);
-  backdrop-filter: blur(6px);
-}
-
-/* ===================== NOTEBOOK PAGE ===================== */
-.notebook-page {
-  width: 1200px !important;
-  height: 600px !important;
-  overflow: hidden;
-  background: repeating-linear-gradient(0deg, transparent, transparent 35px, rgba(37,99,235,0.045) 36px), #fffefc;
-  border: 2px solid var(--ink);
-  padding: 2rem 5rem 10rem;
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  transform: rotate(-1deg);
-  opacity: 0;
-  transition: transform 0.5s cubic-bezier(.34,1.56,.64,1), opacity 0.35s ease;
-  box-shadow: 0 24px 60px rgba(0,0,0,0.22), 8px 8px 0 rgba(26,26,46,0.18);
-}
-
-.notebook-overlay.active .notebook-page {
-  transform: rotate(0deg);
-  opacity: 1;
-}
-
-/* ===================== DECOR ===================== */
-
-.notebook-page::before {
-  content: '';
-
-  position: absolute;
-
-  left: 42px;
-  top: 0;
-  bottom: 0;
-
-  width: 2px;
-
-  background: rgba(239,68,68,0.28);
-}
-
-.notebook-tape {
-  position: absolute;
-
-  top: -12px;
-  left: 50%;
-
-  transform: translateX(-50%) rotate(-2deg);
-
-  width: 90px;
-  height: 22px;
-
-  background: rgba(147,197,253,0.5);
-}
-
-/* ===================== POLAROID ===================== */
-
-.notebook-polaroid img {
-  width: 100%;
-  height: 170px;
-
-  object-fit: cover;
-
-  display: block;
-}
-
-.notebook-polaroid-caption {
-  font-family: 'Caveat', cursive;
-  text-align: center;
-  margin-top: 4px;
-  color: #666;
-}
-
-/* ===================== CLOSE BUTTON ===================== */
-
-.notebook-close {
-  position: absolute;
-
-  top: 14px;
-  right: 14px;
-
-  width: 36px;
-  height: 36px;
-
-  border: 2px solid var(--ink);
-  background: white;
-
-  cursor: pointer;
-
-  font-size: 1rem;
-
-  border-radius: 2px;
-
-  box-shadow: 2px 2px 0 var(--ink);
-}
-
-.notebook-close:hover {
-  background: var(--blue-pale);
-}
-/* ===================== CONTENT POLAROID ===================== */
-
-.content-polaroid-wrapper {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 1.4rem;
-}
-
-  /* simple open/close animation for book material in content area */
   .content-polaroid-wrapper {
+    width: 100%;
+    height: 100%;
+    min-height: 0;
+    display: grid;
+    grid-template-rows: auto minmax(0, 1fr);
+    justify-items: center;
+    gap: 1.4rem;
     transform-origin: top center;
     transition: transform 300ms cubic-bezier(.2,.9,.2,1), opacity 220ms ease;
   }
   .content-polaroid-wrapper.anim-open { transform: scale(1); opacity: 1; }
   .content-polaroid-wrapper.anim-close { transform: scale(0.92); opacity: 0; }
 
-.content-polaroid {
-  width: 100%;
-  max-width: 280px;
-  background: white;
-  padding: 10px 10px 26px;
-  border: 1px solid #ddd8cf;
-  box-shadow:
-    0 2px 6px rgba(0,0,0,0.08),
-    3px 5px 0 rgba(0,0,0,0.04);
-  position: relative;
-  transform: rotate(-1.5deg);
-  transition: transform 0.2s ease;
-}
+  .content-polaroid {
+    width: 100%;
+    max-width: 280px;
+    background: white;
+    padding: 10px 10px 26px;
+    border: 1px solid #ddd8cf;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.08), 3px 5px 0 rgba(0,0,0,0.04);
+    position: relative;
+    transform: rotate(-1.5deg);
+    transition: transform 0.2s ease;
+  }
 
-.content-polaroid:hover {
-  transform: rotate(0deg) scale(1.02);
-}
+  .content-polaroid:hover { transform: rotate(0deg) scale(1.02); }
 
-.content-polaroid::before {
-  content: '';
-  position: absolute;
-  top: -9px;
-  left: 50%;
-  transform: translateX(-50%) rotate(-2deg);
+  .content-polaroid::before {
+    content: '';
+    position: absolute;
+    top: -9px;
+    left: 50%;
+    transform: translateX(-50%) rotate(-2deg);
+    width: 56px;
+    height: 18px;
+    background: rgba(147,197,253,0.45);
+    border-radius: 2px;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.06);
+  }
 
-  width: 56px;
-  height: 18px;
+  .content-polaroid img {
+    width: 100%;
+    height: 240px;
+    object-fit: cover;
+    display: block;
+    filter: contrast(1.02) saturate(0.98);
+  }
 
-  background: rgba(147,197,253,0.45);
+  .content-polaroid-caption {
+    margin-top: 10px;
+    font-family: 'Caveat', cursive;
+    font-size: 1.15rem;
+    color: #555;
+    text-align: center;
+    line-height: 1.3;
+  }
 
-  border-radius: 2px;
+  .handwritten-note {
+    width: 100%;
+    background: rgb(255, 255, 255) 28px;
+    padding: 1.2rem 1rem;
+    border: 1.5px dashed #c7c7c7;
+    position: relative;
+    transform: rotate(0.5deg);
+    box-shadow: 2px 3px 0 rgba(0,0,0,0.04);
+    min-height: 0;
+    max-height: 100%;
+    display: flex;
+    flex-direction: column;
+  }
 
-  box-shadow: 0 1px 2px rgba(0,0,0,0.06);
-}
+  .handwritten-note::before {
+    content: '';
+    position: absolute;
+    top: -10px;
+    right: 18px;
+    width: 52px;
+    height: 16px;
+    background: rgba(147,197,253,0.4);
+    transform: rotate(6deg);
+  }
 
-.content-polaroid img {
-  width: 100%;
-  height: 240px;
-  object-fit: cover;
-  display: block;
+  .handwritten-title {
+    font-family: 'Caveat', cursive;
+    font-size: 1.35rem;
+    color: var(--blue);
+    margin-bottom: 0.8rem;
+    border-bottom: 1px dashed #bbb;
+    padding-bottom: 0.4rem;
+  }
 
-  filter: contrast(1.02) saturate(0.98);
-}
+  .handwritten-text {
+    font-family: 'Kalam', cursive;
+    font-size: 0.96rem;
+    line-height: 1.9;
+    color: #333;
+    min-height: 0;
+    overflow: hidden;
+  }
 
-.content-polaroid-caption {
-  margin-top: 10px;
+  .preview-text {
+    flex: 1 1 auto;
+  }
 
-  font-family: 'Caveat', cursive;
-  font-size: 1.15rem;
+  .handwritten-note .expand-reflection-btn {
+    flex: 0 0 auto;
+  }
 
-  color: #555;
-
-  text-align: center;
-  line-height: 1.3;
-}
-
-.handwritten-note {
-  width: 100%;
-
-  background:rgb(255, 255, 255) 28px;
-
-  padding: 1.2rem 1rem;
-
-  border: 1.5px dashed #c7c7c7;
-
-  position: relative;
-
-  transform: rotate(0.5deg);
-
-  box-shadow: 2px 3px 0 rgba(0,0,0,0.04);
-}
-
-.handwritten-note::before {
-  content: '';
-
-  position: absolute;
-
-  top: -10px;
-  right: 18px;
-
-  width: 52px;
-  height: 16px;
-
-  background: rgba(147,197,253,0.4);
-
-  transform: rotate(6deg);
-}
-
-.handwritten-title {
-  font-family: 'Caveat', cursive;
-  font-size: 1.35rem;
-  color: var(--blue);
-
-  margin-bottom: 0.8rem;
-
-  border-bottom: 1px dashed #bbb;
-  padding-bottom: 0.4rem;
-}
-
-.handwritten-text {
-  font-family: 'Kalam', cursive;
-  font-size: 0.96rem;
-  line-height: 1.9;
-  color: #333;
-}
   /* ===================== CHARACTERS + CONTENT SIDE-BY-SIDE ===================== */
   .char-content-card {
     background: white;
@@ -659,7 +689,8 @@
     position: relative;
     box-shadow: 4px 4px 0 var(--ink);
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    align-items: stretch;
     min-height: 420px;
     overflow: hidden;
   }
@@ -672,13 +703,15 @@
     border-radius: 2px;
   }
 
-  /* Left half: characters */
   .char-panel {
     padding: 1.5rem 1.5rem;
     border-right: 2px solid var(--ink);
     display: flex;
     flex-direction: column;
-    gap: 1rem;
+    gap: 0.3rem;
+    min-width: 0;
+    container-type: inline-size;
+    height: 100%;
   }
   .char-panel-tag {
     font-family: 'Caveat', cursive;
@@ -717,6 +750,13 @@
   .char-btn:hover { border-color: var(--blue-light); background: var(--blue-pale); }
   .char-btn.active { border-color: var(--blue); background: var(--blue-pale); box-shadow: 3px 3px 0 var(--blue-light); }
   .char-btn svg { width: 48px; height: 56px; }
+  .char-btn-avatar {
+    width: 54px;
+    height: 62px;
+    object-fit: contain;
+    display: block;
+    filter: drop-shadow(2px 3px 0 rgba(0,0,0,0.08));
+  }
   .char-btn span { font-family: 'Caveat', cursive; font-size: 1rem; font-weight: 700; letter-spacing: 0.08em; color: var(--ink); }
   .char-btn.active span { color: var(--blue); }
 
@@ -737,6 +777,197 @@
   }
   .profile-detail { font-size: 0.88rem; line-height: 1.7; color: #333; }
 
+  .profile-combined-box {
+    background: var(--paper-dark);
+    border: 1.5px solid var(--ink);
+    border-radius: 2px;
+    padding: 0.85rem 0.9rem;
+    margin-top: 0.2rem;
+  }
+
+  .profile-grid-shell {
+    margin-top: 0.2rem;
+    overflow: visible;
+  }
+
+  .profile-grid-layout {
+    display: grid;
+    grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.5fr);
+    grid-template-rows: 1fr;
+    gap: 0.8rem;
+    align-items: stretch;
+  }
+
+  .profile-col,
+  .profile-wide {
+    background: var(--paper-dark);
+    border: 1.5px solid var(--ink);
+    border-radius: 2px;
+    padding: 0.85rem 0.9rem;
+    min-width: 0;
+  }
+
+  .profile-box-meet { grid-column: 1; grid-row: 1; }
+  .profile-box-stats { grid-column: 2; grid-row: 1; }
+  .profile-box-favorites {
+    grid-column: 1 / -1;
+    margin-top: 0.8rem;
+  }
+
+  .profile-col h4,
+  .profile-wide h4 {
+    font-family: 'Caveat', cursive;
+    font-size: 1rem;
+    color: var(--blue);
+    border-bottom: 1.5px solid var(--ink);
+    padding-bottom: 0.3rem;
+    margin-bottom: 0.7rem;
+  }
+
+  .profile-main-title {
+    font-family: 'Caveat', cursive;
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: var(--ink);
+    margin-bottom: 0.15rem;
+  }
+
+  .profile-fullname {
+    font-family: 'Kalam', cursive;
+    font-size: 0.70rem;
+    color: #333;
+    margin-bottom: 1rem;
+  }
+
+  .profile-catchphrase {
+    font-family: 'Caveat', cursive;
+    font-size: 1rem;
+    color: #4b5563;
+    font-style: italic;
+    margin-bottom: 0.75rem;
+  }
+
+  .profile-avatar {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    margin-top: 0.2rem;
+    margin-left: 0.5rem;
+  }
+
+  .profile-avatar svg {
+    width: 92px;
+    height: 108px;
+    filter: drop-shadow(2px 3px 0 rgba(0,0,0,0.08));
+  }
+
+  .profile-avatar img {
+    width: 100%;
+    max-width: 140px;
+    height: auto;
+    object-fit: contain;
+    border-radius: 2px;
+    display: block;
+  }
+
+  .profile-thoughts-box {
+    background: var(--paper-dark);
+    border: 1.5px solid var(--ink);
+    border-radius: 2px;
+    padding: 0.85rem 0.9rem;
+    margin-top: 0.8rem;
+  }
+
+  .profile-thoughts-box h4 {
+    font-family: 'Caveat', cursive;
+    font-size: 1rem;
+    color: var(--blue);
+    border-bottom: 1.5px solid var(--ink);
+    padding-bottom: 0.3rem;
+    margin-bottom: 0.7rem;
+  }
+
+  .profile-thoughts-box .thought-btn,
+  .profile-thoughts-box .reflect-btn {
+    width: 100%;
+  }
+
+  .profile-thought-actions {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 0.5rem;
+  }
+
+  .profile-reflection-row {
+    display: grid;
+    grid-template-columns: 1fr;
+    margin-top: 0.5rem;
+  }
+
+  .profile-list {
+    display: grid;
+    gap: 0.45rem;
+  }
+
+  .profile-list-item {
+    display: flex;
+    align-items: center;
+    gap: 0.55rem;
+    font-family: 'Kalam', cursive;
+    font-size: 0.86rem;
+    color: #333;
+    background: white;
+    border: 1px solid rgba(26,26,46,0.18);
+    border-radius: 2px;
+    padding: 0.30rem 0.5rem;
+    min-height: 25px;
+    overflow: hidden;
+  }
+
+  .profile-list-item span:first-child {
+    display: inline-flex;
+    width: 22px;
+    height: 22px;
+    align-items: center;
+    justify-content: center;
+    background: var(--blue-pale);
+    border: 1px solid var(--blue-light);
+    border-radius: 50%;
+    color: var(--blue);
+    font-weight: 700;
+    flex: 0 0 auto;
+  }
+
+  .profile-list-item span:last-child {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    flex: 1 1 auto;
+  }
+
+  .profile-wide { grid-column: 1 / -1; }
+
+  .favorite-items-row {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 0.5rem;
+  }
+
+  .favorite-item {
+    min-height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: white;
+    border: 1px dashed var(--blue-light);
+    border-radius: 2px;
+    font-family: 'Kalam', cursive;
+    font-size: 0.9rem;
+    color: #333;
+    padding: 0.35rem 0.5rem;
+    text-align: center;
+  }
+
   .thought-btn, .reflect-btn {
     display: block;
     width: 100%;
@@ -745,7 +976,7 @@
     border: 1.5px solid var(--ink);
     border-radius: 2px;
     padding: 0.38rem 0.7rem;
-    margin-bottom: 0.45rem;
+    margin-bottom: 0;
     cursor: pointer;
     font-family: 'Kalam', cursive;
     font-size: 0.82rem;
@@ -758,19 +989,54 @@
   .thought-btn.active { background: var(--blue-pale); border-color: var(--blue); }
   .reflect-btn {
     background: var(--blue); color: white; font-weight: 700;
-    text-align: center; margin-top: 0.3rem;
+    text-align: center;
     box-shadow: 2px 2px 0 var(--ink);
   }
   .reflect-btn:hover { background: #1d4ed8; }
   .reflect-btn::before { content: ''; }
 
-  /* Right half: content area */
   .content-panel {
     padding: 1.5rem 1.5rem;
     display: flex;
     flex-direction: column;
-    gap: 0.8rem;
+    gap: 0.3rem;
+    min-width: 0;
+    height: 100%;
+    min-height: 0;
   }
+
+  @media (max-width: 1180px) {
+    .profile-grid-layout {
+      grid-template-columns: minmax(0, 1.08fr) minmax(0, 1fr);
+    }
+  }
+
+  @media (max-width: 1024px) {
+    .page-body {
+      grid-template-columns: 1fr;
+      gap: 1rem;
+      padding: 1rem;
+    }
+    .center-col { padding: 0; }
+    .side-col {
+      position: static;
+      top: auto;
+      flex-direction: row;
+      flex-wrap: wrap;
+      gap: 1rem;
+      padding: 0.5rem 0;
+    }
+    .book-item { transform: none !important; }
+    .char-content-card {
+      grid-template-columns: 1fr;
+      min-height: 0;
+    }
+    .char-panel {
+      border-right: none;
+      border-bottom: 2px solid var(--ink);
+    }
+  }
+
   .content-panel-tag {
     font-family: 'Caveat', cursive;
     font-size: 1rem;
@@ -782,12 +1048,14 @@
 
   .bottom-box-label {
     font-family: 'Caveat', cursive;
-    font-size: 0.85rem;
+    font-size: 0.9rem;
     color: #888;
   }
   .bottom-box-content {
-    flex: 1;
-    min-height: 300px;
+    flex: 1 1 auto;
+    height: auto;
+    max-height: none;
+    min-height: 0;
     background: var(--paper-dark);
     border: 1.5px dashed #bbb;
     border-radius: 2px;
@@ -797,14 +1065,17 @@
     line-height: 1.7;
     color: #333;
     transition: background 0.3s, border-color 0.3s;
+    overflow: hidden;
   }
   .bottom-box-content.flash { background: var(--blue-pale); border-color: var(--blue); }
 
   .bottom-book-layout {
-    display: flex;
-    flex-direction: column;
+    display: grid;
+    grid-template-rows: auto minmax(0, 1fr);
     gap: 1rem;
-    align-items: center;
+    align-items: stretch;
+    height: 100%;
+    min-height: 0;
     transform-origin: top center;
     transform: scale(0.92);
     opacity: 0;
@@ -818,6 +1089,7 @@
     flex-direction: column;
     align-items: center;
     gap: 0.6rem;
+    min-height: 0;
   }
   .bottom-book-cover img { width: 100%; max-width: 200px; max-height: 220px; object-fit: contain; }
   .bottom-book-title {
@@ -846,14 +1118,40 @@
     border-bottom: 1.5px solid var(--ink);
     padding-bottom: 0.3rem;
     margin-bottom: 0.7rem;
+    flex: 0 0 auto;
+  }
+  .bottom-thoughts-col {
+    min-height: 0;
+    display: grid;
+    grid-template-rows: minmax(0, 1fr) minmax(0, 1fr);
+    gap: 1rem;
+  }
+  .bottom-item-info {
+    min-height: 0;
+  }
+  .bottom-item-info h4 {
+    color: var(--ink);
+  }
+  .bottom-material-section {
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
   }
   .thought-entry {
     padding: 0.8rem 1rem;
     background: white;
     border: 1.5px solid #ddd;
     border-radius: 2px;
+    min-height: 0;
+    flex: 1 1 auto;
+    overflow: hidden;
   }
-  .thought-entry-text { font-size: 0.92rem; line-height: 1.65; color: #333; }
+  .thought-entry-text {
+    font-size: 0.92rem;
+    line-height: 1.65;
+    color: #333;
+    overflow: hidden;
+  }
 
   .placeholder-text { color: #bbb; font-style: italic; font-size: 0.88rem; }
 
@@ -869,9 +1167,9 @@
 
   /* ===================== GALLERY SECTION ===================== */
   .gallery-section {
-    width: 1040px;
+    width: min(980px, calc(100% - 4rem));
     margin: 1rem auto 4rem;
-    padding: 0 2rem;
+    padding: 0;
   }
 
   .gallery-header {
@@ -901,7 +1199,6 @@
     margin-top: 0.1rem;
   }
 
-  /* OPEN BOOK CONTAINER */
   .open-book-wrapper {
     position: relative;
     width: 100%;
@@ -918,36 +1215,29 @@
     perspective: 2000px;
   }
 
-  /* Book cover - consistent blue palette */
   .book-cover-left {
     position: absolute;
-    top: 0;
-    left: 0;
-    width: 50%;
-    height: 100%;
+    top: 0; left: 0;
+    width: 50%; height: 100%;
     border-radius: 8px 0 0 8px;
     background: linear-gradient(to right, #1d4ed8 0%, #2563eb 85%, #3b82f6 100%);
-    box-shadow: -4px 0 12px rgba(0,0,0,0.15), inset -2px 0 4px rgba(0,0,0,0.12);
+    cursor: pointer;
   }
   .book-cover-right {
     position: absolute;
-    top: 0;
-    right: 0;
-    width: 50%;
-    height: 100%;
+    top: 0; right: 0;
+    width: 50%; height: 100%;
     border-radius: 0 8px 8px 0;
     background: linear-gradient(to left, #1d4ed8 0%, #2563eb 85%, #3b82f6 100%);
     box-shadow: 4px 0 12px rgba(0,0,0,0.15), inset 2px 0 4px rgba(0,0,0,0.12);
   }
 
-  /* Spine */
   .book-spine {
     position: absolute;
     left: 50%;
     top: 0;
     transform: translateX(-50%);
-    width: 24px;
-    height: 100%;
+    width: 24px; height: 100%;
     background: linear-gradient(to right, #1e3a8a, #2563eb, #1e3a8a);
     z-index: 20;
     box-shadow: 0 0 6px rgba(0,0,0,0.2);
@@ -960,7 +1250,6 @@
     border-radius: 1px;
   }
 
-  /* Pages area */
   .book-page-left,
   .book-page-right {
     position: absolute;
@@ -982,7 +1271,6 @@
     background: linear-gradient(to left, #f5f0e8 0%, #faf7f2 100%);
   }
 
-  /* Page lines */
   .book-page-left::before,
   .book-page-right::before {
     content: '';
@@ -991,7 +1279,6 @@
     background: repeating-linear-gradient(0deg, transparent, transparent 27px, rgba(37,99,235,0.06) 28px);
   }
 
-  /* Page number */
   .page-number {
     position: absolute;
     bottom: 10px;
@@ -1002,7 +1289,6 @@
   .book-page-left .page-number { right: 14px; }
   .book-page-right .page-number { left: 14px; }
 
-  /* Photo grid on each page */
   .page-photos {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
@@ -1012,7 +1298,6 @@
     height: 100%;
   }
 
-  /* Polaroid photo card */
   .polaroid {
     background: white;
     border: 1px solid #d8d5cd;
@@ -1022,7 +1307,7 @@
     box-shadow: 1px 2px 5px rgba(0,0,0,0.08);
     position: relative;
   }
-  .polaroid:nth-child(odd) { transform: rotate(-1deg); }
+  .polaroid:nth-child(odd)  { transform: rotate(-1deg); }
   .polaroid:nth-child(even) { transform: rotate(0.8deg); }
   .polaroid:hover {
     transform: rotate(0deg) scale(1.06) !important;
@@ -1058,7 +1343,6 @@
     white-space: pre-line;
   }
 
-  /* PAGE FLIP NAVIGATION */
   .book-nav {
     display: flex;
     align-items: center;
@@ -1123,22 +1407,22 @@
   }
   .lb-close:hover { background: var(--blue-pale); }
 
-  .lb-scene {
-    perspective: 1200px;
-    width: 360px;
-    height: 360px;
-    position: relative;
-  }
+.lb-scene {
+  perspective: 1200px;
+  width: 420px;
+  height: 520px;
+  position: relative;
+}
 
   .lb-card {
-    width: 100%;
-    height: 100%;
+    width: 100%; height: 100%;
     position: relative;
     transform-style: preserve-3d;
     transform: scale(0.4) rotateY(-20deg);
     opacity: 0;
     transition: transform 0.55s cubic-bezier(.34,1.3,.64,1), opacity 0.4s ease;
     cursor: pointer;
+    pointer-events: auto;
   }
   .lb-card.entering { transform: scale(1) rotateY(0deg); opacity: 1; }
   .lb-card.flipped  { transform: scale(1) rotateY(180deg) !important; }
@@ -1151,19 +1435,37 @@
     border-radius: 4px;
     display: flex;
     flex-direction: column;
-    width: 100%;
-    height: 100%;
+    width: 100%; height: 100%;
   }
 
   .lb-front {
-    background: white;
-    border: 2px solid #d8d5cd;
-    padding: 12px 12px 48px;
-    box-shadow: 0 16px 40px rgba(0,0,0,0.2);
-    display: flex;
-    flex-direction: column;
-  }
-  .lb-front-img { flex: 1; overflow: hidden; background: var(--blue-pale); }
+  background: white;
+  border: 2px solid #d8d5cd;
+  padding: 12px 12px 52px;
+  box-shadow: 0 16px 40px rgba(0,0,0,0.2);
+  display: flex;
+  flex-direction: column;
+  position: absolute;
+  inset: 0;
+}
+
+.lb-front::before {
+  content: '';
+  position: absolute;
+  top: -10px;
+  left: 50%;
+  transform: translateX(-50%) rotate(-2deg);
+  width: 58px;
+  height: 18px;
+  background: rgba(147,197,253,0.5);
+  border-radius: 2px;
+}
+  .lb-front-img {
+  flex: 1;
+  overflow: hidden;
+  background: var(--blue-pale);
+  border: 1px solid #e5e5e5;
+}
   .lb-front-img svg { width: 100%; height: 100%; display: block; }
   .lb-front-caption {
     font-family: 'Caveat', cursive;
@@ -1185,7 +1487,8 @@
     justify-content: center;
     padding: 2rem 2.2rem;
     gap: 1rem;
-    position: relative;
+    position: absolute;
+    inset: 0;
     overflow: hidden;
     background-image: repeating-linear-gradient(0deg, transparent, transparent 23px, rgba(37,99,235,0.07) 24px);
   }
@@ -1241,18 +1544,14 @@
   .image-zoom-overlay.closing { display: flex; }
   .image-zoom-close {
     position: fixed;
-    top: 1.5rem;
-    right: 1.5rem;
-    width: 38px;
-    height: 38px;
+    top: 1.5rem; right: 1.5rem;
+    width: 38px; height: 38px;
     border: 2px solid var(--ink);
     background: white;
     border-radius: 2px;
     cursor: pointer;
     font-size: 1.2rem;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    display: flex; align-items: center; justify-content: center;
     box-shadow: 3px 3px 0 var(--ink);
     z-index: 3010;
     color: var(--ink);
@@ -1280,32 +1579,62 @@
   }
   .image-zoom-container img { max-width: 100%; max-height: 85vh; object-fit: contain; }
 
-#notebookText {
-  transition: opacity 0.2s ease;
-}
+  .zoom-polaroid {
+    width: min(420px, 82vw);
+    max-height: 86vh;
+    background: white;
+    border: 2px solid #d8d5cd;
+    padding: 12px 12px 48px;
+    box-shadow: 0 16px 40px rgba(0,0,0,0.22);
+    position: relative;
+    transform: rotate(-1deg);
+  }
 
-.notebook-text-wrapper {
-  max-height: calc(100vh - 200px); /* adjust based on header */
-  overflow: auto;                  /* only scroll when needed */
-}
+  .zoom-polaroid::before {
+    content: '';
+    position: absolute;
+    top: -10px;
+    left: 50%;
+    transform: translateX(-50%) rotate(-2deg);
+    width: 58px;
+    height: 18px;
+    background: rgba(147,197,253,0.5);
+    border-radius: 2px;
+  }
 
-.notebook-next-btn {
-  position: absolute;
-  bottom: 10px;
-  right: 10px;
+  .zoom-polaroid img {
+    width: 100%;
+    max-height: 68vh;
+    aspect-ratio: 1.1;
+    object-fit: cover;
+    display: block;
+    border: 1px solid #e5e5e5;
+    background: var(--blue-pale);
+  }
 
-  background: #2563eb;
-  color: white;
-  border: none;
-  padding: 6px 10px;
-  border-radius: 8px;
-  cursor: pointer;
-  font-size: 12px;
-}
+  .zoom-polaroid-caption {
+    font-family: 'Caveat', cursive;
+    font-size: 1.1rem;
+    color: #444;
+    text-align: center;
+    margin-top: 12px;
+    line-height: 1.3;
+  }
 
-.notebook-next-btn:hover {
-  background: #1d4ed8;
-}
+  #notebookText { transition: opacity 0.2s ease; }
+
+  .notebook-next-btn {
+    position: absolute;
+    bottom: 10px; right: 10px;
+    background: #2563eb;
+    color: white;
+    border: none;
+    padding: 6px 10px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 12px;
+  }
+  .notebook-next-btn:hover { background: #1d4ed8; }
 </style>
 </head>
 <body>
@@ -1319,26 +1648,31 @@
   <div class="side-col" id="left-books"></div>
 
   <div class="center-col">
-    <!-- SLIDES -->
-    <div class="card">
+    <!-- PROJECT OVERVIEW (Visible on Page) -->
+    <div class="card page-overview-card">
       <div class="section-tag">Project Overview!</div>
-      <div class="slide-content">
-        <div class="slide-text" id="slide-text"></div>
+      <div class="overview-slide-content">
+        <div class="slide-text" id="page-overview-slide-text"></div>
       </div>
-      <div class="slide-nav">
-        <button class="nav-btn" onclick="changeSlide(-1)">&lt;</button>
-        <span class="slide-counter" id="slide-counter">1 / 3</span>
-        <button class="nav-btn" onclick="changeSlide(1)">&gt;</button>
+      <div class="overview-slide-nav">
+        <button class="nav-btn" onclick="changePageOverviewSlide(-1)">&lt;</button>
+        <span class="slide-counter" id="page-overview-slide-counter">1 / 3</span>
+        <button class="nav-btn" onclick="changePageOverviewSlide(1)">&gt;</button>
       </div>
     </div>
 
+    <!-- CHARACTER SELECTION BOX (Full Width) -->
+    <div class="card">
+      <div class="section-tag">Meet our Group!</div>
+      <div class="char-label">Select a student....</div>
+      <div class="char-row" id="char-row"></div>
+    </div>
     <!-- CHARACTERS + CONTENT SIDE BY SIDE -->
     <div class="char-content-card">
       <!-- LEFT: Characters -->
       <div class="char-panel">
-        <div class="char-panel-tag">Student Perspectives</div>
-        <div class="char-label">choose a student perspective</div>
-        <div class="char-row" id="char-row"></div>
+        <div class="content-panel-tag">Meet the student!</div>
+        <div class="bottom-box-label" id="char-nickname">nothing selected yet</div>
         <div id="profile-grid"></div>
       </div>
 
@@ -1361,6 +1695,22 @@
   <button class="image-zoom-close" onclick="closeImageZoom()" aria-label="Close">&#x2715;</button>
   <div class="image-zoom-container" id="imageZoomContainer">
     <img id="zoomImage" src="" alt="Zoomed image" />
+  </div>
+</div>
+
+<!-- ===================== PROJECT OVERVIEW MODAL ===================== -->
+<div class="overview-modal-overlay" id="overviewModalOverlay">
+  <div class="overview-modal">
+    <button class="overview-modal-close" onclick="closeOverviewModal()" aria-label="Close">&#x2715;</button>
+    <div class="section-tag">Project Overview!</div>
+    <div class="overview-slide-content">
+      <div class="slide-text" id="overview-slide-text"></div>
+    </div>
+    <div class="overview-slide-nav">
+      <button class="nav-btn" onclick="changeOverviewSlide(-1)">&lt;</button>
+      <span class="slide-counter" id="overview-slide-counter">1 / 3</span>
+      <button class="nav-btn" onclick="changeOverviewSlide(1)">&gt;</button>
+    </div>
   </div>
 </div>
 
@@ -1401,32 +1751,18 @@ const characters = [
   {
     id: "raya",
     name: "RAYA",
-
+    fullName: "Raya Gabrielle Herrera",
+    avatar: "",
     profile: {
       role: "LIS 170 Student",
       background: "Placeholder background details here."
     },
-
+    favorites: ["Favorite 1", "Favorite 2", "Favorite 3"],
     thoughts: [
-      {
-        title: "Thought 1",
-        text: "Placeholder thought content here.",
-        image: "1.png",
-      },
-
-      {
-        title: "Thought 2",
-        text: "Placeholder thought content here.",
-        image: "2.png",
-      },
-
-      {
-        title: "Thought 3",
-        text: "Placeholder thought content here.",
-        image: "3.png",
-      }
+      { title: "Thought 1", text: "Placeholder thought content here.", image: "1.png" },
+      { title: "Thought 2", text: "Placeholder thought content here.", image: "2.png" },
+      { title: "Thought 3", text: "Placeholder thought content here.", image: "3.png" }
     ],
-
     reflection: {
       text: `Placeholder reflection content here, test if gumagana pag shorten Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium.Totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit.Sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit.Ut enim ad minima veniam, quis nostrum exercitationem ullam corporis suscipit laboriosam, nisi ut aliquid ex ea commodi consequatur.Quis autem vel eum iure reprehenderit qui in ea voluptate velit esse quam nihil molestiae consequatur. At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti quos dolores.
 Et harum quidem rerum facilis est et expedita distinctio. Nam libero tempore, cum soluta nobis est eligendi optio cumque nihil impedit quo minus id quod maxime placeat facere possimus, omnis voluptas assumenda est, omnis dolor repellendus. Temporibus autem quibusdam et aut officiis debitis.
@@ -1435,89 +1771,99 @@ Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, ad
       image2: "6.png"
     }
   },
-
   {
     id: "erin",
     name: "ERIN",
-
+    fullName: "Erin Clemente",
+    avatar: "erin.png",
     profile: {
       role: "LIS 170 Student",
       background: "Placeholder background details here."
     },
-
+    favorites: ["Favorite 1", "Favorite 2", "Favorite 3"],
     thoughts: [
-      {
-        title: "Thought 1",
-        text: "Placeholder thought content here.",
-        image: "5.png"
-      },
-
-      {
-        title: "Thought 2",
-        text: "Placeholder thought content here.",
-        image: "6.png"
-      },
-
-      {
-        title: "Thought 3",
-        text: "Placeholder thought content here.",
-        image: "7.png"
-      }
+      { title: "Thought 1", text: "Placeholder thought content here.", image: "5.png" },
+      { title: "Thought 2", text: "Placeholder thought content here.", image: "6.png" },
+      { title: "Thought 3", text: "Placeholder thought content here.", image: "7.png" }
     ],
-
     reflection: {
       text: "Placeholder reflection content here.",
-      image: "8.png",      
+      image: "8.png",
       image2: "12.png"
     }
   },
-
   {
     id: "ian",
     name: "IAN",
-
+    fullName: "Marc Ian Young",
+    avatar: "ian.png",
     profile: {
       role: "LIS 170 Student",
       background: "Placeholder background details here."
     },
-
+    favorites: ["Favorite 1", "Favorite 2", "Favorite 3"],
     thoughts: [
-      {
-        title: "Thought 1",
-        text: "Placeholder thought content here.",
-        image: "9.png"
-      },
-
-      {
-        title: "Thought 2",
-        text: "Placeholder thought content here.",
-        image: "10.png"
-      },
-
-      {
-        title: "Thought 3",
-        text: "Placeholder thought content here.",
-        image: "11.png"
-      }
+      { title: "Thought 1", text: "Placeholder thought content here.", image: "9.png" },
+      { title: "Thought 2", text: "Placeholder thought content here.", image: "10.png" },
+      { title: "Thought 3", text: "Placeholder thought content here.", image: "11.png" }
     ],
-
     reflection: {
       text: "Placeholder reflection content here.",
-      image: "12.png",      
+      image: "12.png",
       image2: "3.png"
     }
   }
 ];
 
 const books = [
-  { id:"b1", image:"Declaration of Philippine Independence.png", thoughts:{ raya:"Thought placeholder", erin:"Thought placeholder", ian:"Thought placeholder" } },
-  { id:"b2", image:"Velarde Map.png",                            thoughts:{ raya:"Thought placeholder", erin:"Thought placeholder", ian:"Thought placeholder" } },
-  { id:"b3", image:"Noli Me Tangere.png",                       thoughts:{ raya:"Thought placeholder", erin:"Thought placeholder", ian:"Thought placeholder" } },
-  { id:"b4", image:"Doctrina Christiana.png",                   thoughts:{ raya:"Thought placeholder", erin:"Thought placeholder", ian:"Thought placeholder" } },
-  { id:"b5", image:"Himno Nacional Pilipinas.png",              thoughts:{ raya:"Thought placeholder", erin:"Thought placeholder", ian:"Thought placeholder" } },
-  { id:"b6", image:"Kartilya ng Katipunan.png",                 thoughts:{ raya:"Thought placeholder", erin:"Thought placeholder", ian:"Thought placeholder" } },
-  { id:"b7", image:"Katipunan Membership Certificate.png",      thoughts:{ raya:"Thought placeholder", erin:"Thought placeholder", ian:"Thought placeholder" } },
-  { id:"b8", image:"Description of the Philippine Flag.png",   thoughts:{ raya:"Thought placeholder", erin:"Thought placeholder", ian:"Thought placeholder" } },
+  {
+    id:"b1",
+    image:"Declaration of Philippine Independence.png",
+    info:"insert material description here.",
+    thoughts:{ raya:"Thought placeholder", erin:"Thought placeholder", ian:"Thought placeholder" }
+  },
+  {
+    id:"b2",
+    image:"Velarde Map.png",
+    info:"insert material description here.",
+    thoughts:{ raya:"Thought placeholder", erin:"Thought placeholder", ian:"Thought placeholder" }
+  },
+  {
+    id:"b3",
+    image:"Noli Me Tangere.png",
+    info:"insert material description here.",
+    thoughts:{ raya:"Thought placeholder", erin:"Thought placeholder", ian:"Thought placeholder" }
+  },
+  {
+    id:"b4",
+    image:"Doctrina Christiana.png",
+    info:"insert material description here.",
+    thoughts:{ raya:"Thought placeholder", erin:"Thought placeholder", ian:"Thought placeholder" }
+  },
+  {
+    id:"b5",
+    image:"Himno Nacional Pilipinas.png",
+    info:"insert material description here.",
+    thoughts:{ raya:"Thought placeholder", erin:"Thought placeholder", ian:"Thought placeholder" }
+  },
+  {
+    id:"b6",
+    image:"Kartilya ng Katipunan.png",
+    info:"insert material description here.",
+    thoughts:{ raya:"Thought placeholder", erin:"Thought placeholder", ian:"Thought placeholder" }
+  },
+  {
+    id:"b7",
+    image:"Katipunan Membership Certificate.png",
+    info:"insert material description here.",
+    thoughts:{ raya:"Thought placeholder", erin:"Thought placeholder", ian:"Thought placeholder" }
+  },
+  {
+    id:"b8",
+    image:"Description of the Philippine Flag.png",
+    info:"insert material description here.",
+    thoughts:{ raya:"Thought placeholder", erin:"Thought placeholder", ian:"Thought placeholder" }
+  },
 ];
 
 let currentSlide = 0;
@@ -1526,43 +1872,95 @@ let activeBook   = null;
 let notebookPages = [];
 let notebookPageIndex = 0;
 
-function renderSlide() {
-  const s = slides[currentSlide];
-  const el = document.getElementById('slide-text');
-  el.innerHTML = `
+// ============================================================
+// PROJECT OVERVIEW MODAL (opens on page load)
+// ============================================================
+let overviewSlide = 0;
+let pageOverviewSlide = 0;
+
+function createOverviewSlideMarkup(s, isClickable) {
+  return `
   <div class="scrapbook-slide">
     <div class="scrapbook-text">
       <div class="scrapbook-title">${s.title}</div>
       <div class="scrapbook-body">${s.body}</div>
     </div>
     <div class="scrapbook-photos">
-      ${s.photos.map((shape, i) => `
-        <div class="slide-polaroid">
+      ${s.photos.map((photo, i) => `
+        <div class="slide-polaroid${isClickable ? ' is-clickable' : ''}" ${isClickable ? `onclick="showPolaroidZoom('${photo}')"` : ''}>
           <img
-            src="${shape}"
+            src="${photo}"
             alt="slide image"
-            style="
-              width:100%;
-              height:100%;
-              object-fit:cover;
-              border-radius:1px;
-            "
+            style="width:100%;height:100%;object-fit:cover;border-radius:1px;"
           />
-          <div class="slide-polaroid-caption">${shape}</div>
+          <div class="slide-polaroid-caption">${photo}</div>
         </div>
       `).join('')}
     </div>
   </div>`;
+}
+
+function renderOverviewSlide() {
+  const s = slides[overviewSlide];
+  const el = document.getElementById('overview-slide-text');
+  el.innerHTML = createOverviewSlideMarkup(s, false);
   el.classList.remove('fade-in'); void el.offsetWidth; el.classList.add('fade-in');
-  document.getElementById('slide-counter').textContent = `${currentSlide+1} / ${slides.length}`;
+  document.getElementById('overview-slide-counter').textContent = `${overviewSlide+1} / ${slides.length}`;
+}
+
+function changeOverviewSlide(dir) {
+  overviewSlide = (overviewSlide + dir + slides.length) % slides.length;
+  renderOverviewSlide();
+}
+
+function renderPageOverviewSlide() {
+  const s = slides[pageOverviewSlide];
+  const el = document.getElementById('page-overview-slide-text');
+  if (!el) return;
+  el.innerHTML = createOverviewSlideMarkup(s, true);
+  el.classList.remove('fade-in'); void el.offsetWidth; el.classList.add('fade-in');
+  document.getElementById('page-overview-slide-counter').textContent = `${pageOverviewSlide+1} / ${slides.length}`;
+}
+
+function changePageOverviewSlide(dir) {
+  pageOverviewSlide = (pageOverviewSlide + dir + slides.length) % slides.length;
+  renderPageOverviewSlide();
+}
+
+function closeOverviewModal() {
+  const overlay = document.getElementById('overviewModalOverlay');
+  overlay.classList.remove('active');
+  document.body.style.overflow = '';
+}
+
+function showOverviewModal() {
+  overviewSlide = 0;
+  renderOverviewSlide();
+  const overlay = document.getElementById('overviewModalOverlay');
+  overlay.classList.add('active');
+  document.body.style.overflow = 'hidden';
+}
+
+document.getElementById('overviewModalOverlay').addEventListener('click', (e) => {
+  if (e.target.id === 'overviewModalOverlay') closeOverviewModal();
+});
+
+// ============================================================
+// MAIN PAGE SLIDES (kept for internal use but not shown as card)
+// ============================================================
+function renderSlide() {
+  // no-op: slide card removed from main page
 }
 function changeSlide(dir) {
   currentSlide = (currentSlide + dir + slides.length) % slides.length;
-  renderSlide();
 }
 
 function getImageTitle(imagePath) {
   return imagePath.replace(/\.png$/i, '');
+}
+
+function getBookInfo(book) {
+  return book.info || `The ${getImageTitle(book.image)} is one of the featured materials from the gallery. This section gives quick context before reading each student's thoughts.`;
 }
 
 function bookImage(b) {
@@ -1601,15 +1999,9 @@ function selectBook(id) {
   setTimeout(() => {
     const contentArea = document.getElementById('box-label');
     if (!contentArea) return;
-
     const offset = 160;
     const top = contentArea.getBoundingClientRect().top + window.pageYOffset - offset;
-
-    window.scrollTo({
-      top,
-      behavior: 'smooth'
-    });
-
+    window.scrollTo({ top, behavior: 'smooth' });
   }, 160);
 }
 
@@ -1623,72 +2015,94 @@ function personSVG(color='#2563eb') {
   </svg>`;
 }
 
+function svgToDataUri(svg) {
+  return 'data:image/svg+xml;charset=UTF-8,' + encodeURIComponent(svg);
+}
+
 function renderCharacters() {
-
   document.getElementById('char-row').innerHTML =
-    characters.map((c, i) => `
-      <button class="char-btn ${i === currentChar ? 'active' : ''}"
-              onclick="selectChar(${i})">
-
-        ${personSVG(i === currentChar ? '#2563eb' : '#93c5fd')}
-
+    characters.map((c, i) => {
+      const selectionAvatar = c.avatar
+        ? `<img class="char-btn-avatar" src="${c.avatar}" alt="${c.name}">`
+        : personSVG(i === currentChar ? '#2563eb' : '#93c5fd');
+      return `
+      <button class="char-btn ${i === currentChar ? 'active' : ''}" onclick="selectChar(${i})">
+        ${selectionAvatar}
         <span>${c.name}</span>
-
       </button>
-    `).join('');
+    `;
+    }).join('');
 
   const c = characters[currentChar];
+  const avatarSrc = c.avatar ? c.avatar : svgToDataUri(personSVG('#2563eb'));
+  const avatarHtml = c.avatar
+    ? `<img src="${c.avatar}" alt="${c.name}" style="width:90%;max-width:140px;height:auto;object-fit:contain;border-radius:8px;display:block;"/>`
+    : personSVG('#2563eb');
 
   document.getElementById('profile-grid').innerHTML = `
-
-    <div class="profile-box" style="margin-bottom:0.8rem">
-
-      <h3>Student Profile</h3>
-
-      <div class="profile-detail">
-
-        <strong>${c.name}</strong><br>
-        ${c.profile.role}<br><br>
-
-        <span style="font-size:0.82rem;color:#666">
-          ${c.profile.background}
-        </span>
-
+    <div class="profile-grid-shell">
+      <div class="profile-grid-layout">
+        <div class="profile-col profile-box-meet profile-meet">
+          <h4>Meet ${c.name}!!!</h4>
+          <div class="profile-main-title">${c.name}</div>
+          <div class="profile-fullname">${c.fullName || 'Full Name'}</div>
+          <div class="profile-catchphrase">"Short Catchphrase"</div>
+          <div class="profile-avatar" style="max-width:160px;">
+            <div onclick="showImageZoom('${avatarSrc}')">
+              ${avatarHtml}
+            </div>
+          </div>
+        </div>
+        <div class="profile-col profile-box-stats profile-stats">
+          <h4>Strengths</h4>
+          <div class="profile-list">
+            <div class="profile-list-item"><span>A</span><span>Placeholder strength</span></div>
+            <div class="profile-list-item"><span>B</span><span>Placeholder strength</span></div>
+            <div class="profile-list-item"><span>C</span><span>Placeholder strength</span></div>
+          </div>
+          <h4 style="margin-top:0.85rem;">Weaknesses</h4>
+          <div class="profile-list">
+            <div class="profile-list-item"><span>A</span><span>Placeholder weakness</span></div>
+            <div class="profile-list-item"><span>B</span><span>Placeholder weakness</span></div>
+            <div class="profile-list-item"><span>C</span><span>Placeholder weakness</span></div>
+          </div>
+        </div>
       </div>
-
+      <div class="profile-col profile-box-favorites">
+        <h4>3 Favorite Items</h4>
+        <div class="favorite-items-row" style="margin-top:0.4rem;">
+          ${(c.favorites || ['Favorite 1', 'Favorite 2', 'Favorite 3']).map(item => `
+            <div class="favorite-item">${item}</div>
+          `).join('')}
+        </div>
+      </div>
     </div>
 
-    <div class="profile-box">
-
-      <h3>What's on ${c.name}'s Mind???</h3>
-
-      ${c.thoughts.map((t, i) => `
-        <button class="thought-btn"
-                onclick="selectThought(${currentChar}, ${i})">
-
-          ${t.title}
-
+    <div class="profile-thoughts-box">
+      <h4>What's on ${c.name}'s Mind???</h4>
+      <div class="profile-thought-actions">
+        ${c.thoughts.map((t, i) => `
+          <button class="thought-btn" onclick="selectThought(${currentChar}, ${i})">
+            ${t.title}
+          </button>
+        `).join('')}
+      </div>
+      <div class="profile-reflection-row">
+        <button class="reflect-btn" onclick="selectReflection(${currentChar})">
+          Reflection
         </button>
-      `).join('')}
-
-      <button class="reflect-btn"
-              onclick="selectReflection(${currentChar})">
-
-        Reflection
-
-      </button>
-
+      </div>
     </div>
-
   `;
+
+  document.getElementById('char-nickname').textContent = `Say hello to ${c.name}!!!`;
+  syncContentPanelHeight();
 }
 
 function selectChar(i) {
   currentChar = i;
-
   renderCharacters();
-  updateNotebookTitle(); // 🔥 REQUIRED
-
+  updateNotebookTitle();
   if (activeBook) {
     const book = books.find(b => b.id === activeBook);
     if (book) setBoxBook(book);
@@ -1699,36 +2113,20 @@ function selectChar(i) {
 
 function selectThought(charIdx, thoughtIdx) {
   const c = characters[charIdx];
-
   activeBook = null;
-
-  document.querySelectorAll('.book-item')
-    .forEach(el => el.classList.remove('active'));
-
-  setBoxThought(
-    `What's on ${c.name}'s mind`,
-    c.thoughts[thoughtIdx],
-    false
-  );
+  document.querySelectorAll('.book-item').forEach(el => el.classList.remove('active'));
+  setBoxThought(`What's on ${c.name}'s mind`, c.thoughts[thoughtIdx], false);
 }
 
 function selectReflection(charIdx) {
   const c = characters[charIdx];
-
   activeBook = null;
-
-  document.querySelectorAll('.book-item')
-    .forEach(el => el.classList.remove('active'));
-
-  setBoxThought(
-    `${c.name}'s Reflection`,
-    {
-      title: "Reflection",
-      text: c.reflection.text,
-      image: c.reflection.image
-    },
-    true
-  );
+  document.querySelectorAll('.book-item').forEach(el => el.classList.remove('active'));
+  setBoxThought(`${c.name}'s Reflection`, {
+    title: "Reflection",
+    text: c.reflection.text,
+    image: c.reflection.image
+  }, true);
 }
 
 function setBoxClear() {
@@ -1750,127 +2148,148 @@ function setBoxThought(label, thought, isReflection = false) {
   document.getElementById('box-label').textContent = displayLabel;
 
   const el = document.getElementById('box-content');
-
   el.innerHTML = `
-
     <div class="content-polaroid-wrapper fade-in">
-
       <div class="content-polaroid">
-
-        <img src="${thought.image}"
-             alt="${thought.title}">
-
+        <img src="${thought.image}" alt="${thought.title}">
         <div class="content-polaroid-caption">
-          ${thought.image.replace(/\.png$/i, '')}  <!-- ← SHOW FILENAME INSTEAD -->
+          ${thought.image.replace(/\.png$/i, '')}
         </div>
-
       </div>
-
       <div class="handwritten-note">
-
         <div class="handwritten-title">
           ${isReflection ? 'Reflection Note' : 'Thought Note'}
         </div>
-
-        <div class="handwritten-text preview-text">
-          ${firstFiveWords(thought.text)}
-        </div>
-
+        <div class="handwritten-text preview-text" data-full-text="${escapeHtml(thought.text)}"></div>
         ${isReflection ? `
-
           <button class="expand-reflection-btn"
                   onclick='openReflectionNotebook(
                     ${JSON.stringify(thought.title)},
                     ${JSON.stringify(thought.text)},
                     ${JSON.stringify(thought.image)}
                   )'>
-
             Expand!
-
           </button>
-
         ` : ''}
-
       </div>
-
     </div>
-
   `;
-
+  syncContentPanelHeight();
+  clampPreviewText(el);
   flashBox(el);
+}
+
+function syncContentPanelHeight() {
+  const charPanel = document.querySelector('.char-panel');
+  const contentPanel = document.querySelector('.content-panel');
+  if (!charPanel || !contentPanel || window.innerWidth <= 1024) {
+    if (contentPanel) contentPanel.style.height = '';
+    return;
+  }
+
+  contentPanel.style.height = `${charPanel.getBoundingClientRect().height}px`;
+}
+
+function escapeHtml(text) {
+  return String(text)
+    .replace(/&/g, '&amp;')
+    .replace(/"/g, '&quot;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;');
+}
+
+function clampPreviewText(container) {
+  clampTextToBox(container.querySelector('.preview-text'));
+}
+
+function clampTextToBox(textEl) {
+  if (!textEl) return;
+
+  const fullText = textEl.dataset.fullText || textEl.textContent || '';
+  textEl.textContent = fullText;
+
+  requestAnimationFrame(() => {
+    syncContentPanelHeight();
+    textEl.textContent = fullText;
+
+    if (textEl.scrollHeight <= textEl.clientHeight) return;
+
+    let low = 0;
+    let high = fullText.length;
+    let best = '';
+
+    while (low <= high) {
+      const mid = Math.floor((low + high) / 2);
+      textEl.textContent = fullText.slice(0, mid).trimEnd() + '...';
+
+      if (textEl.scrollHeight <= textEl.clientHeight) {
+        best = textEl.textContent;
+        low = mid + 1;
+      } else {
+        high = mid - 1;
+      }
+    }
+
+    textEl.textContent = best || '...';
+  });
+}
+
+function clampMaterialText(container) {
+  container.querySelectorAll('.thought-entry-text[data-full-text]').forEach(clampTextToBox);
 }
 
 function splitIntoPages(text, wordsPerPage = 20) {
   const words = text.split(' ');
   const pages = [];
-
   for (let i = 0; i < words.length; i += wordsPerPage) {
     pages.push(words.slice(i, i + wordsPerPage).join(' '));
   }
-
   return pages;
 }
 
 function firstFiveWords(text) {
   const words = text.split(' ');
-  return words.length > 5
-    ? words.slice(0, 5).join(' ') + '...'
-    : text;
+  return words.length > 5 ? words.slice(0, 5).join(' ') + '...' : text;
 }
 
 function updateNotebookTitle() {
   const char = characters[currentChar];
   const el = document.getElementById("notebookTitle");
-
   if (!el || !char) return;
-
   el.textContent = `${char.name}'s Reflection`;
 }
 
 function setBoxBook(book) {
-
   const char = characters[currentChar];
-
-  document.getElementById('box-label').textContent =
-    `${char.name}'s thoughts on ${getImageTitle(book.image)}`;
+  document.getElementById('box-label').textContent = `${char.name}'s thoughts on ${getImageTitle(book.image)}`;
 
   const el = document.getElementById('box-content');
 
   const replaceContent = () => {
     el.innerHTML = `
-
     <div class="bottom-book-layout">
-
       <div class="bottom-book-cover">
-
-        <img src="${book.image}"
-             alt="${getImageTitle(book.image)}">
-             <h6 style="color: gray;">(Click me to enlarge!)</h6>
-
-        <div class="bottom-book-title">
-          ${getImageTitle(book.image)}
+        <img src="${book.image}" alt="${getImageTitle(book.image)}">
+        <h6 style="color: gray;">(Click me to enlarge!)</h6>
+        <div class="bottom-book-title">${getImageTitle(book.image)}</div>
+      </div>
+      <div class="bottom-thoughts-col">
+        <div class="bottom-material-section bottom-item-info">
+          <h4 style="color: #2563eb;">ooo, whats this?</h4>
+          <div class="thought-entry">
+            <div class="thought-entry-text" data-full-text="${escapeHtml(getBookInfo(book))}"></div>
+          </div>
         </div>
-
+        <div class="bottom-material-section">
+          <h4>${char.name}'s Thoughts</h4>
+          <div class="thought-entry">
+            <div class="thought-entry-text" data-full-text="${escapeHtml(book.thoughts[char.id])}"></div>
+          </div>
+        </div>
       </div>
     </div>
-
-    <div class="bottom-thoughts-col">
-
-        <h4>${char.name}'s Thoughts</h4>
-
-        <div class="thought-entry">
-
-          <div class="thought-entry-text">
-            ${book.thoughts[char.id]}
-          </div>
-
-        </div>
-
-    </div>
-
     `;
 
-    // animate open for the newly inserted book wrapper
     const newWrapper = el.querySelector('.bottom-book-layout');
     if (newWrapper) {
       newWrapper.style.transformOrigin = 'top center';
@@ -1883,13 +2302,13 @@ function setBoxBook(book) {
         newWrapper.style.opacity = '1';
       }, 20);
     }
-
+    syncContentPanelHeight();
+    clampMaterialText(el);
     flashBox(el);
   };
 
   const oldWrapper = el.querySelector('.bottom-book-layout');
   if (oldWrapper) {
-    // animate close, then replace
     oldWrapper.style.transformOrigin = 'top center';
     oldWrapper.style.transition = 'transform 300ms cubic-bezier(.2,.9,.2,1), opacity 220ms ease';
     oldWrapper.style.transform = 'scale(0.92)';
@@ -1905,22 +2324,20 @@ function flashBox(el) {
   el.classList.add('flash');
   setTimeout(() => el.classList.remove('flash'), 500);
 }
+
 function openReflectionNotebook(title, text, image) {
   const char = characters[currentChar];
-
   document.getElementById('notebookTitle').textContent = `${char.name}'s Reflection`;
   document.getElementById('notebookImage').src = image;
-  document.getElementById('notebookCaption').textContent = image.replace(/\.png$/i, '');  // ← EXTRACT FILENAME
-  
-  // Set second image
+  document.getElementById('notebookCaption').textContent = image.replace(/\.png$/i, '');
+
   if (char.reflection.image2) {
     document.getElementById('notebookImage2').src = char.reflection.image2;
-    document.getElementById('notebookCaption2').textContent = char.reflection.image2.replace(/\.png$/i, '');  // ← EXTRACT FILENAME
+    document.getElementById('notebookCaption2').textContent = char.reflection.image2.replace(/\.png$/i, '');
   }
 
   notebookPages = splitIntoPages(text, 1000);
   notebookPageIndex = 0;
-
   renderNotebookPage();
 
   const overlay = document.getElementById('notebookOverlay');
@@ -1931,23 +2348,14 @@ function openReflectionNotebook(title, text, image) {
 function renderNotebookPage() {
   const el = document.getElementById('notebookText');
   const btn = document.querySelector('.notebook-next-btn');
-
   if (!el) return;
-
   el.style.opacity = 0;
-
   setTimeout(() => {
     el.textContent = notebookPages[notebookPageIndex] || "";
     el.style.opacity = 1;
-
-    // hide button on last page
     if (btn) {
-      btn.style.display =
-        notebookPageIndex >= notebookPages.length - 1
-          ? 'none'
-          : 'block';
+      btn.style.display = notebookPageIndex >= notebookPages.length - 1 ? 'none' : 'block';
     }
-
   }, 200);
 }
 
@@ -1959,27 +2367,21 @@ function nextNotebookPage() {
 }
 
 function closeReflectionNotebook() {
-
-  document.getElementById('notebookOverlay')
-    .classList.remove('active');
-
+  document.getElementById('notebookOverlay').classList.remove('active');
   document.body.style.overflow = '';
 }
 
 const notebookOverlayEl = document.getElementById('notebookOverlay');
 if (notebookOverlayEl) {
   notebookOverlayEl.addEventListener('click', (e) => {
-
-    if (e.target.id === 'notebookOverlay') {
-      closeReflectionNotebook();
-    }
+    if (e.target.id === 'notebookOverlay') closeReflectionNotebook();
   });
 }
 
 window.addEventListener("DOMContentLoaded", () => {
   updateNotebookTitle();
+  syncContentPanelHeight();
 });
-
 </script>
 
 <!-- ===================== GALLERY SECTION ===================== -->
@@ -2031,42 +2433,25 @@ window.addEventListener("DOMContentLoaded", () => {
 </div>
 
 <script>
-// ============================================================
-// PHOTO DATA — all blue palette
-// ============================================================
-// If you place actual photo files in a `photos/` folder next to this HTML
-// use the `image` property below (e.g. "photos/p1.jpg"). Otherwise the
-// code will fall back to the SVG art generator to create placeholders.
 const photos = [
-  { id:"p1",  image:"1.png",  caption:"Photo 1",          colors:["#2563eb","#1d4ed8","#93c5fd","#eff6ff"], shapes:"hall",       notes:"Photo note placeholder text here.", author:"Raya" },
-  { id:"p2",  image:"2.png",  caption:"Photo 2",        colors:["#2563eb","#1e40af","#bfdbfe","#dbeafe"], shapes:"manuscript", notes:"Photo note placeholder text here.", author:"Erin" },
-  { id:"p3",  image:"3.png",  caption:"Photo 3",      colors:["#3b82f6","#1d4ed8","#93c5fd","#eff6ff"], shapes:"map",        notes:"Photo note placeholder text here.", author:"Ian"  },
-  { id:"p4",  image:"4.png",  caption:"Photo 4",             colors:["#2563eb","#1e3a8a","#bfdbfe","#eff6ff"], shapes:"scroll",     notes:"Photo note placeholder text here.", author:"Raya" },
-  { id:"p5",  image:"5.png",  caption:"Photo 5",         colors:["#1d4ed8","#1e3a8a","#93c5fd","#dbeafe"], shapes:"book",       notes:"Photo note placeholder text here.", author:"Erin" },
-  { id:"p6",  image:"6.png",  caption:"Photo 6",    colors:["#3b82f6","#2563eb","#bfdbfe","#eff6ff"], shapes:"folio",      notes:"Photo note placeholder text here.", author:"Ian"  },
-  { id:"p7",  image:"7.png",  caption:"Photo 7",    colors:["#2563eb","#1e3a8a","#bfdbfe","#eff6ff"], shapes:"hallway",    notes:"Photo note placeholder text here.", author:"Raya" },
-  { id:"p8",  image:"8.png",  caption:"Photo 8",          colors:["#1d4ed8","#1e40af","#93c5fd","#dbeafe"], shapes:"novel",      notes:"Photo note placeholder text here.", author:"Erin" },
-  { id:"p9",  image:"9.png",  caption:"Photo 9",        colors:["#2563eb","#1e40af","#bfdbfe","#eff6ff"], shapes:"hall",       notes:"Photo note placeholder text here.", author:"Ian"  },
-  { id:"p10", image:"10.png", caption:"Photo 10",      colors:["#3b82f6","#2563eb","#93c5fd","#dbeafe"], shapes:"manuscript", notes:"Photo note placeholder text here.", author:"Raya" },
-  { id:"p11", image:"11.png", caption:"Photo 11",          colors:["#2563eb","#1d4ed8","#bfdbfe","#eff6ff"], shapes:"hallway",    notes:"Photo note placeholder text here.", author:"Erin" },
-  { id:"p12", image:"12.png", caption:"Photo 12",             colors:["#1e40af","#1e3a8a","#93c5fd","#eff6ff"], shapes:"book",       notes:"Photo note placeholder text here.", author:"Ian"  },
-  { id:"p13", image:"13.png", caption:"Photo 13",         colors:["#3b82f6","#2563eb","#bfdbfe","#dbeafe"], shapes:"folio",      notes:"Photo note placeholder text here.", author:"Raya" },
-  { id:"p14", image:"14.png", caption:"Photo 14",        colors:["#2563eb","#1d4ed8","#93c5fd","#eff6ff"], shapes:"hall",       notes:"Photo note placeholder text here.", author:"Erin" },
-  { id:"p15", image:"15.png", caption:"Photo 15",     colors:["#1d4ed8","#1e3a8a","#bfdbfe","#eff6ff"], shapes:"scroll",     notes:"Photo note placeholder text here.", author:"Ian"  },
-{ 
-  id: "p16", 
-  image: "16.png", 
-  caption: "Photo 16", 
-  colors: ["#3b82f6", "#2563eb", "#93c5fd", "#dbeafe"], 
-  shapes: "map", 
-  notes: "Photo note placeholder text here.", 
-  author: "Raya" 
-}
+  { id:"p1",  image:"1.png",  caption:"Photo 1",  colors:["#2563eb","#1d4ed8","#93c5fd","#eff6ff"], shapes:"hall",       notes:"Photo note placeholder text here.", author:"Raya" },
+  { id:"p2",  image:"2.png",  caption:"Photo 2",  colors:["#2563eb","#1e40af","#bfdbfe","#dbeafe"], shapes:"manuscript", notes:"Photo note placeholder text here.", author:"Erin" },
+  { id:"p3",  image:"3.png",  caption:"Photo 3",  colors:["#3b82f6","#1d4ed8","#93c5fd","#eff6ff"], shapes:"map",        notes:"Photo note placeholder text here.", author:"Ian"  },
+  { id:"p4",  image:"4.png",  caption:"Photo 4",  colors:["#2563eb","#1e3a8a","#bfdbfe","#eff6ff"], shapes:"scroll",     notes:"Photo note placeholder text here.", author:"Raya" },
+  { id:"p5",  image:"5.png",  caption:"Photo 5",  colors:["#1d4ed8","#1e3a8a","#93c5fd","#dbeafe"], shapes:"book",       notes:"Photo note placeholder text here.", author:"Erin" },
+  { id:"p6",  image:"6.png",  caption:"Photo 6",  colors:["#3b82f6","#2563eb","#bfdbfe","#eff6ff"], shapes:"folio",      notes:"Photo note placeholder text here.", author:"Ian"  },
+  { id:"p7",  image:"7.png",  caption:"Photo 7",  colors:["#2563eb","#1e3a8a","#bfdbfe","#eff6ff"], shapes:"hallway",    notes:"Photo note placeholder text here.", author:"Raya" },
+  { id:"p8",  image:"8.png",  caption:"Photo 8",  colors:["#1d4ed8","#1e40af","#93c5fd","#dbeafe"], shapes:"novel",      notes:"Photo note placeholder text here.", author:"Erin" },
+  { id:"p9",  image:"9.png",  caption:"Photo 9",  colors:["#2563eb","#1e40af","#bfdbfe","#eff6ff"], shapes:"hall",       notes:"Photo note placeholder text here.", author:"Ian"  },
+  { id:"p10", image:"10.png", caption:"Photo 10", colors:["#3b82f6","#2563eb","#93c5fd","#dbeafe"], shapes:"manuscript", notes:"Photo note placeholder text here.", author:"Raya" },
+  { id:"p11", image:"11.png", caption:"Photo 11", colors:["#2563eb","#1d4ed8","#bfdbfe","#eff6ff"], shapes:"hallway",    notes:"Photo note placeholder text here.", author:"Erin" },
+  { id:"p12", image:"12.png", caption:"Photo 12", colors:["#1e40af","#1e3a8a","#93c5fd","#eff6ff"], shapes:"book",       notes:"Photo note placeholder text here.", author:"Ian"  },
+  { id:"p13", image:"13.png", caption:"Photo 13", colors:["#3b82f6","#2563eb","#bfdbfe","#dbeafe"], shapes:"folio",      notes:"Photo note placeholder text here.", author:"Raya" },
+  { id:"p14", image:"14.png", caption:"Photo 14", colors:["#2563eb","#1d4ed8","#93c5fd","#eff6ff"], shapes:"hall",       notes:"Photo note placeholder text here.", author:"Erin" },
+  { id:"p15", image:"15.png", caption:"Photo 15", colors:["#1d4ed8","#1e3a8a","#bfdbfe","#eff6ff"], shapes:"scroll",     notes:"Photo note placeholder text here.", author:"Ian"  },
+  { id:"p16", image:"16.png", caption:"Photo 16", colors:["#3b82f6","#2563eb","#93c5fd","#dbeafe"], shapes:"map",        notes:"Photo note placeholder text here.", author:"Raya" }
 ];
 
-// ============================================================
-// ART GENERATORS — all use passed colors (now all blue palette)
-// ============================================================
 function makeArt(p, w, h) {
   const c = p.colors;
   const arts = {
@@ -2123,9 +2508,6 @@ function makeArt(p, w, h) {
   return arts[p.shapes] || arts.book;
 }
 
-// ============================================================
-// BOOK PAGINATION
-// ============================================================
 const PHOTOS_PER_SIDE   = 4;
 const PHOTOS_PER_SPREAD = 8;
 
@@ -2167,9 +2549,6 @@ function updateNav() {
   document.getElementById('page-indicator').textContent = `page ${currentSpread + 1} of ${totalSpreads}`;
 }
 
-// ============================================================
-// PAGE FLIP ANIMATION — smoother easing
-// ============================================================
 function turnPage(dir) {
   if (isFlipping) return;
   const next = currentSpread + dir;
@@ -2218,7 +2597,6 @@ function turnPage(dir) {
 
   flipLayer.appendChild(flipEl);
 
-  // Trigger flip — slight delay for browser paint
   requestAnimationFrame(() => {
     requestAnimationFrame(() => {
       flipEl.style.transform = goingForward ? 'rotateY(-180deg)' : 'rotateY(180deg)';
@@ -2226,22 +2604,17 @@ function turnPage(dir) {
     });
   });
 
-  // Update content at halfway point
   setTimeout(() => {
     currentSpread = next;
     renderSpread(currentSpread);
   }, 375);
 
-  // Clean up after animation
   setTimeout(() => {
     if (flipEl.parentNode) flipLayer.removeChild(flipEl);
     isFlipping = false;
   }, 800);
 }
 
-// ============================================================
-// LIGHTBOX
-// ============================================================
 let lbFlipped = false;
 
 function openLightbox(id) {
@@ -2310,22 +2683,37 @@ function handleOverlayClick(e) {
 }
 
 document.addEventListener('keydown', e => {
-  if (e.key === 'Escape') closeLightbox();
+  if (e.key === 'Escape') {
+    closeLightbox();
+    closeOverviewModal();
+    closeReflectionNotebook();
+    closeImageZoom();
+  }
 });
 
-// ============================================================
-// INIT
-// ============================================================
 renderSpread(0);
-renderSlide();
 renderBooks();
 renderCharacters();
+renderPageOverviewSlide();
 
 // Image Zoom Functions
 function showImageZoom(imagePath) {
   const overlay = document.getElementById('imageZoomOverlay');
-  const img = document.getElementById('zoomImage');
-  img.src = imagePath;
+  const container = document.getElementById('imageZoomContainer');
+  container.innerHTML = `<img id="zoomImage" src="${imagePath}" alt="Zoomed image" />`;
+  overlay.classList.remove('closing');
+  overlay.classList.add('active');
+}
+
+function showPolaroidZoom(imagePath) {
+  const overlay = document.getElementById('imageZoomOverlay');
+  const container = document.getElementById('imageZoomContainer');
+  container.innerHTML = `
+    <div class="zoom-polaroid">
+      <img src="${imagePath}" alt="${imagePath}" />
+      <div class="zoom-polaroid-caption">${imagePath}</div>
+    </div>
+  `;
   overlay.classList.remove('closing');
   overlay.classList.add('active');
 }
@@ -2333,29 +2721,10 @@ function showImageZoom(imagePath) {
 function closeImageZoom() {
   const overlay = document.getElementById('imageZoomOverlay');
   if (!overlay || !overlay.classList.contains('active')) return;
-
   overlay.classList.add('closing');
   setTimeout(() => {
     overlay.classList.remove('active', 'closing');
   }, 260);
-}
-
-function setupImageHoverZoom() {
-  document.querySelectorAll('.book-item').forEach(item => {
-    const img = item.querySelector('.book-image');
-    if (img) {
-      const imagePath = img.style.backgroundImage.match(/url\('(.+?)'\)/)?.[1];
-      if (imagePath) {
-        img.style.cursor = 'pointer';
-        item.addEventListener('mouseenter', () => showImageZoom(imagePath));
-        item.addEventListener('mouseleave', closeImageZoom);
-        item.addEventListener('click', (e) => {
-          e.stopPropagation();
-          closeImageZoom();
-        });
-      }
-    }
-  });
 }
 
 function setupContentImageZoom() {
@@ -2375,50 +2744,45 @@ document.getElementById('imageZoomOverlay').addEventListener('click', (e) => {
 });
 
 setupContentImageZoom();
+
+// Show overview modal on page load
+function openOverviewOnLoad() {
+  setTimeout(() => showOverviewModal(), 220);
+}
+
+if (document.readyState === 'complete') {
+  openOverviewOnLoad();
+} else {
+  window.addEventListener('load', openOverviewOnLoad);
+}
 </script>
+
 <!-- NOTEBOOK MODAL -->
 <div class="notebook-overlay" id="notebookOverlay">
-
   <div class="notebook-page">
-
     <div class="notebook-tape"></div>
-
-    <button class="notebook-close" onclick="closeReflectionNotebook()">
-      ✕
-    </button>
+    <button class="notebook-close" onclick="closeReflectionNotebook()">✕</button>
 
     <div class="notebook-content-layout">
-
-      <!-- POLAROIDS COLUMN -->
       <div class="notebook-polaroids-column">
-        
-        <!-- FIRST POLAROID -->
         <div class="notebook-polaroid">
           <img id="notebookImage" src="" alt="">
           <div class="notebook-polaroid-caption" id="notebookCaption"></div>
         </div>
-
-        <!-- SECOND POLAROID -->
         <div class="notebook-polaroid">
           <img id="notebookImage2" src="" alt="">
           <div class="notebook-polaroid-caption" id="notebookCaption2"></div>
         </div>
-
       </div>
 
-      <!-- TEXT AREA -->
       <div class="notebook-text-area">
         <div class="notebook-title" id="notebookTitle"></div>
-
         <div class="notebook-text-wrapper">
           <div class="notebook-text" id="notebookText"></div>
         </div>
       </div>
-
     </div>
-
   </div>
-
 </div>
 </body>
 </html>
