@@ -1043,8 +1043,195 @@
     color: var(--blue);
     letter-spacing: 0.05em;
   }
+  .content-panel-tag-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.6rem;
+  }
   .content-panel-tag::before { content: '< '; }
   .content-panel-tag::after  { content: ' >'; }
+
+  .section-expand-btn {
+    width: 30px;
+    height: 30px;
+    border: 2px solid var(--ink);
+    border-radius: 2px;
+    background: white;
+    color: var(--ink);
+    cursor: pointer;
+    box-shadow: 2px 2px 0 var(--ink);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1rem;
+    line-height: 1;
+    flex: 0 0 auto;
+    transition: background 0.15s, transform 0.1s;
+  }
+  .section-expand-btn:hover {
+    background: var(--blue-pale);
+    transform: translateY(-1px);
+  }
+  .section-expand-btn:active {
+    transform: translate(1px, 1px);
+    box-shadow: 1px 1px 0 var(--ink);
+  }
+
+  .section-modal-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(10, 10, 25, 0.55);
+    backdrop-filter: blur(8px);
+    z-index: 4500;
+    align-items: center;
+    justify-content: center;
+    padding: 1.25rem;
+  }
+  .section-modal-overlay.active {
+    display: flex;
+  }
+
+  .section-modal {
+    width: min(1120px, 92vw);
+    max-height: min(95vh, 1000px);
+    background: #fffefb;
+    border: 3px solid var(--ink);
+    box-shadow: 10px 10px 0 rgba(26,26,46,0.22);
+    border-radius: 3px;
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .section-modal::before {
+    content: '';
+    position: absolute;
+    top: -11px;
+    left: 50%;
+    transform: translateX(-50%) rotate(-1deg);
+    width: 64px;
+    height: 18px;
+    background: var(--tape);
+    border-radius: 2px;
+  }
+
+  .section-modal-close {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    width: 34px;
+    height: 34px;
+    border: 2px solid var(--ink);
+    background: white;
+    border-radius: 2px;
+    cursor: pointer;
+    font-size: 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 2px 2px 0 var(--ink);
+    color: var(--ink);
+    transition: background 0.15s;
+    z-index: 2;
+  }
+  .section-modal-close:hover { background: var(--blue-pale); }
+
+  .section-modal-header {
+    padding: 1.35rem 1.5rem 0.4rem;
+    padding-right: 4rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+  }
+
+  .section-modal-kicker {
+    font-family: 'Caveat', cursive;
+    font-size: 1rem;
+    color: var(--blue);
+    letter-spacing: 0.05em;
+  }
+  .section-modal-kicker::before { content: '< '; }
+  .section-modal-kicker::after { content: ' >'; }
+
+  .section-modal-title {
+    font-family: 'Reenie Beanie', cursive;
+    font-size: 2.4rem;
+    color: var(--ink);
+    line-height: 1;
+  }
+
+  .section-modal-subtitle {
+    font-family: 'Caveat', cursive;
+    font-size: 1.05rem;
+    color: #666;
+  }
+
+  .section-modal-body {
+    flex: 1;
+    min-height: 0;
+    overflow: auto;
+    padding: 0 1.5rem 1.4rem;
+  }
+
+  .section-modal-body::-webkit-scrollbar {
+    width: 8px;
+  }
+
+  .section-modal-meet-stage {
+    max-width: 1040px;
+    margin: 0 auto;
+  }
+
+  .section-modal-meet-stage .profile-grid-shell {
+    margin-top: 0;
+  }
+
+  .section-modal-meet-stage .profile-grid-layout {
+    grid-template-columns: minmax(0, 0.2fr) minmax(0, 1fr);
+  }
+
+  .section-modal-meet-stage .profile-thoughts-box,
+  .section-modal-meet-stage .profile-col,
+  .section-modal-meet-stage .profile-wide {
+    background: #f8f5ee;
+  }
+
+  .section-modal-content-stage {
+    max-width: 980px;
+    margin: 0 auto;
+    background: #f4efe3;
+    border: 2px dotted rgba(26,26,46,0.28);
+    border-radius: 4px;
+    box-shadow: inset 0 0 0 1px rgba(255,255,255,0.55), 0 8px 20px rgba(26,26,46,0.08);
+    padding: 1.1rem;
+  }
+
+  .section-modal-content-stage .bottom-box-content {
+    min-height: 0;
+    overflow-y: auto;
+    overflow-x: hidden;
+    background: #fcfaf4;
+    border: 1.5px dotted rgba(26,26,46,0.28);
+    border-radius: 3px;
+    box-shadow: inset 0 0 0 1px rgba(255,255,255,0.7);
+  }
+
+  .section-modal-content-stage .bottom-book-layout {
+    transform: none;
+    opacity: 1;
+    height: auto;
+  }
+
+  .section-modal-content-stage .bottom-thoughts-col {
+    min-height: 320px;
+  }
+
+  .section-modal-content-stage .thought-entry {
+    max-height: none;
+  }
 
   .bottom-box-label {
     font-family: 'Caveat', cursive;
@@ -1144,13 +1331,15 @@
     border-radius: 2px;
     min-height: 0;
     flex: 1 1 auto;
-    overflow: hidden;
+    overflow-y: auto;
+    overflow-x: hidden;
+    scrollbar-width: thin;
   }
   .thought-entry-text {
     font-size: 0.92rem;
     line-height: 1.65;
     color: #333;
-    overflow: hidden;
+    overflow: visible;
   }
 
   .placeholder-text { color: #bbb; font-style: italic; font-size: 0.88rem; }
@@ -1535,7 +1724,7 @@
     inset: 0;
     background: rgba(0,0,0,0.5);
     backdrop-filter: blur(4px);
-    z-index: 3000;
+    z-index: 6000;
     align-items: center;
     justify-content: center;
     animation: fadeInOverlay 0.3s ease;
@@ -1553,7 +1742,7 @@
     font-size: 1.2rem;
     display: flex; align-items: center; justify-content: center;
     box-shadow: 3px 3px 0 var(--ink);
-    z-index: 3010;
+    z-index: 6010;
     color: var(--ink);
     font-family: sans-serif;
     transition: background 0.15s;
@@ -1671,14 +1860,20 @@
     <div class="char-content-card">
       <!-- LEFT: Characters -->
       <div class="char-panel">
-        <div class="content-panel-tag">Meet the student!</div>
+        <div class="content-panel-tag-row">
+          <div class="content-panel-tag">Meet the student!</div>
+          <button class="section-expand-btn" onclick="openSectionModal('meet')" aria-label="Expand Meet the student section">⤢</button>
+        </div>
         <div class="bottom-box-label" id="char-nickname">nothing selected yet</div>
         <div id="profile-grid"></div>
       </div>
 
       <!-- RIGHT: Content Area -->
       <div class="content-panel">
-        <div class="content-panel-tag">Content Area</div>
+        <div class="content-panel-tag-row">
+          <div class="content-panel-tag">Content Area</div>
+          <button class="section-expand-btn" onclick="openSectionModal('content')" aria-label="Expand Content Area section">⤢</button>
+        </div>
         <div class="bottom-box-label" id="box-label">nothing selected yet</div>
         <div class="bottom-box-content" id="box-content">
           <span class="placeholder-text">Click a book on the side, or a thought / reflection button above.</span>
@@ -1711,6 +1906,19 @@
       <span class="slide-counter" id="overview-slide-counter">1 / 3</span>
       <button class="nav-btn" onclick="changeOverviewSlide(1)">&gt;</button>
     </div>
+  </div>
+</div>
+
+<!-- SECTION EXPAND MODAL -->
+<div class="section-modal-overlay" id="sectionModalOverlay">
+  <div class="section-modal">
+    <button class="section-modal-close" onclick="closeSectionModal()" aria-label="Close">&#x2715;</button>
+    <div class="section-modal-header">
+      <div class="section-modal-kicker" id="sectionModalKicker">Expanded Section</div>
+      <div class="section-modal-title" id="sectionModalTitle"></div>
+      <div class="section-modal-subtitle" id="sectionModalSubtitle"></div>
+    </div>
+    <div class="section-modal-body" id="sectionModalBody"></div>
   </div>
 </div>
 
@@ -1758,6 +1966,9 @@ const characters = [
       background: "Placeholder background details here."
     },
     favorites: ["Favorite 1", "Favorite 2", "Favorite 3"],
+    catchphrase: "catchphrase here",
+    strengths: ["strength 1", "strength 2", "strength 3"],
+    weaknesses: ["Weakness 1", "Weakness 2", "Weakness 3"],
     thoughts: [
       { title: "Thought 1", text: "Placeholder thought content here.", image: "1.png" },
       { title: "Thought 2", text: "Placeholder thought content here.", image: "2.png" },
@@ -1771,6 +1982,7 @@ Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, ad
       image2: "6.png"
     }
   },
+  // strengths and weaknesses will be attached below if missing
   {
     id: "erin",
     name: "ERIN",
@@ -1781,6 +1993,9 @@ Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, ad
       background: "Placeholder background details here."
     },
     favorites: ["Favorite 1", "Favorite 2", "Favorite 3"],
+    catchphrase: "catchphrase here",
+    strengths: ["strength 1", "strength 2", "strength 3"],
+    weaknesses: ["Weakness 1", "Weakness 2", "Weakness 3"],
     thoughts: [
       { title: "Thought 1", text: "Placeholder thought content here.", image: "5.png" },
       { title: "Thought 2", text: "Placeholder thought content here.", image: "6.png" },
@@ -1801,14 +2016,17 @@ Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, ad
       role: "LIS 170 Student",
       background: "Placeholder background details here."
     },
-    favorites: ["Favorite 1", "Favorite 2", "Favorite 3"],
+    favorites: ["Coffee", "Designing UI", "Physics"],
+    catchphrase: "Think it through, then push forward.",
+    strengths: ["detail-oriented (over)thinking", "per(fectionism)sistence", "Instincts"],
+    weaknesses: ["Second-guesses", "tendencies to procrastinate", "low social battery"],
     thoughts: [
-      { title: "Thought 1", text: "Placeholder thought content here.", image: "9.png" },
-      { title: "Thought 2", text: "Placeholder thought content here.", image: "10.png" },
-      { title: "Thought 3", text: "Placeholder thought content here.", image: "11.png" }
+      { title: "Archivists as....", text:  "Oh Wow! Archivists really are Guardians of Authenticity. I can never imagine my clumsy self doing this level of care with hands-on work like decontamination, brushing, gloved handling, and specialized bookbinding.", image: "9.png" },
+      { title: "The weight of...", text: "It feels both such a huge responsibility and privilege to preserve these materials for a hundred years or who even knows how long,  because the longer they last, the more important they become for national identity and memory... Also, I really love the lighting here..", image: "10.png" },
+      { title: "Paintings???", text: "Paintings were the last thing I expected to see here! They really stand out in terms of complexity in preservation because of their multiple fragile layers like paint, canvas, varnish, and wood—at least that’s my educated guess as someone who barely knows anything about art preservation.", image: "11.png" }
     ],
     reflection: {
-      text: "Placeholder reflection content here.",
+      text: "Fleckners description of archivists as master practitioners with esoteric knowledge, engaged in the most profoundly and universally human of all undertakings, at first felt somewhat too grandiose to me as an LIS 170 student. (Of course, largely due to my limited understanding of archival work.) That was until our little visit challenged the preconceived notion. Seeing both copies and original materials such as the Kartilya ng Katipunan, Doctrina Christiana, Rizals Noli Me Tangere and El Filibusterismo, and the Treaty of Paris map made archival work feel far less abstract than it once did. Standing in front of these materials, one cant help but realize that archives are not simply storage spaces for old documents, but institutions that preserve the historical memory and identity of a nation. Fleckners statement wasnt exaggerated at all. If anything, it perfectly captured the importance and essence of archival work. At the same time, learning about the history of the institution reinforced how archival authority in the Philippines was originally shaped by something similar to the framework of Archives for the Sovereign. That Spanish colonial administrators functioned as archontic authorities insofar as they controlled the creation, organization, and legitimization of official records in the establishment of the Museo-Biblioteca de Filipinas. The archival records, museum collections, and library holdings of our nation were once managed within a single colonized institutional system, and that same colonial authority shaped not only the institution itself but also the narratives preserved within its records. Many documents reflected the biases, misunderstandings, and cultural prejudices of their foreign creators, resulting in distorted portrayals of Filipino culture and identity even in materials considered historically authoritative. One notable example that was shared with us in our visit came from the Spanish field notes, such as Antonio de Morgas Sucesos de las Islas Filipinas (1609), where Filipinos were described as barbaric people who supposedly consumed rotten fish, when the reference was actually to bagoong. Nevertheless, what I found more significant and more worthwhile to focus on was how materials and institutions that once served the administrative and political interests of colonial rule have gradually transformed into an archive and institution for the people, allowing Filipinos to reclaim, reinterpret, and reexamine their own history from their own perspective. That is, regardless of whether the materials are nationally celebrated artifacts or more ordinary records preserved for future generations. Archival work, in the end, is not only about keeping historical materials intact, but also about protecting how people remember, interpret, and understand their own past, all of these coming together as part of a shared national memory,",
       image: "12.png",
       image2: "3.png"
     }
@@ -1819,50 +2037,50 @@ const books = [
   {
     id:"b1",
     image:"Declaration of Philippine Independence.png",
-    info:"insert material description here.",
-    thoughts:{ raya:"Thought placeholder", erin:"Thought placeholder", ian:"Thought placeholder" }
+    info:"The Declaration of Philippine Independence was proclaimed on June 12, 1898 in Kawit, Cavite, authored by Ambrosio Rianzares Bautista under Emilio Aguinaldo’s revolutionary government, asserting sovereignty from Spain and establishing the foundations of a national republic.",
+    thoughts:{ raya:"Thought placeholder", erin:"Thought placeholder", ian:"It’s strange thinking that independence here isn’t just a concept but something formally declared, as if identity itself had to be written down to exist politically." }
   },
   {
     id:"b2",
     image:"Velarde Map.png",
-    info:"insert material description here.",
-    thoughts:{ raya:"Thought placeholder", erin:"Thought placeholder", ian:"Thought placeholder" }
+    info:"The Velarde Map (Carta Hydrographica y Chorographica de las Islas Filipinas, 1734), created by Pedro Murillo Velarde, is among the earliest scientific maps of the Philippines, depicting geography, settlements, and cultural illustrations, and is used in modern territorial studies.",
+    thoughts:{ raya:"Thought placeholder", erin:"Thought placeholder", ian:"Truly, maps are never neutral, neither are they just about measurement. They’re always a quiet argument drawn in ink. What gets included, centered, or emphasized feels like an early form of claiming space." }
   },
   {
     id:"b3",
     image:"Noli Me Tangere.png",
-    info:"insert material description here.",
-    thoughts:{ raya:"Thought placeholder", erin:"Thought placeholder", ian:"Thought placeholder" }
+    info:"Noli Me Tangere, written by José Rizal in 1887 in Berlin, is a political novel exposing abuses of Spanish friars and colonial officials, highlighting social injustice and awakening Filipino nationalism that contributed to reform and revolutionary movements.",
+    thoughts:{ raya:"Thought placeholder", erin:"Thought placeholder", ian:"This actually brings me back to elementary school, when we first read about Rizal without fully understanding the weight of it." }
   },
   {
     id:"b4",
     image:"Doctrina Christiana.png",
-    info:"insert material description here.",
-    thoughts:{ raya:"Thought placeholder", erin:"Thought placeholder", ian:"Thought placeholder" }
+    info:"Doctrina Christiana, printed in 1593, is one of the earliest books in the Philippines, containing Catholic doctrine in Spanish and Tagalog scripts, used by Spanish missionaries to facilitate religious conversion and early colonial education.",
+    thoughts:{ raya:"Thought placeholder", erin:"Thought placeholder", ian:"I actually remember making an infographic about this for LIS 51 (the topic/module was Historical LIS Milestones IIRC) with Sir Dridge ;0" }
   },
   {
     id:"b5",
     image:"Himno Nacional Pilipinas.png",
-    info:"insert material description here.",
-    thoughts:{ raya:"Thought placeholder", erin:"Thought placeholder", ian:"Thought placeholder" }
+    info:"The Philippine National Anthem, originally composed as an instrumental march “Marcha Nacional Filipina” by Julián Felipe in 1898, later gained lyrics by José Palma (fun fact: this is the younger brother of Rafael Palma, whom Palma Hall was named after), symbolizing independence, unity, and national identity during and after the revolution.",
+    thoughts:{ raya:"Thought placeholder", erin:"Thought placeholder", ian:"The hymn back then probably felt like music that is for and by the people. I remember attending an ACLE about the popularization and democratization of music, how it is collectively used in advocacies, especially during the Martial Law and the EDSA Revolution. People using sound to express what couldn’t always be openly said, the Hymn may have carried the same kind of collective feeling for the people during those times." }
   },
   {
     id:"b6",
     image:"Kartilya ng Katipunan.png",
-    info:"insert material description here.",
-    thoughts:{ raya:"Thought placeholder", erin:"Thought placeholder", ian:"Thought placeholder" }
+    info:"The Kartilya ng Katipunan, written by Emilio Jacinto, served as the ethical and moral guide of the Katipunan, outlining principles of equality, patriotism, and discipline that shaped revolutionary conduct against Spanish colonial rule.",
+    thoughts:{ raya:"Thought placeholder", erin:"Thought placeholder", ian:"There’s something interesting about how the Katipunan started with values and moral formation before action, defining what kind of person a revolutionary should be." }
   },
   {
     id:"b7",
     image:"Katipunan Membership Certificate.png",
-    info:"insert material description here.",
-    thoughts:{ raya:"Thought placeholder", erin:"Thought placeholder", ian:"Thought placeholder" }
+    info:"The Katipunan membership certificate was an official document confirming membership in the secret revolutionary society KKK (Kataas-taasan, Kagalang-galangang Katipunan ng mga Anak ng Bayan), signifying commitment to independence and resistance against Spanish colonial authorities.",
+    thoughts:{ raya:"Thought placeholder", erin:"Thought placeholder", ian:"A piece of paper that once meant real risk that could completely change or end someone’s life... It looks mundane now, but at the time, it was more dangerous and irreversible than just a document." }
   },
   {
     id:"b8",
     image:"Description of the Philippine Flag.png",
-    info:"insert material description here.",
-    thoughts:{ raya:"Thought placeholder", erin:"Thought placeholder", ian:"Thought placeholder" }
+    info:"The Philippine flag symbolizes national identity: the sun represents freedom, its eight rays represent the first eight revolting provinces, and the three stars represent Luzon, Visayas, and Mindanao, unified under one sovereign nation.",
+    thoughts:{ raya:"Thought placeholder", erin:"Thought placeholder", ian:"It’s really sad when people disrespect the Philippine flag. Everyone should be able to understand why there are strict laws and even significant fines around it. It’s not just about protecting a piece of cloth, but about protecting what it represents" }
   },
 ];
 
@@ -1943,6 +2161,54 @@ function showOverviewModal() {
 
 document.getElementById('overviewModalOverlay').addEventListener('click', (e) => {
   if (e.target.id === 'overviewModalOverlay') closeOverviewModal();
+});
+
+let activeSectionModal = null;
+
+function openSectionModal(section) {
+  const overlay = document.getElementById('sectionModalOverlay');
+  const kicker = document.getElementById('sectionModalKicker');
+  const title = document.getElementById('sectionModalTitle');
+  const subtitle = document.getElementById('sectionModalSubtitle');
+  const body = document.getElementById('sectionModalBody');
+
+  activeSectionModal = section;
+
+  if (section === 'meet') {
+    const char = characters[currentChar];
+    const prettyName = char?.name ? char.name.charAt(0) + char.name.slice(1).toLowerCase() : '';
+    kicker.textContent = 'Meet the student!';
+    title.textContent = char ? `${prettyName}'s Profile` : 'Student Profile';
+    subtitle.textContent = document.getElementById('char-nickname')?.textContent || '';
+    body.innerHTML = `
+      <div class="section-modal-meet-stage">
+        ${document.getElementById('profile-grid')?.innerHTML || ''}
+      </div>
+    `;
+  } else if (section === 'content') {
+    kicker.textContent = 'Content Area';
+    title.textContent = document.getElementById('box-label')?.textContent || 'Content Area';
+    subtitle.textContent = 'Expanded view!';
+    body.innerHTML = `
+      <div class="section-modal-content-stage">
+        ${document.getElementById('box-content')?.innerHTML || ''}
+      </div>
+    `;
+  }
+
+  overlay.classList.add('active');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeSectionModal() {
+  const overlay = document.getElementById('sectionModalOverlay');
+  overlay.classList.remove('active');
+  activeSectionModal = null;
+  document.body.style.overflow = '';
+}
+
+document.getElementById('sectionModalOverlay').addEventListener('click', (e) => {
+  if (e.target.id === 'sectionModalOverlay') closeSectionModal();
 });
 
 // ============================================================
@@ -2046,7 +2312,7 @@ function renderCharacters() {
           <h4>Meet ${c.name}!!!</h4>
           <div class="profile-main-title">${c.name}</div>
           <div class="profile-fullname">${c.fullName || 'Full Name'}</div>
-          <div class="profile-catchphrase">"Short Catchphrase"</div>
+          <div class="profile-catchphrase">"${c.catchphrase || 'Short Catchphrase'}"</div>
           <div class="profile-avatar" style="max-width:160px;">
             <div onclick="showImageZoom('${avatarSrc}')">
               ${avatarHtml}
@@ -2056,15 +2322,15 @@ function renderCharacters() {
         <div class="profile-col profile-box-stats profile-stats">
           <h4>Strengths</h4>
           <div class="profile-list">
-            <div class="profile-list-item"><span>A</span><span>Placeholder strength</span></div>
-            <div class="profile-list-item"><span>B</span><span>Placeholder strength</span></div>
-            <div class="profile-list-item"><span>C</span><span>Placeholder strength</span></div>
+            ${(c.strengths || []).map((s, i) => `
+              <div class="profile-list-item"><span>${String.fromCharCode(65 + i)}</span><span>${s}</span></div>
+            `).join('')}
           </div>
           <h4 style="margin-top:0.85rem;">Weaknesses</h4>
           <div class="profile-list">
-            <div class="profile-list-item"><span>A</span><span>Placeholder weakness</span></div>
-            <div class="profile-list-item"><span>B</span><span>Placeholder weakness</span></div>
-            <div class="profile-list-item"><span>C</span><span>Placeholder weakness</span></div>
+            ${(c.weaknesses || []).map((w, i) => `
+              <div class="profile-list-item"><span>${String.fromCharCode(65 + i)}</span><span>${w}</span></div>
+            `).join('')}
           </div>
         </div>
       </div>
@@ -2235,7 +2501,9 @@ function clampTextToBox(textEl) {
 }
 
 function clampMaterialText(container) {
-  container.querySelectorAll('.thought-entry-text[data-full-text]').forEach(clampTextToBox);
+  container.querySelectorAll('.thought-entry-text[data-full-text]').forEach(textEl => {
+    textEl.textContent = textEl.dataset.fullText || textEl.textContent || '';
+  });
 }
 
 function splitIntoPages(text, wordsPerPage = 20) {
@@ -2269,7 +2537,7 @@ function setBoxBook(book) {
     el.innerHTML = `
     <div class="bottom-book-layout">
       <div class="bottom-book-cover">
-        <img src="${book.image}" alt="${getImageTitle(book.image)}">
+        <img src="${book.image}" alt="${getImageTitle(book.image)}" onclick="showImageZoom(this.src)" style="cursor:pointer;">
         <h6 style="color: gray;">(Click me to enlarge!)</h6>
         <div class="bottom-book-title">${getImageTitle(book.image)}</div>
       </div>
@@ -2686,6 +2954,7 @@ document.addEventListener('keydown', e => {
   if (e.key === 'Escape') {
     closeLightbox();
     closeOverviewModal();
+    closeSectionModal();
     closeReflectionNotebook();
     closeImageZoom();
   }
