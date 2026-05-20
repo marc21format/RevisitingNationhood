@@ -1275,7 +1275,12 @@
   /* Prevent grid children from stretching parents; make rows autosize. */
   .section-modal .profile-grid-layout {
     grid-template-rows: auto;
-    align-items: start;
+    /* In the expanded modal, keep both columns visually balanced by
+       using equal column widths and stretching their content to match
+       heights. This prevents one column appearing much taller than the
+       other when content differs. */
+    grid-template-columns: 1fr 1fr;
+    align-items: stretch;
     min-height: 0;
   }
 
@@ -1307,6 +1312,16 @@
 
   .section-modal .profile-col {
     min-height: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    justify-content: flex-start;
+  }
+
+  /* Slightly increase polaroid size inside the modal so image and note
+     proportions look more balanced when enlarged. */
+  .section-modal .content-polaroid {
+    max-width: 340px;
   }
 
   /* Reduce scrollbar footprint for inner scroll areas */
