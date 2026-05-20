@@ -184,7 +184,6 @@
     margin-bottom: 0.8rem;
     letter-spacing: 0.05em;
   }
-  .section-tag::before { content: '< '; }
   .section-tag::after  { content: ' >'; }
 
   .slide-content {
@@ -192,6 +191,16 @@
     display: flex;
     align-items: center;
     justify-content: center;
+  }
+  .profile-avatar > div {
+    width: 140px;
+    aspect-ratio: 1;
+    overflow: hidden;
+    border-radius: 10px;
+    background: #f8f3ea;
+    display: flex;
+    align-items: stretch;
+    justify-content: stretch;
   }
   .scrapbook-slide {
     display: grid;
@@ -202,14 +211,7 @@
     width: 100%;
     max-width: 820px;
     margin: 0 auto;
-  }
-
-  .scrapbook-text {
-    display: flex;
-    flex-direction: column;
-    gap: 0.7rem;
-    align-items: center;
-    text-align: center;
+    height: 100%;
   }
 
   .scrapbook-title {
@@ -503,6 +505,14 @@
     word-break: break-word;
   }
 
+  .notebook-text p {
+    margin: 0 0 1.05rem;
+  }
+
+  .notebook-text p:last-child {
+    margin-bottom: 0;
+  }
+
   .notebook-overlay {
     position: fixed;
     inset: 0;
@@ -576,6 +586,13 @@
     text-align: center;
     margin-top: 4px;
     color: #666;
+    font-size: 0.95rem;
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+    -webkit-box-orient: vertical;
+    word-break: break-word;
   }
 
   .notebook-close {
@@ -646,10 +663,16 @@
   .content-polaroid-caption {
     margin-top: 10px;
     font-family: 'Caveat', cursive;
-    font-size: 1.15rem;
+    font-size: 1rem;
     color: #555;
     text-align: center;
     line-height: 1.3;
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+    -webkit-box-orient: vertical;
+    word-break: break-word;
   }
 
   .handwritten-note {
@@ -661,9 +684,11 @@
     transform: rotate(0.5deg);
     box-shadow: 2px 3px 0 rgba(0,0,0,0.04);
     min-height: 0;
-    max-height: 100%;
+    max-height: calc(60vh);
     display: flex;
     flex-direction: column;
+    overflow: hidden;
+    margin-bottom: 1rem;
   }
 
   .handwritten-note::before {
@@ -692,7 +717,9 @@
     line-height: 1.9;
     color: #333;
     min-height: 0;
-    overflow: hidden;
+    overflow: auto;
+    flex: 1 1 auto;
+    white-space: pre-wrap;
   }
 
   .preview-text {
@@ -712,8 +739,8 @@
     box-shadow: 4px 4px 0 var(--ink);
     display: grid;
     grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-    align-items: stretch;
-    min-height: 420px;
+    align-items: start;
+    min-height: 0;
     overflow: hidden;
   }
   .char-content-card::before {
@@ -733,7 +760,8 @@
     gap: 0.3rem;
     min-width: 0;
     container-type: inline-size;
-    height: 100%;
+    height: auto;
+    align-self: start;
   }
   .char-panel-tag {
     font-family: 'Caveat', cursive;
@@ -874,7 +902,18 @@
     display: flex;
     justify-content: center;
     margin-top: 0.2rem;
-    margin-left: 0.5rem;
+    margin-left: 0;
+  }
+
+  .profile-avatar > div {
+    width: 140px;
+    aspect-ratio: 1;
+    overflow: hidden;
+    border-radius: 10px;
+    background: #f8f3ea;
+    display: flex;
+    align-items: stretch;
+    justify-content: stretch;
   }
 
   .profile-avatar svg {
@@ -885,10 +924,10 @@
 
   .profile-avatar img {
     width: 100%;
-    max-width: 140px;
-    height: auto;
-    object-fit: contain;
-    border-radius: 2px;
+    height: 100%;
+    object-fit: cover;
+    object-position: center top;
+    border-radius: 0;
     display: block;
   }
 
@@ -1023,8 +1062,9 @@
     flex-direction: column;
     gap: 0.3rem;
     min-width: 0;
-    height: 100%;
+    height: auto;
     min-height: 0;
+    align-self: start;
   }
 
   @media (max-width: 1180px) {
@@ -1126,7 +1166,8 @@
 
   .section-modal {
     width: min(1120px, 92vw);
-    max-height: min(95vh, 1000px);
+    /* ensure modal never exceeds viewport minus gutters */
+    max-height: calc(100vh - 48px);
     background: #fffefb;
     border: 3px solid var(--ink);
     box-shadow: 10px 10px 0 rgba(26,26,46,0.22);
@@ -1225,8 +1266,207 @@
     padding: 0 1.5rem 1.4rem;
   }
 
+  /* Ensure direct children don't force the modal taller than its max-height
+     and allow internal scrolling when content is long. */
+  .section-modal-body > * {
+    min-height: 0;
+  }
+
+  /* Prevent grid children from stretching parents; make rows autosize. */
+  .section-modal .profile-grid-layout {
+    grid-template-rows: auto;
+    align-items: start;
+    min-height: 0;
+  }
+
+  .section-modal .char-content-card {
+    align-items: start;
+    min-height: 0;
+  }
+
+  /* Constrain large inner panels and enable their own scrollbars.
+     Using calc with vh ensures it fits inside the modal and viewport. */
+  .section-modal .profile-grid-shell,
+  .section-modal .content-polaroid-wrapper,
+  .section-modal .handwritten-note,
+  .section-modal #box-content {
+    min-height: 0;
+    max-height: calc(95vh - 220px);
+    overflow-y: auto;
+  }
+
+  /* Ensure the stage wrappers inside the modal don't expand beyond the modal
+     and create their own scroll context. This prevents the modal from growing
+     larger than the viewport when content is long. */
+  .section-modal .section-modal-meet-stage,
+  .section-modal .section-modal-content-stage {
+    min-height: 0;
+    max-height: calc(95vh - 200px);
+    overflow-y: auto;
+  }
+
+  .section-modal .profile-col {
+    min-height: 0;
+  }
+
+  /* Reduce scrollbar footprint for inner scroll areas */
+  .section-modal .profile-grid-shell::-webkit-scrollbar,
+  .section-modal .content-polaroid-wrapper::-webkit-scrollbar,
+  .section-modal #box-content::-webkit-scrollbar {
+    width: 8px;
+  }
+
   .section-modal-body::-webkit-scrollbar {
     width: 8px;
+  }
+
+  /* Make inner scrollbars match the site's blue theme (WebKit + Firefox) */
+  .section-modal .profile-grid-shell::-webkit-scrollbar-track,
+  .section-modal .content-polaroid-wrapper::-webkit-scrollbar-track,
+  .section-modal #box-content::-webkit-scrollbar-track,
+  .section-modal-body::-webkit-scrollbar-track,
+  .thought-entry::-webkit-scrollbar-track,
+  .handwritten-text::-webkit-scrollbar-track {
+    background: var(--paper);
+  }
+
+  .section-modal .profile-grid-shell::-webkit-scrollbar-thumb,
+  .section-modal .content-polaroid-wrapper::-webkit-scrollbar-thumb,
+  .section-modal #box-content::-webkit-scrollbar-thumb,
+  .section-modal-body::-webkit-scrollbar-thumb,
+  .thought-entry::-webkit-scrollbar-thumb,
+  .handwritten-text::-webkit-scrollbar-thumb {
+    background: var(--blue-light);
+    border-radius: 6px;
+    border: 2px solid var(--paper);
+  }
+
+  /* Firefox */
+  .section-modal .profile-grid-shell,
+  .section-modal .content-polaroid-wrapper,
+  .section-modal #box-content,
+  .section-modal-body,
+  .thought-entry,
+  .handwritten-text {
+    scrollbar-width: thin;
+    scrollbar-color: var(--blue-light) var(--paper);
+  }
+
+  .erin-modal-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(10, 10, 25, 0.5);
+    backdrop-filter: blur(6px);
+    z-index: 4600;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
+    opacity: 0;
+    transition: opacity 220ms ease;
+  }
+
+  .erin-modal-overlay.active,
+  .erin-modal-overlay.closing {
+    display: flex;
+  }
+
+  .erin-modal-overlay.active {
+    opacity: 1;
+  }
+
+  .erin-modal-overlay.closing {
+    opacity: 0;
+  }
+
+  .erin-modal {
+    width: min(440px, 92vw);
+    background: #fffefb;
+    border: 3px solid var(--ink);
+    border-radius: 4px;
+    box-shadow: 10px 10px 0 rgba(26,26,46,0.22);
+    padding: 1.2rem 1.2rem 1rem;
+    text-align: center;
+    position: relative;
+    transform: translateY(12px) scale(0.98);
+    opacity: 0;
+    transition: transform 220ms cubic-bezier(.2,.9,.2,1), opacity 220ms ease;
+  }
+
+  .erin-modal-overlay.active .erin-modal {
+    transform: translateY(0) scale(1);
+    opacity: 1;
+  }
+
+  .erin-modal-overlay.closing .erin-modal {
+    transform: translateY(12px) scale(0.98);
+    opacity: 0;
+  }
+
+  .erin-modal::before {
+    content: '';
+    position: absolute;
+    top: -10px;
+    left: 50%;
+    transform: translateX(-50%) rotate(-1deg);
+    width: 56px;
+    height: 16px;
+    background: var(--tape);
+    border-radius: 2px;
+  }
+
+  .erin-modal-kicker {
+    font-family: 'Caveat', cursive;
+    font-size: 1rem;
+    color: var(--blue);
+    margin-bottom: 0.2rem;
+  }
+
+  .erin-modal-title {
+    font-family: 'Reenie Beanie', cursive;
+    font-size: 2.05rem;
+    color: var(--ink);
+    margin-bottom: 0.6rem;
+  }
+
+  .erin-modal-message {
+    font-family: 'Kalam', cursive;
+    font-size: 1rem;
+    line-height: 1.75;
+    color: #333;
+    margin-bottom: 1rem;
+  }
+
+  .erin-modal-message p + p {
+    margin-top: 0.75rem;
+  }
+
+  .erin-modal-actions {
+    display: flex;
+    justify-content: center;
+  }
+
+  .erin-modal-ok {
+    background: var(--blue);
+    color: white;
+    border: 2px solid var(--ink);
+    border-radius: 2px;
+    padding: 0.45rem 1.1rem;
+    font-family: 'Caveat', cursive;
+    font-size: 1rem;
+    font-weight: 700;
+    cursor: pointer;
+    box-shadow: 3px 3px 0 var(--ink);
+    transition: background 0.15s, transform 0.1s;
+  }
+
+  .erin-modal-ok:hover {
+    background: #1d4ed8;
+  }
+
+  .erin-modal-ok:active {
+    transform: translate(2px, 2px);
+    box-shadow: 1px 1px 0 var(--ink);
   }
 
   .section-modal-meet-stage {
@@ -1272,10 +1512,37 @@
     transform: none;
     opacity: 1;
     height: auto;
+    overflow: visible;
+  }
+
+  .section-modal-content-stage .content-polaroid-wrapper {
+    height: auto;
+    grid-template-rows: auto auto;
+    align-items: start;
+  }
+
+  .section-modal-content-stage .content-polaroid {
+    max-width: 340px;
+  }
+
+  .section-modal-content-stage .handwritten-note {
+    width: 100%;
+    max-height: none;
+    align-self: stretch;
+    transform: none;
+  }
+
+  .section-modal-content-stage .handwritten-text,
+  .section-modal-content-stage .preview-text {
+    overflow: visible;
   }
 
   .section-modal-content-stage .bottom-thoughts-col {
-    min-height: 320px;
+    min-height: 0;
+    height: auto;
+    grid-template-rows: auto auto;
+    align-content: start;
+    overflow: visible;
   }
 
   .section-modal-content-stage .thought-entry {
@@ -1308,10 +1575,11 @@
   .bottom-book-layout {
     display: grid;
     grid-template-rows: auto minmax(0, 1fr);
-    gap: 1rem;
+    gap: 0.55rem;
     align-items: stretch;
     height: 100%;
     min-height: 0;
+    overflow: hidden;
     transform-origin: top center;
     transform: scale(0.92);
     opacity: 0;
@@ -1324,19 +1592,25 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 0.6rem;
+    gap: 0.2rem;
     min-height: 0;
   }
-  .bottom-book-cover img { width: 100%; max-width: 200px; max-height: 220px; object-fit: contain; }
+  .bottom-book-cover img { width: 100%; max-width: 200px; max-height: 220px; object-fit: contain; display: block; }
+  .bottom-book-cover h6 {
+    margin: 0.05rem 0 0;
+    font-size: 0.68rem;
+    line-height: 1.1;
+    color: gray;
+  }
   .bottom-book-title {
     font-family: 'Caveat', cursive;
-    font-size: 1.2rem;
+    font-size: 1.12rem;
     font-weight: 700;
     text-align: center;
     color: var(--ink);
-    line-height: 1.3;
-    margin-top: 0.2rem;
-    margin-bottom: 0.5rem;
+    line-height: 1.15;
+    margin-top: 0;
+    margin-bottom: 0.15rem;
   }
   .bottom-book-tag {
     font-family: 'Kalam', cursive;
@@ -1361,6 +1635,7 @@
     display: grid;
     grid-template-rows: minmax(0, 1fr) minmax(0, 1fr);
     gap: 1rem;
+    overflow: hidden;
   }
   .bottom-item-info {
     min-height: 0;
@@ -1372,6 +1647,7 @@
     min-height: 0;
     display: flex;
     flex-direction: column;
+    overflow: hidden;
   }
   .thought-entry {
     padding: 0.8rem 1rem;
@@ -1380,6 +1656,7 @@
     border-radius: 2px;
     min-height: 0;
     flex: 1 1 auto;
+    max-height: 100%;
     overflow-y: auto;
     overflow-x: hidden;
     scrollbar-width: thin;
@@ -1389,6 +1666,7 @@
     line-height: 1.65;
     color: #333;
     overflow: visible;
+    white-space: pre-wrap;
   }
 
   .placeholder-text { color: #bbb; font-style: italic; font-size: 0.88rem; }
@@ -1573,12 +1851,18 @@
 
   .polaroid-caption {
     font-family: 'Caveat', cursive;
-    font-size: 1.25rem;
+    font-size: 1rem;
     color: #555;
     text-align: center;
-    margin-top: 10px;
+    margin-top: 8px;
     line-height: 1.2;
-    white-space: pre-line;
+    white-space: normal;
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+    -webkit-box-orient: vertical;
+    word-break: break-word;
   }
 
   .book-nav {
@@ -1740,7 +2024,7 @@
     border-radius: 2px;
   }
   .lb-back-tag { font-family: 'Caveat', cursive; font-size: 0.8rem; color: var(--blue); letter-spacing: 0.08em; text-transform: uppercase; }
-  .lb-back-note { font-family: 'Kalam', cursive; font-size: 0.95rem; color: #2a2a2a; line-height: 1.7; flex: 1; }
+  .lb-back-note { font-family: 'Kalam', cursive; font-size: 1.14rem; color: #2a2a2a; line-height: 1.7; flex: 1; }
   .lb-back-sig { font-family: 'Caveat', cursive; font-size: 1.15rem; color: var(--blue); font-weight: 700; text-align: right; }
   .lb-back-stamp {
     position: absolute;
@@ -1852,11 +2136,17 @@
 
   .zoom-polaroid-caption {
     font-family: 'Caveat', cursive;
-    font-size: 1.1rem;
+    font-size: 1rem;
     color: #444;
     text-align: center;
-    margin-top: 12px;
-    line-height: 1.3;
+    margin-top: 10px;
+    line-height: 1.2;
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+    -webkit-box-orient: vertical;
+    word-break: break-word;
   }
 
   #notebookText { transition: opacity 0.2s ease; }
@@ -1971,6 +2261,21 @@
   </div>
 </div>
 
+<!-- ERIN HOLD MODAL -->
+<div class="erin-modal-overlay" id="erinModalOverlay">
+  <div class="erin-modal" role="dialog" aria-modal="true" aria-labelledby="erinModalTitle">
+    <div class="erin-modal-kicker">Wait a sec!</div>
+    <div class="erin-modal-title" id="erinModalTitle">Erin is still in the archives</div>
+    <div class="erin-modal-message">
+      <p>It seems like Erin has not returned yet from the archives and has not been able to join the group just yet.</p>
+      <p>Click Okay! to proceed.</p>
+    </div>
+    <div class="erin-modal-actions">
+      <button class="erin-modal-ok" type="button" onclick="confirmErinModal()">Okay!</button>
+    </div>
+  </div>
+</div>
+
 <!-- SVG SYMBOLS -->
 <svg style="display:none">
   <symbol id="book-open" viewBox="0 0 72 60">
@@ -2009,26 +2314,32 @@ const characters = [
     id: "raya",
     name: "RAYA",
     fullName: "Raya Gabrielle Herrera",
-    avatar: "",
+    avatar: "Raya.png",
     profile: {
       role: "LIS 170 Student",
       background: "Placeholder background details here."
     },
-    favorites: ["Favorite 1", "Favorite 2", "Favorite 3"],
-    catchphrase: "catchphrase here",
-    strengths: ["strength 1", "strength 2", "strength 3"],
-    weaknesses: ["Weakness 1", "Weakness 2", "Weakness 3"],
+    favorites: ["silver ring", "itabag", "new library card"],
+    catchphrase: "Ooh what's that? Ooh what's that? Ooh what's that?",
+    strengths: ["Mausisa", "Observant", "Friendly"],
+    weaknesses: ["Tendency to lose things", "Forgets to take pictures", "Sleepy in the afternoon"],
     thoughts: [
-      { title: "Thought 1", text: "Placeholder thought content here.", image: "1.png" },
-      { title: "Thought 2", text: "Placeholder thought content here.", image: "2.png" },
-      { title: "Thought 3", text: "Placeholder thought content here.", image: "3.png" }
+      { title: "First Impressions", text: "We chose to visit the National Library mainly because of Ian’s connections through his mom. Only to discover, interestingly, that the National Library did not have a formal archive division. Instead, it is the 10-person team of the Filipiniana division that essentially functions as the NL’s archivists, as the focus of their work is conservation of the NL’s rare manuscript collection. The person who toured us around the NL’s archive and gallery, Sir Arman, was from this division. Unfortunately, Dr. Chua, the head of the division and a head curator of the Permanent Gallery was unavailable to tour us that day, so we weren't able to get much detailed information of the establishment and management of the NL’s archiving practice from an administrative perspective. Sir Arman notes that none of the Filipiniana librarians of the NL have formal education in Archives and Records Management.", image: "1.png" },
+      { title: "While Walking", text: "We were brought to see two places: the Permanent Gallery and the conservation labs. The Permanent Gallery is where you'll find the most well-known historical artifacts of the Philippines, such as the original copies of Noli me Tangere and El Filibusterismo and the original Declaration of Independence, while the conservation labs in the adjacent hallway had big glass windows to let visitors see the staff working on the rare manuscripts collection.", image: "2.png" },
+      { title: "Right After", text: "“Owch, it's too bright,” was my first thought after stepping outside the National Library after our visit into the hot May afternoon. Since the Permanent Gallery and the NL as a whole does need to be temperature and humidity-controlled in order to protect their collections, it does mean that it's fairly dark inside. The low ceilings and old 60s modernist interior design definitely did not help in making the NL seem kinda gloomy.", image: "3.png" }
     ],
     reflection: {
-      text: `Placeholder reflection content here, test if gumagana pag shorten Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium.Totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit.Sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit.Ut enim ad minima veniam, quis nostrum exercitationem ullam corporis suscipit laboriosam, nisi ut aliquid ex ea commodi consequatur.Quis autem vel eum iure reprehenderit qui in ea voluptate velit esse quam nihil molestiae consequatur. At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti quos dolores.
-Et harum quidem rerum facilis est et expedita distinctio. Nam libero tempore, cum soluta nobis est eligendi optio cumque nihil impedit quo minus id quod maxime placeat facere possimus, omnis voluptas assumenda est, omnis dolor repellendus. Temporibus autem quibusdam et aut officiis debitis.
-Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit, sed quia non numquam eius modi tempora incidunt ut labore et dolore magnam aliquam quaerat voluptatem. Ut enim ad minima veniam, quis nostrum exercitationem ullam corporis suscipit laboriosam, nisi ut aliquid ex ea commodi consequatur. Quis autem vel eum iure reprehenderit qui in ea voluptate velit esse quam nihil molestiae consequatur.`,
-      image: "4.png",
-      image2: "6.png"
+      text: `To be completely honest, I was surprised at first by the lack of a formal archive division in the National Library. Sir Arman went over the somewhat messy history of what national institution handles what things, and eventually explained: “if there's something you can't find here, then it is either held at the National Archives (NA) or being studied by the National Historical Commission (NHC).”
+
+Since the National Library’s responsibilities often overlap with many other national institutions, it treats the National Archive as its archive.
+
+Compared to my first archive visit at ADB, the NL is certainly on the more informal end of archival practices. Although the NL is technically an independent institution, it seems to rely on and answer to other institutions too, like the NHC and the NA. As such, many of their core functions overlap, with the NL mainly handling some core functions (arrangement, description, and access) while the grunt work of the other core functions (acquisition, restoration, etc) are handled by their sister institutions. Thus, they don't have an internal archive division of their own.
+
+It's a bit of a messy system, as sir Arman mentions that people often get confused where to look for what item, and visit the NL only to discover the item they were interested in is hosted somewhere else in Manila. Items also change location often as they are brought to NHC for study and professional restoration, sometimes without public notice. And since each institution has its own separate database, it can be quite tedious and difficult for people to search for the items they need.
+
+Although the Gallery of the NL and its conservation labs were quite interesting to see and browse as a tourist, it seems really difficult to properly gain access to their collections if you're looking for something specific.`,
+      image: "6.png",
+      image2: "8.png"
     }
   },
   // strengths and weaknesses will be attached below if missing
@@ -2041,17 +2352,17 @@ Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, ad
       role: "LIS 170 Student",
       background: "Placeholder background details here."
     },
-    favorites: ["Favorite 1", "Favorite 2", "Favorite 3"],
-    catchphrase: "catchphrase here",
-    strengths: ["strength 1", "strength 2", "strength 3"],
-    weaknesses: ["Weakness 1", "Weakness 2", "Weakness 3"],
+    favorites: ["borrowed book", "student beep card", "muji pens"],
+    catchphrase: "“Woah, they have this here?”",
+    strengths: ["Photographer", "Idea Bank", "Art Appreciation"],
+    weaknesses: ["Low battery", "No powerbank (and sometimes charger)", "Needs coffee"],
     thoughts: [
-      { title: "Thought 1", text: "Placeholder thought content here.", image: "5.png" },
-      { title: "Thought 2", text: "Placeholder thought content here.", image: "6.png" },
-      { title: "Thought 3", text: "Placeholder thought content here.", image: "7.png" }
+      { title: "hold on...", text: "....", image: "5.png" },
+      { title: "loading...", text: "still loading...", image: "6.png" },
+      { title: "one moment...", text: "working on it...", image: "7.png" }
     ],
     reflection: {
-      text: "Placeholder reflection content here.",
+      text: "just a sec...",
       image: "8.png",
       image2: "12.png"
     }
@@ -2075,61 +2386,75 @@ Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, ad
       { title: "Paintings???", text: "Paintings were the last thing I expected to see here! They really stand out in terms of complexity in preservation because of their multiple fragile layers like paint, canvas, varnish, and wood—at least that’s my educated guess as someone who barely knows anything about art preservation.", image: "11.png" }
     ],
     reflection: {
-      text: "Fleckners description of archivists as master practitioners with esoteric knowledge, engaged in the most profoundly and universally human of all undertakings, at first felt somewhat too grandiose to me as an LIS 170 student. (Of course, largely due to my limited understanding of archival work.) That was until our little visit challenged the preconceived notion. Seeing both copies and original materials such as the Kartilya ng Katipunan, Doctrina Christiana, Rizals Noli Me Tangere and El Filibusterismo, and the Treaty of Paris map made archival work feel far less abstract than it once did. Standing in front of these materials, one cant help but realize that archives are not simply storage spaces for old documents, but institutions that preserve the historical memory and identity of a nation. Fleckners statement wasnt exaggerated at all. If anything, it perfectly captured the importance and essence of archival work. At the same time, learning about the history of the institution reinforced how archival authority in the Philippines was originally shaped by something similar to the framework of Archives for the Sovereign. That Spanish colonial administrators functioned as archontic authorities insofar as they controlled the creation, organization, and legitimization of official records in the establishment of the Museo-Biblioteca de Filipinas. The archival records, museum collections, and library holdings of our nation were once managed within a single colonized institutional system, and that same colonial authority shaped not only the institution itself but also the narratives preserved within its records. Many documents reflected the biases, misunderstandings, and cultural prejudices of their foreign creators, resulting in distorted portrayals of Filipino culture and identity even in materials considered historically authoritative. One notable example that was shared with us in our visit came from the Spanish field notes, such as Antonio de Morgas Sucesos de las Islas Filipinas (1609), where Filipinos were described as barbaric people who supposedly consumed rotten fish, when the reference was actually to bagoong. Nevertheless, what I found more significant and more worthwhile to focus on was how materials and institutions that once served the administrative and political interests of colonial rule have gradually transformed into an archive and institution for the people, allowing Filipinos to reclaim, reinterpret, and reexamine their own history from their own perspective. That is, regardless of whether the materials are nationally celebrated artifacts or more ordinary records preserved for future generations. Archival work, in the end, is not only about keeping historical materials intact, but also about protecting how people remember, interpret, and understand their own past, all of these coming together as part of a shared national memory,",
+      text: `Fleckners description of archivists as master practitioners with esoteric knowledge, engaged in the most profoundly and universally human of all undertakings, at first felt somewhat too grandiose to me as an LIS 170 student. (Of course, largely due to my limited understanding of archival work.) That was until our little visit challenged the preconceived notion.
+
+Seeing both copies and original materials such as the Kartilya ng Katipunan, Doctrina Christiana, Rizals Noli Me Tangere and El Filibusterismo, and the Treaty of Paris map made archival work feel far less abstract than it once did. Standing in front of these materials, one cant help but realize that archives are not simply storage spaces for old documents, but institutions that preserve the historical memory and identity of a nation. 
+
+At the same time, learning about the history of the institution reinforced how archival authority in the Philippines was originally shaped by something similar to the framework of Archives for the Sovereign. That Spanish colonial administrators functioned as archontic authorities insofar as they controlled the creation, organization, and legitimization of official records in the establishment of the Museo-Biblioteca de Filipinas. The archival records, museum collections, and library holdings of our nation were once managed within a single colonized institutional system, and that same colonial authority shaped not only the institution itself but also the narratives preserved within its records.
+
+Many documents reflected the biases, misunderstandings, and cultural prejudices of their foreign creators, resulting in distorted portrayals of Filipino culture and identity even in materials considered historically authoritative. One notable example that was shared with us in our visit came from the Spanish field notes, such as Antonio de Morgas Sucesos de las Islas Filipinas (1609), where Filipinos were described as barbaric people who supposedly consumed rotten fish, when the reference was actually to bagoong.
+
+Nevertheless, what I found more significant and more worthwhile to focus on was how materials and institutions that once served the administrative and political interests of colonial rule have gradually transformed into an archive and institution for the people, allowing Filipinos to reclaim, reinterpret, and reexamine their own history from their own perspective. That is, regardless of whether the materials are nationally celebrated artifacts or more ordinary records preserved for future generations. Archival work, in the end, is not only about keeping historical materials intact, but also about protecting how people remember, interpret, and understand their own past, all of these coming together as part of a shared national memory. 
+
+Fleckners statement wasnt exaggerated at all. If anything, it perfectly captured the importance and essence of archival work.
+
+`,
       image: "12.png",
       image2: "3.png"
     }
   }
 ];
 
+const ERIN_CHAR_INDEX = characters.findIndex(c => c.id === 'erin');
+
 const books = [
   {
     id:"b1",
     image:"Declaration of Philippine Independence.png",
     info:"The Declaration of Philippine Independence was proclaimed on June 12, 1898 in Kawit, Cavite, authored by Ambrosio Rianzares Bautista under Emilio Aguinaldo’s revolutionary government, asserting sovereignty from Spain and establishing the foundations of a national republic.",
-    thoughts:{ raya:"Thought placeholder", erin:"Thought placeholder", ian:"It’s strange thinking that independence here isn’t just a concept but something formally declared, as if identity itself had to be written down to exist politically." }
+    thoughts:{ raya:"It’s really incredible how legible the print of the Declaration of Independence is even after almost two hundred years. It almost looks like it could’ve been printed on A4 paper yesterday, which goes to show how well it was preserved.", erin:"Erin's note for the Declaration is still waiting to declare itself. Until then, this space is holding its independence quietly.", ian:"It’s strange thinking that independence here isn’t just a concept but something formally declared, as if identity itself had to be written down to exist politically." }
   },
   {
     id:"b2",
     image:"Velarde Map.png",
     info:"The Velarde Map (Carta Hydrographica y Chorographica de las Islas Filipinas, 1734), created by Pedro Murillo Velarde, is among the earliest scientific maps of the Philippines, depicting geography, settlements, and cultural illustrations, and is used in modern territorial studies.",
-    thoughts:{ raya:"Thought placeholder", erin:"Thought placeholder", ian:"Truly, maps are never neutral, neither are they just about measurement. They’re always a quiet argument drawn in ink. What gets included, centered, or emphasized feels like an early form of claiming space." }
+    thoughts:{ raya:"This was the map they used in court for the West Philippine Sea dispute against China! We were in grade school when the ruling happened, and I remember my teachers taught us about it, and I think that was a moment when I realized just how powerful old archived materials can be in the present day and the future.", erin:"Erin's map thoughts are currently uncharted territory. The route exists, but the annotation has not been pinned yet.", ian:"Truly, maps are never neutral, neither are they just about measurement. They’re always a quiet argument drawn in ink. What gets included, centered, or emphasized feels like an early form of claiming space." }
   },
   {
     id:"b3",
     image:"Noli Me Tangere.png",
     info:"Noli Me Tangere, written by José Rizal in 1887 in Berlin, is a political novel exposing abuses of Spanish friars and colonial officials, highlighting social injustice and awakening Filipino nationalism that contributed to reform and revolutionary movements.",
-    thoughts:{ raya:"Thought placeholder", erin:"Thought placeholder", ian:"This actually brings me back to elementary school, when we first read about Rizal without fully understanding the weight of it." }
+    thoughts:{ raya:"It's smaller than I thought it would be; I’ve certainly read novels thicker than this and in smaller font, but back in high school reading through Noli felt so long! It's also so interesting seeing a book that was bound by hand. Making a whole book used to be more effort, huh?", erin:"Erin's Noli entry is still being written in the margins. Very literary, very delayed, very on-brand for a dramatic novel.", ian:"This actually brings me back to elementary school, when we first read about Rizal without fully understanding the weight of it." }
   },
   {
     id:"b4",
     image:"Doctrina Christiana.png",
     info:"Doctrina Christiana, printed in 1593, is one of the earliest books in the Philippines, containing Catholic doctrine in Spanish and Tagalog scripts, used by Spanish missionaries to facilitate religious conversion and early colonial education.",
-    thoughts:{ raya:"Thought placeholder", erin:"Thought placeholder", ian:"I actually remember making an infographic about this for LIS 51 (the topic/module was Historical LIS Milestones IIRC) with Sir Dridge ;0" }
+    thoughts:{ raya:"At first I didn’t realize this was the Doctrina Christiana because it didn’t have the picture of St. Dominic on the cover, as always seen in schoolbooks. It’s quite boring without its iconic cover, isn’t it?", erin:"Erin's Doctrina note is pending translation from brain to text. The exhibit is ready; the entry is still loading.", ian:"I actually remember making an infographic about this for LIS 51 (the topic/module was Historical LIS Milestones IIRC) with Sir Dridge ;0" }
   },
   {
     id:"b5",
     image:"Himno Nacional Pilipinas.png",
     info:"The Philippine National Anthem, originally composed as an instrumental march “Marcha Nacional Filipina” by Julián Felipe in 1898, later gained lyrics by José Palma (fun fact: this is the younger brother of Rafael Palma, whom Palma Hall was named after), symbolizing independence, unity, and national identity during and after the revolution.",
-    thoughts:{ raya:"Thought placeholder", erin:"Thought placeholder", ian:"The hymn back then probably felt like music that is for and by the people. I remember attending an ACLE about the popularization and democratization of music, how it is collectively used in advocacies, especially during the Martial Law and the EDSA Revolution. People using sound to express what couldn’t always be openly said, the Hymn may have carried the same kind of collective feeling for the people during those times." }
+    thoughts:{ raya:"The first thing I noticed about this record was how damaged it was! It’s in a particularly bad condition— ink stamps of ownership directly onto the paper? Clear tape placed directly onto the crease folds? Certainly this would not pass for conservation standards today. It exposes just how poorly some of our nation’s most important historical documents have been conserved in the past.", erin:"Erin's anthem thoughts have not hit the final note yet. Please imagine a respectful pause with background music.", ian:"The hymn back then probably felt like music that is for and by the people. I remember attending an ACLE about the popularization and democratization of music, how it is collectively used in advocacies, especially during the Martial Law and the EDSA Revolution. People using sound to express what couldn’t always be openly said, the Hymn may have carried the same kind of collective feeling for the people during those times." }
   },
   {
     id:"b6",
     image:"Kartilya ng Katipunan.png",
     info:"The Kartilya ng Katipunan, written by Emilio Jacinto, served as the ethical and moral guide of the Katipunan, outlining principles of equality, patriotism, and discipline that shaped revolutionary conduct against Spanish colonial rule.",
-    thoughts:{ raya:"Thought placeholder", erin:"Thought placeholder", ian:"There’s something interesting about how the Katipunan started with values and moral formation before action, defining what kind of person a revolutionary should be." }
+    thoughts:{ raya:"Much like the etiquette handbooks published by schools today, this book seems just as long and just as boring to look at.", erin:"Erin's Kartilya reflection is still observing proper revolutionary discipline by not rushing itself.", ian:"There’s something interesting about how the Katipunan started with values and moral formation before action, defining what kind of person a revolutionary should be." }
   },
   {
     id:"b7",
     image:"Katipunan Membership Certificate.png",
     info:"The Katipunan membership certificate was an official document confirming membership in the secret revolutionary society KKK (Kataas-taasan, Kagalang-galangang Katipunan ng mga Anak ng Bayan), signifying commitment to independence and resistance against Spanish colonial authorities.",
-    thoughts:{ raya:"Thought placeholder", erin:"Thought placeholder", ian:"A piece of paper that once meant real risk that could completely change or end someone’s life... It looks mundane now, but at the time, it was more dangerous and irreversible than just a document." }
+    thoughts:{ raya:"It’s fascinating how cursive writing seems to have changed very little over the past 120 years, as I am perfectly able to read the words written on this card. Either that or the standards for penmanship back then were much higher than they are today!", erin:"Erin's membership certificate note has not been signed in yet. The space is reserved, the ink is imaginary.", ian:"A piece of paper that once meant real risk that could completely change or end someone’s life... It looks mundane now, but at the time, it was more dangerous and irreversible than just a document." }
   },
   {
     id:"b8",
     image:"Description of the Philippine Flag.png",
     info:"The Philippine flag symbolizes national identity: the sun represents freedom, its eight rays represent the first eight revolting provinces, and the three stars represent Luzon, Visayas, and Mindanao, unified under one sovereign nation.",
-    thoughts:{ raya:"Thought placeholder", erin:"Thought placeholder", ian:"It’s really sad when people disrespect the Philippine flag. Everyone should be able to understand why there are strict laws and even significant fines around it. It’s not just about protecting a piece of cloth, but about protecting what it represents" }
+    thoughts:{ raya:"There’s something so charming about handwritten documents like this, showing the ink splotches and erasures and the unique brushstrokes of the hand that wrote it.", erin:"Erin's flag note is still respectfully standing at attention. Entry pending, but the sentiment is present.", ian:"It’s really sad when people disrespect the Philippine flag. Everyone should be able to understand why there are strict laws and even significant fines around it. It’s not just about protecting a piece of cloth, but about protecting what it represents" }
   },
 ];
 
@@ -2138,6 +2463,8 @@ let currentChar  = 0;
 let activeBook   = null;
 let notebookPages = [];
 let notebookPageIndex = 0;
+let erinModalCloseTimer = null;
+let pendingCharIndex = null;
 
 // ============================================================
 // PROJECT OVERVIEW MODAL (opens on page load)
@@ -2160,7 +2487,7 @@ function createOverviewSlideMarkup(s, isClickable) {
             alt="slide image"
             style="width:100%;height:100%;object-fit:cover;border-radius:1px;"
           />
-          <div class="slide-polaroid-caption">${photo}</div>
+          <div class="slide-polaroid-caption">${getPhotoCaption(photo)}</div>
         </div>
       `).join('')}
     </div>
@@ -2265,10 +2592,17 @@ function openSectionModal(section) {
         ${document.getElementById('box-content')?.innerHTML || ''}
       </div>
     `;
+    restoreFullPreviewText(body);
   }
 
   overlay.classList.add('active');
   document.body.style.overflow = 'hidden';
+}
+
+function restoreFullPreviewText(container) {
+  container.querySelectorAll('.preview-text[data-full-text]').forEach(el => {
+    el.textContent = el.dataset.fullText || el.textContent || '';
+  });
 }
 
 function closeSectionModal() {
@@ -2382,7 +2716,7 @@ function renderCharacters() {
   const c = characters[currentChar];
   const avatarSrc = c.avatar ? c.avatar : svgToDataUri(personSVG('#2563eb'));
   const avatarHtml = c.avatar
-    ? `<img src="${c.avatar}" alt="${c.name}" style="width:90%;max-width:140px;height:auto;object-fit:contain;border-radius:8px;display:block;"/>`
+    ? `<img src="${c.avatar}" alt="${c.name}" style="width:100%;height:100%;object-fit:cover;object-position:center top;display:block;"/>`
     : personSVG('#2563eb');
 
   document.getElementById('profile-grid').innerHTML = `
@@ -2446,6 +2780,11 @@ function renderCharacters() {
 }
 
 function selectChar(i) {
+  if (i === ERIN_CHAR_INDEX) {
+    openErinModal(i);
+    return;
+  }
+
   currentChar = i;
   renderCharacters();
   updateNotebookTitle();
@@ -2455,6 +2794,46 @@ function selectChar(i) {
   } else {
     setBoxClear();
   }
+}
+
+function openErinModal(i) {
+  const overlay = document.getElementById('erinModalOverlay');
+  pendingCharIndex = i;
+  overlay.classList.remove('closing');
+  if (erinModalCloseTimer) {
+    clearTimeout(erinModalCloseTimer);
+    erinModalCloseTimer = null;
+  }
+  overlay.classList.add('active');
+  document.body.style.overflow = 'hidden';
+}
+
+function confirmErinModal() {
+  const overlay = document.getElementById('erinModalOverlay');
+  if (!overlay.classList.contains('active') || overlay.classList.contains('closing')) return;
+
+  overlay.classList.add('closing');
+  if (erinModalCloseTimer) clearTimeout(erinModalCloseTimer);
+
+  erinModalCloseTimer = setTimeout(() => {
+    overlay.classList.remove('active', 'closing');
+    document.body.style.overflow = '';
+
+    if (pendingCharIndex !== null && pendingCharIndex !== undefined) {
+      currentChar = pendingCharIndex;
+      renderCharacters();
+      updateNotebookTitle();
+      if (activeBook) {
+        const book = books.find(b => b.id === activeBook);
+        if (book) setBoxBook(book);
+      } else {
+        setBoxClear();
+      }
+    }
+
+    pendingCharIndex = null;
+    erinModalCloseTimer = null;
+  }, 220);
 }
 
 function selectThought(charIdx, thoughtIdx) {
@@ -2499,7 +2878,7 @@ function setBoxThought(label, thought, isReflection = false) {
       <div class="content-polaroid">
         <img src="${thought.image}" alt="${thought.title}">
         <div class="content-polaroid-caption">
-          ${thought.image.replace(/\.png$/i, '')}
+          ${getPhotoCaption(thought.image)}
         </div>
       </div>
       <div class="handwritten-note">
@@ -2508,18 +2887,21 @@ function setBoxThought(label, thought, isReflection = false) {
         </div>
         <div class="handwritten-text preview-text" data-full-text="${escapeHtml(thought.text)}"></div>
         ${isReflection ? `
-          <button class="expand-reflection-btn"
-                  onclick='openReflectionNotebook(
-                    ${JSON.stringify(thought.title)},
-                    ${JSON.stringify(thought.text)},
-                    ${JSON.stringify(thought.image)}
-                  )'>
+          <button class="expand-reflection-btn" type="button">
             Expand!
           </button>
         ` : ''}
       </div>
     </div>
   `;
+  if (isReflection) {
+    const expandBtn = el.querySelector('.expand-reflection-btn');
+    if (expandBtn) {
+      expandBtn.addEventListener('click', () => {
+        openReflectionNotebook(thought.title, thought.text, thought.image);
+      });
+    }
+  }
   syncContentPanelHeight();
   clampPreviewText(el);
   flashBox(el);
@@ -2600,6 +2982,20 @@ function firstFiveWords(text) {
   return words.length > 5 ? words.slice(0, 5).join(' ') + '...' : text;
 }
 
+function formatNotebookText(text) {
+  const escaped = escapeHtml(text || '');
+  const paragraphs = escaped
+    .split(/\n\s*\n+/)
+    .map(part => part.trim())
+    .filter(Boolean);
+
+  if (!paragraphs.length) return '';
+
+  return paragraphs
+    .map(part => `<p>${part.replace(/\n/g, '<br>')}</p>`)
+    .join('');
+}
+
 function updateNotebookTitle() {
   const char = characters[currentChar];
   const el = document.getElementById("notebookTitle");
@@ -2677,14 +3073,14 @@ function openReflectionNotebook(title, text, image) {
   const char = characters[currentChar];
   document.getElementById('notebookTitle').textContent = `${char.name}'s Reflection`;
   document.getElementById('notebookImage').src = image;
-  document.getElementById('notebookCaption').textContent = image.replace(/\.png$/i, '');
+  document.getElementById('notebookCaption').textContent = getPhotoCaption(image);
 
   if (char.reflection.image2) {
     document.getElementById('notebookImage2').src = char.reflection.image2;
-    document.getElementById('notebookCaption2').textContent = char.reflection.image2.replace(/\.png$/i, '');
+    document.getElementById('notebookCaption2').textContent = getPhotoCaption(char.reflection.image2);
   }
 
-  notebookPages = splitIntoPages(text, 1000);
+  notebookPages = [text];
   notebookPageIndex = 0;
   renderNotebookPage();
 
@@ -2699,7 +3095,7 @@ function renderNotebookPage() {
   if (!el) return;
   el.style.opacity = 0;
   setTimeout(() => {
-    el.textContent = notebookPages[notebookPageIndex] || "";
+    el.innerHTML = formatNotebookText(notebookPages[notebookPageIndex] || "");
     el.style.opacity = 1;
     if (btn) {
       btn.style.display = notebookPageIndex >= notebookPages.length - 1 ? 'none' : 'block';
@@ -2782,23 +3178,34 @@ window.addEventListener("DOMContentLoaded", () => {
 
 <script>
 const photos = [
-  { id:"p1",  image:"1.png",  caption:"Photo 1",  colors:["#2563eb","#1d4ed8","#93c5fd","#eff6ff"], shapes:"hall",       notes:"Photo note placeholder text here.", author:"Raya" },
-  { id:"p2",  image:"2.png",  caption:"Photo 2",  colors:["#2563eb","#1e40af","#bfdbfe","#dbeafe"], shapes:"manuscript", notes:"Photo note placeholder text here.", author:"Erin" },
-  { id:"p3",  image:"3.png",  caption:"Photo 3",  colors:["#3b82f6","#1d4ed8","#93c5fd","#eff6ff"], shapes:"map",        notes:"Photo note placeholder text here.", author:"Ian"  },
-  { id:"p4",  image:"4.png",  caption:"Photo 4",  colors:["#2563eb","#1e3a8a","#bfdbfe","#eff6ff"], shapes:"scroll",     notes:"Photo note placeholder text here.", author:"Raya" },
-  { id:"p5",  image:"5.png",  caption:"Photo 5",  colors:["#1d4ed8","#1e3a8a","#93c5fd","#dbeafe"], shapes:"book",       notes:"Photo note placeholder text here.", author:"Erin" },
-  { id:"p6",  image:"6.png",  caption:"Photo 6",  colors:["#3b82f6","#2563eb","#bfdbfe","#eff6ff"], shapes:"folio",      notes:"Photo note placeholder text here.", author:"Ian"  },
-  { id:"p7",  image:"7.png",  caption:"Photo 7",  colors:["#2563eb","#1e3a8a","#bfdbfe","#eff6ff"], shapes:"hallway",    notes:"Photo note placeholder text here.", author:"Raya" },
-  { id:"p8",  image:"8.png",  caption:"Photo 8",  colors:["#1d4ed8","#1e40af","#93c5fd","#dbeafe"], shapes:"novel",      notes:"Photo note placeholder text here.", author:"Erin" },
-  { id:"p9",  image:"9.png",  caption:"Photo 9",  colors:["#2563eb","#1e40af","#bfdbfe","#eff6ff"], shapes:"hall",       notes:"Photo note placeholder text here.", author:"Ian"  },
-  { id:"p10", image:"10.png", caption:"Photo 10", colors:["#3b82f6","#2563eb","#93c5fd","#dbeafe"], shapes:"manuscript", notes:"Photo note placeholder text here.", author:"Raya" },
-  { id:"p11", image:"11.png", caption:"Photo 11", colors:["#2563eb","#1d4ed8","#bfdbfe","#eff6ff"], shapes:"hallway",    notes:"Photo note placeholder text here.", author:"Erin" },
-  { id:"p12", image:"12.png", caption:"Photo 12", colors:["#1e40af","#1e3a8a","#93c5fd","#eff6ff"], shapes:"book",       notes:"Photo note placeholder text here.", author:"Ian"  },
-  { id:"p13", image:"13.png", caption:"Photo 13", colors:["#3b82f6","#2563eb","#bfdbfe","#dbeafe"], shapes:"folio",      notes:"Photo note placeholder text here.", author:"Raya" },
-  { id:"p14", image:"14.png", caption:"Photo 14", colors:["#2563eb","#1d4ed8","#93c5fd","#eff6ff"], shapes:"hall",       notes:"Photo note placeholder text here.", author:"Erin" },
-  { id:"p15", image:"15.png", caption:"Photo 15", colors:["#1d4ed8","#1e3a8a","#bfdbfe","#eff6ff"], shapes:"scroll",     notes:"Photo note placeholder text here.", author:"Ian"  },
-  { id:"p16", image:"16.png", caption:"Photo 16", colors:["#3b82f6","#2563eb","#93c5fd","#dbeafe"], shapes:"map",        notes:"Photo note placeholder text here.", author:"Raya" }
+  { id:"p1",  image:"1.png",  caption:"Exhibit Entrance",  colors:["#2563eb","#1d4ed8","#93c5fd","#eff6ff"], shapes:"hall",       notes:`This museum wall went so hard it genuinely made me want to learn Baybayin.... 🪶📜`, author:"Raya" },
+  { id:"p2",  image:"2.png",  caption:"Erin in the Rizal Area",  colors:["#2563eb","#1e40af","#bfdbfe","#dbeafe"], shapes:"manuscript", notes:`Literally on my knees taking this shot… and it was 100% worth it.🧎📸`, author:"Ian" },
+  { id:"p3",  image:"3.png",  caption:"Group Photo (w Sir Jay)",  colors:["#3b82f6","#1d4ed8","#93c5fd","#eff6ff"], shapes:"map",        notes:`Serving “field trip group photo” energy… but somehow everyone still looks like they walked out of completely different movie genres 😭🎬👥`, author:"Ian"  },
+  { id:"p4",  image:"4.png",  caption:"Erin and the Noli",  colors:["#2563eb","#1e3a8a","#bfdbfe","#eff6ff"], shapes:"scroll",     notes:`Exactly the kind of pose I imagined whenever my mom says, “anak, picture ka rito”... 😭📷`, author:"Raya" },
+  { id:"p5",  image:"5.png",  caption:"Exhibit Hallway",  colors:["#1d4ed8","#1e3a8a","#93c5fd","#dbeafe"], shapes:"book",       notes:`This hallway got me acting like I’m about to assemble a team for the Filipino remake of Money Heist... 💰🎭`, author:"Erin" },
+  { id:"p6",  image:"6.png",  caption:"Raya and the Noli",  colors:["#3b82f6","#2563eb","#bfdbfe","#eff6ff"], shapes:"folio",      notes:`This is probably the biggest book I’ve ever seen... Definitely getting something like this for house decor! Also, Raya says she hates candid shots, but this says otherwise 😭📖✨`, author:"Ian"  },
+  { id:"p7",  image:"7.png",  caption:"Museum Group Shot (w Sir Arman)",  colors:["#2563eb","#1e3a8a","#bfdbfe","#eff6ff"], shapes:"hallway",    notes:`Everyone looks like they got pulled into the same frame from completely different days—and somehow it still works so well... 😭🧍🧍‍♀️🧍‍♂️`, author:"Raya" },
+  { id:"p8",  image:"8.png",  caption:"Raya Walking Through the Exhibit",  colors:["#1d4ed8","#1e40af","#93c5fd","#dbeafe"], shapes:"novel",      notes:`POV: you wandered off for two minutes and accidentally became part of the exhibit atmosphere... 🏛️🚶`, author:"Erin" },
+  { id:"p9",  image:"9.png",  caption:"Bookbinders and their Work",  colors:["#2563eb","#1e40af","#bfdbfe","#eff6ff"], shapes:"hall",       notes:`This looks like the kind of room where one wrong sneeze would cost approximately ₱4.7 million in damages lol 😭💸`, author:"Ian"  },
+  { id:"p10", image:"10.png", caption:"Ian in the Bansang Pilipinas Area", colors:["#3b82f6","#2563eb","#93c5fd","#dbeafe"], shapes:"manuscript", notes:`I’m the type of person to only post once in a lifetime… but I might genuinely break my record for this one picture`, author:"Ian" },
+  { id:"p11", image:"11.png", caption:"Painting Gallery",  colors:["#2563eb","#1d4ed8","#bfdbfe","#eff6ff"], shapes:"hallway",    notes:`Not me walking through this hallway like I’m about to receive a quest from an old man in a fantasy game... ⚔️🗺️`, author:"Erin" },
+  { id:"p12", image:"12.png", caption:"Exhibit Hall",  colors:["#1e40af","#1e3a8a","#93c5fd","#eff6ff"], shapes:"book",       notes:`The ropes are honestly the only thing stopping me from acting like a Victorian scholar inspecting treasure maps 😭🧐📜`, author:"Ian"  },
+  { id:"p13", image:"13.png", caption:"Museum Walkway",  colors:["#3b82f6","#2563eb","#bfdbfe","#dbeafe"], shapes:"folio",      notes:`This place looks like the waiting area before a billionaire gives you your first mission... 🕴️💼`, author:"Raya" },
+  { id:"p14", image:"14.png", caption:"Museum Staircase",  colors:["#2563eb","#1d4ed8","#93c5fd","#eff6ff"], shapes:"hall",       notes:`Whoever designed this staircase definitely wanted people to feel expensive while simply going upstairs 😭✨🪜`, author:"Erin" },
+  { id:"p15", image:"15.png", caption:"Treaty of Paris map",  colors:["#1d4ed8","#1e3a8a","#bfdbfe","#eff6ff"], shapes:"scroll",     notes:`No one:
+literally no one:
+Spain: let's make the Philippines an income-generating project lol`, author:"Ian"  },
+  { id:"p16", image:"16.png", caption:"Exhibit Title Wall",  colors:["#3b82f6","#2563eb","#93c5fd","#dbeafe"], shapes:"map",        notes:`I can’t stress enough how epic and cool the name is... probably one of the hardest museum names I’ve heard so far!!! 🔥🏛️`, author:"Raya" }
 ];
+
+function cleanPhotoCaption(text) {
+  return (text || '').replace(/^Photo\s*\d+\s*[-—]\s*/i, '').trim();
+}
+
+function getPhotoCaption(imagePath) {
+  const photo = photos.find(p => p.image === imagePath || p.id === imagePath);
+  return photo ? cleanPhotoCaption(photo.caption) : cleanPhotoCaption((imagePath || '').replace(/\.png$/i, ''));
+}
 
 function makeArt(p, w, h) {
   const c = p.colors;
@@ -2887,7 +3294,7 @@ function makePolaroid(p) {
     : `<svg viewBox="0 0 110 95" xmlns="http://www.w3.org/2000/svg">${makeArt(p, 110, 95)}</svg>`;
   return `<div class="polaroid" onclick="openLightbox('${p.id}')">
     <div class="polaroid-img">${imgContent}</div>
-    <div class="polaroid-caption">${p.caption}</div>
+    <div class="polaroid-caption">${cleanPhotoCaption(p.caption)}</div>
   </div>`;
 }
 
@@ -2984,7 +3391,7 @@ function openLightbox(id) {
     <div class="lb-front-img">
       ${p.image ? `<img src="${p.image}" alt="${p.caption}" style="width:100%;height:100%;object-fit:cover;display:block;"/>` : `<svg viewBox="0 0 332 244" xmlns="http://www.w3.org/2000/svg">${makeArt(p, 332, 244)}</svg>`}
     </div>
-    <div class="lb-front-caption">${p.caption}</div>
+    <div class="lb-front-caption">${cleanPhotoCaption(p.caption)}</div>
   `;
 
   back.innerHTML = `
@@ -3060,7 +3467,7 @@ function showPolaroidZoom(imagePath) {
   container.innerHTML = `
     <div class="zoom-polaroid">
       <img src="${imagePath}" alt="${imagePath}" />
-      <div class="zoom-polaroid-caption">${imagePath}</div>
+      <div class="zoom-polaroid-caption">${getPhotoCaption(imagePath)}</div>
     </div>
   `;
   overlay.classList.remove('closing');
